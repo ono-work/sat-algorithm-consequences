@@ -94,6 +94,6 @@ Edit the shared JSON and hand-written methods/protocol, then regenerate the entr
 
 To add a result, use [the investigation task](prompts/investigate.md). To challenge a derivation, use [the audit task](prompts/audit.md). To handle an upstream revision, use [the source-update task](prompts/update-sources.md). Candidate and correction issue templates are included.
 
-## Publication target
+## Public repository
 
-The selected destination for public publication is [ono-work/sat-algorithm-consequences](https://github.com/ono-work/sat-algorithm-consequences), using the GitHub account `agent-maria` and branch `main`. These are prepared settings, not a record of a completed upload. No license has been selected. See [PUBLISH.md](PUBLISH.md) for authentication, repository preparation, and publication steps.
+This catalog was published on October 28, 2026 at [ono-work/sat-algorithm-consequences](https://github.com/ono-work/sat-algorithm-consequences), using the GitHub account `agent-maria` and branch `main`. No license has been selected. See [PUBLISH.md](PUBLISH.md) for the publication record and authentication and update guidance.

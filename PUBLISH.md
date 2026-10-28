@@ -1,6 +1,6 @@
 # Publication guide / 公開手順
 
-## Selected target / 選択済みの公開先
+## Public repository / 公開リポジトリ
 
 | Setting / 設定 | Value / 値 |
 | --- | --- |
@@ -10,7 +10,9 @@
 | Branch / ブランチ | `main` |
 | License / ライセンス | Unselected / 未選定 |
 
-These settings prepare **Parameterized and Exact Algorithms from Faster SAT** for publication; they do not record a completed upload. 以下は公開のために準備した設定と手順であり、アップロード完了の記録ではありません。
+The initial public upload of **Parameterized and Exact Algorithms from Faster SAT** was confirmed on October 28, 2026, with commit [ca01598](https://github.com/ono-work/sat-algorithm-consequences/commit/ca0159823fdef57bf970de2dae9cb3bccb2702d8). GitHub reports public visibility, branch `main`, and commit author/committer `agent-maria`. The creation commands below document the initial setup; future changes should update the existing repository.
+
+2026年10月28日に初回の公開を確認しました。初回コミットは上記の `ca01598` です。GitHub上で公開範囲がpublic、ブランチが `main`、コミットの作成者・コミッターが `agent-maria` であることを確認しています。以下の新規作成コマンドは初回手順の記録です。以後の更新では既存リポジトリを使います。
 
 ## 日本語
 

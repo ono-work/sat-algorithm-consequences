@@ -96,4 +96,4 @@ python3 tools/render_catalog.py --check
 
 ## 公開先
 
-公開リポジトリの作成先は [ono-work/sat-algorithm-consequences](https://github.com/ono-work/sat-algorithm-consequences)、使用するGitHubアカウントは `agent-maria`、ブランチは `main` に決まりました。これは準備した設定であり、アップロード完了の記録ではありません。ライセンスは未選定です。認証、リポジトリの準備、公開の手順は [PUBLISH.md](PUBLISH.md) を参照してください。
+本カタログは2026年10月28日に [ono-work/sat-algorithm-consequences](https://github.com/ono-work/sat-algorithm-consequences) で公開しました。公開に使ったGitHubアカウントは `agent-maria`、ブランチは `main` です。ライセンスは未選定です。公開記録と認証・更新の手順は [PUBLISH.md](PUBLISH.md) を参照してください。

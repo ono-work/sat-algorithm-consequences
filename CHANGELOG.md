@@ -1,5 +1,15 @@
 # Changelog / 更新履歴
 
+## 2026-10-28 — Initial public publication / 初回公開
+
+- Published the bilingual catalog at [ono-work/sat-algorithm-consequences](https://github.com/ono-work/sat-algorithm-consequences) using `agent-maria`, with 12 FPT entries, 11 exact-algorithm entries, and 9 candidate/obstacle notes.
+- Confirmed public visibility, branch `main`, and the GitHub author/committer association with `agent-maria` for initial commit [ca01598](https://github.com/ono-work/sat-algorithm-consequences/commit/ca0159823fdef57bf970de2dae9cb3bccb2702d8).
+- Retained the Codex provenance and verification notice, all draft labels, and the unselected license. Publication does not change the mathematical review status.
+
+- `agent-maria` から上記の公開リポジトリへ英日カタログを公開。FPT 12項目、厳密アルゴリズム11項目、候補・障害の記録9項目を収録。
+- 公開範囲がpublic、ブランチが `main`、初回コミットの作成者・コミッターがGitHub上で `agent-maria` に対応することを確認。
+- Codexによる調査と未確認であることの注意書き、すべてのdraft表示、ライセンス未選定の状態を維持。公開によって数学的な確認状況が変わるものではない。
+
 ## 2026-10-28 — Publication target prepared / 公開先の準備
 
 - Recorded the selected public destination `ono-work/sat-algorithm-consequences`, publishing account `agent-maria`, and branch `main` in the maintenance documents.

@@ -1,0 +1,1632 @@
+{
+  "schema_version": 2,
+  "updated": "2026-10-28",
+  "assumptions": [
+    {
+      "id": "sat26-general",
+      "source_id": "sat26-paper",
+      "locator": "Theorem 1.1, general-density bound",
+      "time_tex": "(N+M)^{O_w(1)}2^{O_w(N\\log\\log N/\\sqrt{\\log N})}",
+      "space_tex": "(N+M)^{O_w(1)}",
+      "description": {
+        "en": "For every fixed clause width w ≥ 2, assume the claimed deterministic exact-counting algorithm for w-CNF on N declared variables and M clauses. The model counts bit operations. Testing whether the count is positive decides SAT. This catalog assumes the statement; it does not certify it.",
+        "ja": "各固定節幅 w ≥ 2 について、宣言変数数 N、節数 M の w-CNF を決定的に厳密計数するという原稿の主張を仮定する。計算量はビット演算数。計数値が正かどうかでSATを判定する。本カタログはこの主張を仮定として使い、正しさを認定するものではない。"
+      }
+    },
+    {
+      "id": "sat26-sparse",
+      "source_id": "sat26-paper",
+      "locator": "Theorem 1.1, fixed-density bound M ≤ DN",
+      "time_tex": "(N+M)^{O_{w,D}(1)}2^{O_{w,D}(N/\\sqrt{\\log N})}",
+      "space_tex": "(N+M)^{O_w(1)}",
+      "description": {
+        "en": "Use only for fixed w and fixed D with M ≤ DN. If an encoding establishes N+M=O(s), where s is its declared parameter or size measure, add M new variables each forced to zero by a unit clause. This gives N′=N+M and M′=2M≤2N′, with exactly one extension per original satisfying assignment. The count-preserving padding is a catalog deduction; the assumed theorem and its pinned version are unchanged. See METHODS.md, Section 5. Free-variable padding is also valid if its known power-of-two multiplicity is corrected when counting.",
+        "ja": "wとDを固定し、M ≤ DNのときだけ使う。指定したパラメータまたはサイズ尺度sについてN+M=O(s)と分かれば、M個の新変数を加え、それぞれを単位節で0に固定する。N′=N+M、M′=2M≤2N′となり、各元充足割当ての拡張は一意である。この計数を保存するpaddingはカタログ側の導出で、仮定する定理と固定した版は変更していない。METHODS.md第5節を参照。自由変数を加える方法も、計数では既知の2のべきの多重度を補正すれば使える。"
+      }
+    },
+    {
+      "id": "sat26-reported-formal",
+      "source_id": "sat26-scope",
+      "locator": "Scope section",
+      "time_tex": "(L_{\\mathrm{CNF}}+1)^{O_w(1)}2^{O_w(N(\\log\\log N)^2/\\sqrt{\\log N})}",
+      "space_tex": "(L_{\\mathrm{CNF}}+1)^{O_w(1)}",
+      "description": {
+        "en": "Separately assume the bound described by the published formalization scope for a deterministic machine on canonical encodings, where L_CNF is the bit length of that encoding. This exponent has an additional log log factor. No independent Lean replay has been performed for this starter catalog.",
+        "ja": "正規符号化に対する決定的機械について、公開された形式化の範囲説明に記された上界を別の仮定として扱う。L_CNF はその符号長。この指数には log log 因子が一つ多い。初版作成時にはLeanの独立再実行は行っていない。"
+      }
+    }
+  ],
+  "sources": {
+    "sat26-paper": {
+      "title": "OpenAI, The Exponential Time Hypothesis is False",
+      "url": "https://github.com/openai/math/blob/42907c9e999cc00d6abe7a50bfc1023250edd1b9/preprints/The-Exponential-Time-Hypothesis-is-False-October-25-2026/paper.pdf",
+      "version": "17 October 2026; revised 25 October 2026; Git commit 42907c9e999cc00d6abe7a50bfc1023250edd1b9",
+      "locator": "Theorem 1.1, page 2",
+      "sha256": "5b1612dc2eebb2cad5b4cbe62d1fed2982f01ab1908c26f70010a651487e8123"
+    },
+    "sat26-scope": {
+      "title": "OpenAI, scope of the Lean formalization, lean/docs/378.md",
+      "url": "https://github.com/openai/math/blob/42907c9e999cc00d6abe7a50bfc1023250edd1b9/lean/docs/378.md",
+      "version": "Git commit 42907c9e999cc00d6abe7a50bfc1023250edd1b9",
+      "locator": "Scope section; this is the published scope description, not an independent Lean replay",
+      "sha256": "a2f7b390d6308997350b903be02c40a1227ebd2b9376982da528574500531f79"
+    },
+    "xiao2016": {
+      "title": "Mingyu Xiao, On a generalization of Nemhauser and Trotter’s local optimization theorem",
+      "url": "https://arxiv.org/html/1601.00164v1",
+      "version": "arXiv:1601.00164v1, 2 January 2016",
+      "locator": "Theorem 1 (Vertex Cover) and Theorem 3 (Bounded-Degree Vertex Deletion)"
+    },
+    "rainbow2023": {
+      "title": "Bessy, Bougeret, Thilikos, Wiederrecht, Kernelization for Graph Packing and Hitting Problems via Rainbow Matching",
+      "url": "https://arxiv.org/html/2207.06874v4",
+      "version": "arXiv:2207.06874v4, 18 May 2023; full version",
+      "locator": "Theorem 3, Section 5 (I2PHS); Corollary 3, Section 7 (FVST)"
+    },
+    "component2016": {
+      "title": "Mithilesh Kumar and Daniel Lokshtanov, A 2ℓk Kernel for ℓ-Component Order Connectivity",
+      "url": "https://drops.dagstuhl.de/entities/document/10.4230/LIPIcs.IPEC.2016.20",
+      "version": "IPEC 2016, LIPIcs 63, Article 20, published 2017",
+      "locator": "Abstract and main result in Section 1: at most 2ℓk vertices, time n^{O(ℓ)}"
+    },
+    "coloring2013": {
+      "title": "Bart M. P. Jansen and Stefan Kratsch, Data Reduction for Graph Coloring Problems",
+      "url": "https://arxiv.org/pdf/1104.4229v2",
+      "version": "arXiv:1104.4229v2; Information and Computation 231 (2013)",
+      "locator": "Section 3.1; Lemma 4 in Section 3.2 (cograph NO certificates)"
+    },
+    "coloring2017": {
+      "title": "Lars Jaffke and Bart M. P. Jansen, Fine-Grained Parameterized Complexity Analysis of Graph Coloring Problems",
+      "url": "https://arxiv.org/pdf/1701.06985v1",
+      "version": "arXiv:1701.06985v1, 24 January 2017",
+      "locator": "Theorem 6 and its proof; Corollary 9"
+    },
+    "cluster-editing2010": {
+      "title": "Yixin Cao and Jianer Chen, Cluster Editing: Kernelization based on Edge Cuts",
+      "url": "https://arxiv.org/abs/1008.4250v3",
+      "version": "arXiv:1008.4250v3, 10 September 2010",
+      "locator": "Abstract: 2k-vertex kernel for weighted Cluster Editing and comparison with unweighted kernels"
+    },
+    "servedio-wan2005": {
+      "title": "Rocco A. Servedio and Andrew Wan, Computing sparse permanents faster",
+      "url": "https://www.cs.columbia.edu/~atw12/papers/perm.pdf",
+      "version": "Author manuscript dated 18 June 2005",
+      "locator": "Section 2, page 3: Ryser formula in Gray-code order takes Θ(n·2^n) arithmetic operations; used only as a classical benchmark"
+    }
+  },
+  "entries": [
+    {
+      "id": "vertex-cover-solution-size",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "decision",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(k)",
+        "clauses_tex": "O(k^2)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "xiao2016",
+          "locator": "Theorem 1 and the following 2k-kernel discussion"
+        }
+      ],
+      "en": {
+        "name": "Vertex Cover",
+        "parameter": "Solution budget k",
+        "restrictions": "Unweighted simple undirected graphs.",
+        "preprocessing": "Apply the Nemhauser–Trotter 2k-vertex kernel, with the reduced budget k′ ≤ k.",
+        "derivation": [
+          "For each kernel vertex v use a deletion bit x_v. For every edge uv add the clause $x_u\\vee x_v$.",
+          "Encode $\\sum_v x_v\\le k^\\prime$ using the linear-size balanced binary-adder construction in METHODS.md. Gate equivalences add O(k) variables and 3-clauses.",
+          "The formula is satisfiable exactly when the kernel has a vertex cover within budget. It has O(k) variables and O(k²) clauses; use the general-density assumption. Kernelization and encoding use polynomial time and space."
+        ],
+        "caveats": [
+          "This parameter is the total solution size, not excess above an LP bound.",
+          "The decision kernel does not automatically preserve the number of vertex covers."
+        ]
+      },
+      "ja": {
+        "name": "Vertex Cover",
+        "parameter": "解サイズの上限 k",
+        "restrictions": "非重み付き単純無向グラフ。",
+        "preprocessing": "Nemhauser–Trotterによる2k頂点カーネルを使う。縮約後の予算を k′ ≤ k とする。",
+        "derivation": [
+          "カーネルの各頂点 v に削除変数 x_v を置き、各辺 uv に節 $x_u\\vee x_v$ を加える。",
+          "$\\sum_v x_v\\le k^\\prime$ は METHODS.md の平衡二進加算器で符号化する。ゲートの同値制約による追加変数と幅3の節はO(k)個。",
+          "式が充足可能であることと、予算内のvertex coverが存在することが同値になる。変数O(k)、節O(k²)なので一般密度の仮定を使う。前処理・符号化は多項式時間・領域。"
+        ],
+        "caveats": [
+          "パラメータは解サイズそのものであり、LP値からの超過量ではない。",
+          "通常の判定カーネルから解の個数の保存は導けない。"
+        ]
+      },
+      "track": "fpt",
+      "measure_tex": "k"
+    },
+    {
+      "id": "cluster-vertex-deletion",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "decision",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(k)",
+        "clauses_tex": "O(k^3)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "rainbow2023",
+          "locator": "Theorem 3, Section 5; the proof treats hitting sets of size at most k"
+        }
+      ],
+      "en": {
+        "name": "Cluster Vertex Deletion",
+        "parameter": "Vertex-deletion budget k",
+        "restrictions": "Unweighted simple undirected graphs; target is a disjoint union of cliques.",
+        "preprocessing": "Use the I2PHS kernel in Theorem 3 of the full version, fixing ε > 0, to obtain at most (243+ε)k vertices.",
+        "derivation": [
+          "A graph is a cluster graph exactly when it has no induced three-vertex path. For every induced path on vertices a,b,c in the kernel, add $x_a\\vee x_b\\vee x_c$.",
+          "Add a linear-size cardinality circuit bounding the number of deleted vertices by the kernel budget. This uses O(k) variables in total.",
+          "Hitting every original induced P3 is equivalent to eliminating all induced P3s by vertex deletion. There are O(k³) clauses, so use the general-density bound."
+        ],
+        "caveats": [
+          "Use the full version containing the hitting-set theorem; a packing theorem alone is not enough.",
+          "The co-cluster deletion variant follows by complementing the input, but is not a separately counted seed entry."
+        ]
+      },
+      "ja": {
+        "name": "Cluster Vertex Deletion",
+        "parameter": "削除頂点数の上限 k",
+        "restrictions": "非重み付き単純無向グラフ。目標はクリークの非交和。",
+        "preprocessing": "full versionのTheorem 3にあるI2PHSカーネルを使い、ε > 0を固定して頂点数を高々(243+ε)kにする。",
+        "derivation": [
+          "クラスタグラフであることは誘導P3が存在しないことと同値。カーネル中の各誘導P3の頂点 a,b,c に節 $x_a\\vee x_b\\vee x_c$ を置く。",
+          "削除頂点数が予算以下という制約を線形サイズの加算回路で追加する。変数の総数はO(k)のまま。",
+          "元の各誘導P3をhitすることと、頂点削除後に誘導P3が残らないことが同値。節数はO(k³)なので一般密度の上界を使う。"
+        ],
+        "caveats": [
+          "hitting版の定理を含むfull versionを参照する。packing版の定理だけでは足りない。",
+          "補グラフを取ればCo-Cluster Vertex Deletionにも適用できるが、初版では別件として数えていない。"
+        ]
+      },
+      "track": "fpt",
+      "measure_tex": "k"
+    },
+    {
+      "id": "bounded-degree-vertex-deletion",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "decision",
+      "fixed_constants": [
+        "d"
+      ],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O_d(k)",
+        "clauses_tex": "O_d(k^{d+2}+k)",
+        "width_tex": "\\max\\{d+2,3\\}"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "xiao2016",
+          "locator": "Theorem 3 and its kernel-size consequence"
+        }
+      ],
+      "en": {
+        "name": "Bounded-Degree Vertex Deletion",
+        "parameter": "Vertex-deletion budget k",
+        "restrictions": "Target maximum degree d is a fixed nonnegative integer.",
+        "preprocessing": "Use Xiao’s kernel with at most (d³+4d²+5d+3)k vertices and reduced budget at most k.",
+        "derivation": [
+          "For each kernel vertex v and each set S of d+1 distinct neighbors of v, add $x_v\\vee\\bigvee_{u\\in S}x_u$.",
+          "These clauses say that no retained vertex has d+1 retained neighbors. Add the linear-size cardinality encoding.",
+          "There are O_d(k) variables and polynomially many clauses of fixed width max(d+2,3). Apply the general-density SAT assumption directly at that width."
+        ],
+        "caveats": [
+          "d is fixed, not an additional input parameter hidden in the polynomial exponent.",
+          "Do not convert every width-(d+2) clause to 3-CNF: that can introduce too many variables."
+        ]
+      },
+      "ja": {
+        "name": "Bounded-Degree Vertex Deletion",
+        "parameter": "削除頂点数の上限 k",
+        "restrictions": "削除後の最大次数 d は固定された非負整数。",
+        "preprocessing": "Xiaoの( d³+4d²+5d+3 )k頂点カーネルを使う。縮約後の予算はk以下。",
+        "derivation": [
+          "各頂点 v と、その相異なる近傍 d+1 個からなる集合 S に対して、節 $x_v\\vee\\bigvee_{u\\in S}x_u$ を置く。",
+          "これらの節は、残る各頂点の近傍がd個以下になることを表す。線形サイズの頂点数制約を加える。",
+          "変数O_d(k)、固定幅max(d+2,3)、節数は多項式となる。この幅のまま一般密度のSAT仮定を適用する。"
+        ],
+        "caveats": [
+          "dを固定している。入力で変わるdへの依存を多項式次数の中に隠さない。",
+          "各幅(d+2)節を一律に3CNFへ変換すると、補助変数が増えすぎる場合がある。"
+        ]
+      },
+      "track": "fpt",
+      "measure_tex": "k"
+    },
+    {
+      "id": "component-order-connectivity",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "decision",
+      "fixed_constants": [
+        "ell"
+      ],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O_{\\ell}(k)",
+        "clauses_tex": "O_{\\ell}(k^{\\ell+1}+k)",
+        "width_tex": "\\max\\{\\ell+1,3\\}"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "component2016",
+          "locator": "Main kernel theorem in Section 1"
+        }
+      ],
+      "en": {
+        "name": "Component Order Connectivity",
+        "parameter": "Vertex-deletion budget k",
+        "restrictions": "The allowed component size ℓ is a fixed positive integer.",
+        "preprocessing": "Apply the 2ℓk-vertex kernel in polynomial time for fixed ℓ.",
+        "derivation": [
+          "For each connected vertex set S of size ℓ+1 in the kernel, add $\\bigvee_{v\\in S}x_v$. Every connected component with more than ℓ vertices contains such a set.",
+          "Consequently, hitting all these sets is equivalent to having no remaining component larger than ℓ. Add the linear cardinality encoding.",
+          "The total number of variables is O_ℓ(k). The width is constant and the number of clauses is polynomial for fixed ℓ, giving the general-density bound."
+        ],
+        "caveats": [
+          "This entry does not claim an FPT bound for the combined parameter (k,ℓ); the cited preprocessing takes n^{O(ℓ)} time."
+        ]
+      },
+      "ja": {
+        "name": "Component Order Connectivity",
+        "parameter": "削除頂点数の上限 k",
+        "restrictions": "残る各連結成分の頂点数の上限 ℓ は固定された正整数。",
+        "preprocessing": "固定ℓに対して多項式時間で2ℓk頂点カーネルを作る。",
+        "derivation": [
+          "カーネル中の各連結な(ℓ+1)頂点集合 S に節 $\\bigvee_{v\\in S}x_v$ を置く。ℓ頂点を超える連結成分は必ずこのような集合を含む。",
+          "したがって全ての集合をhitすることと、削除後の成分サイズがℓ以下であることが同値。線形サイズの頂点数制約を加える。",
+          "変数O_ℓ(k)、幅は定数、節数は固定ℓに対して多項式となり、一般密度の上界が得られる。"
+        ],
+        "caveats": [
+          "この項目は結合パラメータ(k,ℓ)に関するFPT上界を主張しない。引用した前処理はn^{O(ℓ)}時間。"
+        ]
+      },
+      "track": "fpt",
+      "measure_tex": "k"
+    },
+    {
+      "id": "list-coloring-vertex-cover",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "decision",
+      "fixed_constants": [
+        "q"
+      ],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O_q(k)",
+        "clauses_tex": "O_q(\\lvert V\\rvert k^q+k^2+k)",
+        "width_tex": "\\max\\{q,2\\}"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "coloring2013",
+          "locator": "Section 3.1, vertex-cover witness argument"
+        }
+      ],
+      "en": {
+        "name": "Fixed-q List Coloring",
+        "parameter": "Vertex cover number k",
+        "restrictions": "q is fixed; every list is a subset of [q]. Ordinary q-Coloring is the full-list case.",
+        "preprocessing": "Take both endpoints of a maximal matching to obtain a vertex cover X with |X| ≤ 2k in polynomial time.",
+        "derivation": [
+          "Use one-hot color variables $z_{x,c}$ only for x in X. Impose exactly one allowed color and properness inside G[X].",
+          "For v outside X, failure to extend means every color in L(v) occurs on a neighbor in X. Enumerate one witness neighbor u_c for every c in L(v) and forbid that assignment with $\\bigvee_{c\\in L(v)}\\neg z_{u_c,c}$. An empty list gives an immediate NO.",
+          "There are polynomially many clauses for fixed q, width at most max(q,2), and O_q(k) variables. Outside vertices are independent, so nonfailure at each of them is sufficient to extend the coloring."
+        ],
+        "caveats": [
+          "A supplied optimal vertex cover is unnecessary.",
+          "Counting satisfying assignments of this CNF counts extendible colorings of X, not all colorings of the original graph."
+        ]
+      },
+      "ja": {
+        "name": "固定qのList Coloring",
+        "parameter": "vertex cover number k",
+        "restrictions": "qは固定。各頂点のリストは[q]の部分集合。通常のq-Coloringは全色を許す場合。",
+        "preprocessing": "極大マッチングの両端点を取り、多項式時間で|X| ≤ 2kのvertex cover Xを得る。",
+        "derivation": [
+          "Xの頂点にだけone-hotの色変数 $z_{x,c}$ を置く。各頂点で許された色をちょうど一つ選ぶ条件と、G[X]内の適正彩色条件を課す。",
+          "Xの外の頂点vに延長できないのは、L(v)の各色がX内の近傍に現れるとき。各色cの証人近傍u_cを列挙し、節 $\\bigvee_{c\\in L(v)}\\neg z_{u_c,c}$ で禁止する。空リストは直ちにNO。",
+          "固定qに対し節数は多項式、幅はmax(q,2)以下、変数はO_q(k)。外側は独立集合なので、各頂点で延長可能なら全体へ延長できる。"
+        ],
+        "caveats": [
+          "最小vertex coverが入力に付属している必要はない。",
+          "このCNFの割当て数はX上の延長可能な彩色数であり、グラフ全体の彩色数ではない。"
+        ]
+      },
+      "track": "fpt",
+      "measure_tex": "k"
+    },
+    {
+      "id": "list-coloring-cograph-deletion",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "decision",
+      "fixed_constants": [
+        "q"
+      ],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O_q(k)",
+        "clauses_tex": "k^{O(qg(q))}",
+        "width_tex": "\\max\\{q,2,qg(q)\\}"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "coloring2013",
+          "locator": "Lemma 4 and Section 3.1 modulator approximation discussion"
+        },
+        {
+          "source_id": "coloring2017",
+          "locator": "Theorem 6 proof and Corollary 9"
+        }
+      ],
+      "en": {
+        "name": "Fixed-q List Coloring above Cographs",
+        "parameter": "Cograph vertex-deletion number k",
+        "restrictions": "q is fixed. Let g(q) be a fixed upper bound on NO-certificate size from the cited lemma.",
+        "preprocessing": "Repeatedly remove all vertices of an induced P4. This produces a cograph modulator X with |X| ≤ 4k in polynomial time.",
+        "derivation": [
+          "Use one-hot color variables only on X, including properness and list constraints inside X.",
+          "The cited theorem gives a NO-subinstance on at most g(q) outside vertices whenever an assignment to X cannot be extended. Each removed color on such a vertex has a witness neighbor in X. Thus at most qg(q) color assignments on X suffice to witness nonextension.",
+          "Enumerate partial color assignments on at most qg(q) vertices of X. If such an assignment makes List Coloring on G-X impossible, forbid it by one clause. The required outside test is polynomial-time for fixed q on cographs.",
+          "Every nonextendible full assignment is forbidden and every extendible one survives. The width is fixed and the variable count is O_q(k), so the general-density bound applies."
+        ],
+        "caveats": [
+          "q is fixed; the constants and polynomial degree may be very large.",
+          "This is a decision reduction and does not preserve coloring multiplicities.",
+          "Cluster-deletion distance is a special case because every cluster graph is a cograph."
+        ]
+      },
+      "ja": {
+        "name": "cographへの距離による固定qのList Coloring",
+        "parameter": "cograph vertex deletion number k",
+        "restrictions": "qは固定。引用した補題によるNO証明のサイズの固定上界をg(q)とする。",
+        "preprocessing": "誘導P4を見つけるたびに4頂点を全て除く。多項式時間で|X| ≤ 4kのcograph modulator Xを得る。",
+        "derivation": [
+          "X上にだけone-hotの色変数を置き、X内のリスト条件と適正彩色条件を課す。",
+          "引用した補題より、Xへの彩色を延長できない場合には外側の高々g(q)頂点でNOが証明される。そこで削られた各色にはX内の証人近傍があるため、X上の高々qg(q)個の色指定だけで延長不能を証明できる。",
+          "Xの高々qg(q)頂点への部分色指定を列挙する。その指定でG-XのList Coloringが不能なら、それを禁止する節を一つ加える。cograph上のこの判定は固定qに対して多項式時間。",
+          "延長不能な全指定は必ず禁止され、延長可能な指定は残る。幅は定数、変数はO_q(k)なので一般密度の上界を使える。"
+        ],
+        "caveats": [
+          "qを固定しており、定数や多項式次数は大きくなり得る。",
+          "判定用の帰着であり、彩色数を保存しない。",
+          "クラスタグラフはcographなので、cluster deletion numberによる結果も含む。"
+        ]
+      },
+      "track": "fpt",
+      "measure_tex": "k"
+    },
+    {
+      "id": "finite-csp-primal-vertex-cover",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "decision",
+      "fixed_constants": [
+        "q",
+        "r"
+      ],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O_q(k)",
+        "clauses_tex": "L^{O_{q,r}(1)}",
+        "width_tex": "O_{q,r}(1)"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [],
+      "en": {
+        "name": "Finite-domain bounded-arity CSP",
+        "parameter": "Vertex cover number k of the primal graph",
+        "restrictions": "Fixed domain size q, fixed arity bound r, explicitly represented constraint relations.",
+        "preprocessing": "Compute a factor-2 vertex cover X of the primal graph.",
+        "derivation": [
+          "Each constraint contains at most one variable outside X, since every pair of variables sharing a constraint is adjacent in the primal graph.",
+          "If an outside variable cannot receive any of its q values, pick one violated incident constraint for each value. The failure depends on at most q(r-1) variables of X.",
+          "Enumerate and forbid these constant-size boundary assignments, also keeping constraints wholly inside X. Different outside variables can then be extended independently.",
+          "One-hot encoding of X uses O_q(k) Boolean variables; each forbidden tuple becomes a fixed-width clause. Construction is polynomial-time for fixed q,r, so apply the general-density bound."
+        ],
+        "caveats": [
+          "The domain and arity must be fixed, and relations must be given in the stated finite explicit model.",
+          "No counting claim is made because extension multiplicities are discarded."
+        ]
+      },
+      "ja": {
+        "name": "固定領域・固定arityのCSP",
+        "parameter": "primal graphのvertex cover number k",
+        "restrictions": "領域サイズqとarity上限rは固定。制約関係は明示的に表現する。",
+        "preprocessing": "primal graphの2近似vertex cover Xを求める。",
+        "derivation": [
+          "同じ制約に含まれる変数同士はprimal graphで隣接するため、各制約はXの外の変数を高々一つだけ含む。",
+          "外側の変数がq個のどの値も取れないなら、各値について違反する制約を一つ選ぶ。この失敗はXの高々q(r−1)変数への代入で証明できる。",
+          "これらの定数サイズの禁止代入を列挙し、X内だけの制約と合わせる。異なる外側変数への拡張は独立に行える。",
+          "Xをone-hot符号化するとBoolean変数はO_q(k)個。禁止代入は固定幅節になる。固定q,rに対して構成は多項式時間なので、一般密度の上界を使う。"
+        ],
+        "caveats": [
+          "領域サイズとarityを固定し、関係を指定した有限・明示的なモデルで与える。",
+          "拡張方法の個数を捨てているので、計数については主張しない。"
+        ]
+      },
+      "track": "fpt",
+      "measure_tex": "k"
+    },
+    {
+      "id": "bounded-degree-independent-set",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "decision",
+      "fixed_constants": [
+        "Delta"
+      ],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "encoding": {
+        "variables_tex": "O_{\\Delta}(k)",
+        "clauses_tex": "O_{\\Delta}(k)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [],
+      "en": {
+        "name": "Independent Set on Bounded-Degree Graphs",
+        "parameter": "Target independent-set size k",
+        "restrictions": "The input maximum degree Δ is fixed.",
+        "preprocessing": "If |V| ≥ (Δ+1)k, greedily taking a vertex and removing its closed neighborhood gives YES. Otherwise |V|=O_Δ(k).",
+        "derivation": [
+          "For each edge uv add $\\neg x_u\\vee\\neg x_v$ and encode $\\sum_v x_v\\ge k$ with the linear-size adder.",
+          "The remaining graph has O_Δ(k) edges. Both the number of variables and clauses are O_Δ(k), giving the sparse bound."
+        ],
+        "caveats": [
+          "The large-instance YES shortcut is a decision argument; it does not compute the number of size-k independent sets."
+        ]
+      },
+      "ja": {
+        "name": "次数有界グラフのIndependent Set",
+        "parameter": "目標独立集合サイズ k",
+        "restrictions": "入力の最大次数Δは固定。",
+        "preprocessing": "|V| ≥ (Δ+1)kなら、頂点を選んで閉近傍を消すgreedyでYES。残りは|V|=O_Δ(k)。",
+        "derivation": [
+          "各辺uvに $\\neg x_u\\vee\\neg x_v$ を課し、$\\sum_v x_v\\ge k$ を線形加算器で符号化する。",
+          "残ったグラフの辺数もO_Δ(k)。変数・節がともにO_Δ(k)となるので疎な上界を使える。"
+        ],
+        "caveats": [
+          "大きな入力をYESにする処理は判定用であり、サイズkの独立集合の個数を求めるものではない。"
+        ]
+      },
+      "track": "fpt",
+      "measure_tex": "k"
+    },
+    {
+      "id": "bounded-degree-dominating-set",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "decision",
+      "fixed_constants": [
+        "Delta"
+      ],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "encoding": {
+        "variables_tex": "O_{\\Delta}(k)",
+        "clauses_tex": "O_{\\Delta}(k)",
+        "width_tex": "\\max\\{\\Delta+1,3\\}"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [],
+      "en": {
+        "name": "Dominating Set on Bounded-Degree Graphs",
+        "parameter": "Solution budget k",
+        "restrictions": "The input maximum degree Δ is fixed.",
+        "preprocessing": "If |V| > (Δ+1)k, return NO; otherwise |V|=O_Δ(k).",
+        "derivation": [
+          "A set of k vertices dominates at most (Δ+1)k vertices. On the remaining instance, impose $\\bigvee_{u\\in N[v]}x_u$ for each vertex v.",
+          "Add the linear-size encoding of $\\sum_v x_v\\le k$. Clause width is at most max(Δ+1,3), and both variables and clauses are O_Δ(k), giving the sparse bound."
+        ],
+        "caveats": [
+          "This is bounded maximum degree, not an assertion about unrestricted Dominating Set parameterized by solution size."
+        ]
+      },
+      "ja": {
+        "name": "次数有界グラフのDominating Set",
+        "parameter": "解サイズの上限 k",
+        "restrictions": "入力の最大次数Δは固定。",
+        "preprocessing": "|V| > (Δ+1)kならNO。残りは|V|=O_Δ(k)。",
+        "derivation": [
+          "k頂点で支配できるのは高々(Δ+1)k頂点。残った入力では各頂点vに $\\bigvee_{u\\in N[v]}x_u$ を課す。",
+          "$\\sum_v x_v\\le k$ の線形符号化を加える。幅はmax(Δ+1,3)以下で、変数・節ともにO_Δ(k)となるので疎な上界が得られる。"
+        ],
+        "caveats": [
+          "最大次数を固定した結果であり、一般のDominating Setの解サイズパラメータについての主張ではない。"
+        ]
+      },
+      "track": "fpt",
+      "measure_tex": "k"
+    },
+    {
+      "id": "bounded-occurrence-hitting-set",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "decision",
+      "fixed_constants": [
+        "d",
+        "r"
+      ],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "encoding": {
+        "variables_tex": "O_{d,r}(k)",
+        "clauses_tex": "O_{d,r}(k)",
+        "width_tex": "\\max\\{d,3\\}"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [],
+      "en": {
+        "name": "Bounded-Occurrence d-Hitting Set",
+        "parameter": "Solution budget k",
+        "restrictions": "Each set has at most d elements and each element occurs in at most r sets; d and r are fixed positive integers.",
+        "preprocessing": "Reject an empty set. If the number m of sets exceeds rk, return NO. Remove unused elements.",
+        "derivation": [
+          "A k-element solution hits at most rk sets. In all remaining nontrivial instances the active universe has at most dm ≤ drk elements.",
+          "For each set S impose $\\bigvee_{u\\in S}x_u$, and add a linear-size cardinality bound. This is a sparse constant-width CNF on O_{d,r}(k) variables."
+        ],
+        "caveats": [
+          "Both bounded set size and bounded occurrence are used.",
+          "This argument does not cover unrestricted d-Hitting Set."
+        ]
+      },
+      "ja": {
+        "name": "出現回数有界のd-Hitting Set",
+        "parameter": "選ぶ要素数の上限 k",
+        "restrictions": "集合サイズは高々d、各要素の出現回数は高々r。d,rは固定された正整数。",
+        "preprocessing": "空集合があればNO。集合数mがrkを超えればNO。使われない要素を除く。",
+        "derivation": [
+          "k要素でhitできる集合は高々rk個。残る非自明な入力では、使われる要素数は高々dm ≤ drk。",
+          "各集合Sに $\\bigvee_{u\\in S}x_u$ を置き、線形サイズの要素数制約を加える。変数O_{d,r}(k)の疎な固定幅CNFになる。"
+        ],
+        "caveats": [
+          "集合サイズと出現回数の両方の制限を使っている。",
+          "一般のd-Hitting Setにはこの議論をそのまま適用できない。"
+        ]
+      },
+      "track": "fpt",
+      "measure_tex": "k"
+    },
+    {
+      "id": "bounded-occurrence-set-packing",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "decision",
+      "fixed_constants": [
+        "d",
+        "r"
+      ],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "encoding": {
+        "variables_tex": "O_{d,r}(k)",
+        "clauses_tex": "O_{d,r}(k)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [],
+      "en": {
+        "name": "Bounded-Occurrence d-Set Packing",
+        "parameter": "Target number k of pairwise disjoint sets",
+        "restrictions": "Each set has at most d elements and each element occurs in at most r sets; d and r are fixed positive integers.",
+        "preprocessing": "Build the intersection graph of the input sets. Its maximum degree is at most d(r−1).",
+        "derivation": [
+          "A packing is exactly an independent set in the intersection graph. If it has at least (d(r−1)+1)k vertices, greedy yields YES.",
+          "Otherwise the graph has O_{d,r}(k) vertices and edges. Use the bounded-degree Independent Set encoding, giving the sparse bound."
+        ],
+        "caveats": [
+          "Input sets are explicit; duplicate sets count toward the occurrence bound.",
+          "A linear kernel for an arbitrary packing problem is not by itself sufficient for the same conclusion."
+        ]
+      },
+      "ja": {
+        "name": "出現回数有界のd-Set Packing",
+        "parameter": "選ぶ互いに素な集合の目標個数 k",
+        "restrictions": "集合サイズは高々d、各要素の出現回数は高々r。d,rは固定された正整数。",
+        "preprocessing": "集合の交差グラフを作る。その最大次数は高々d(r−1)。",
+        "derivation": [
+          "packingは交差グラフの独立集合に一致する。頂点数が(d(r−1)+1)k以上ならgreedyでYES。",
+          "それ以外では頂点・辺がともにO_{d,r}(k)。次数有界Independent Setの符号化を使って疎な上界を得る。"
+        ],
+        "caveats": [
+          "集合は明示的に与える。同一集合が複数あるときも出現回数の制限に数える。",
+          "任意のpacking問題の線形頂点カーネルから同じ結論が出るわけではない。"
+        ]
+      },
+      "track": "fpt",
+      "measure_tex": "k"
+    },
+    {
+      "id": "max-csp-absolute-target",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "decision",
+      "fixed_constants": [
+        "q",
+        "r"
+      ],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "encoding": {
+        "variables_tex": "O_{q,r}(k)",
+        "clauses_tex": "O_{q,r}(k)",
+        "width_tex": "O_{q,r}(1)"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [],
+      "en": {
+        "name": "Finite-domain bounded-arity Max-CSP",
+        "parameter": "Absolute target k of satisfied constraints",
+        "restrictions": "Fixed domain size q and arity r; unweighted, explicitly listed constraints.",
+        "preprocessing": "Remove identically false constraints. If m ≥ q^r k, return YES by the uniform-assignment expectation bound; otherwise m=O_{q,r}(k).",
+        "derivation": [
+          "Every remaining constraint is satisfied with probability at least q^{-r} under a uniform assignment, so the preprocessing is valid. Only O(rm)=O_{q,r}(k) relevant variables remain.",
+          "Encode each finite-domain variable with one-hot bits, each local satisfaction indicator with a constant-size circuit, and the target number of satisfied constraints with a linear-size adder.",
+          "The full Boolean circuit and its counting-preserving gate encoding have O_{q,r}(k) variables and clauses. For this entry only the decision conclusion is used. Apply the sparse SAT bound."
+        ],
+        "caveats": [
+          "This is the absolute target, not an excess above the expectation or another guarantee.",
+          "Weighted or succinctly compressed instances require separate size accounting.",
+          "Examples include Max-Cut, Max-Dicut, fixed-width Max-SAT, and fixed-width Max-Lin2."
+        ]
+      },
+      "ja": {
+        "name": "固定領域・固定arityのMax-CSP",
+        "parameter": "満たす制約数の絶対目標 k",
+        "restrictions": "領域サイズqとarity上限rは固定。非重み付きで、制約を明示的に列挙する。",
+        "preprocessing": "恒偽の制約を除く。m ≥ q^r kなら一様割当ての期待値からYES。残りはm=O_{q,r}(k)。",
+        "derivation": [
+          "残る各制約が一様割当てで満たされる確率は少なくともq^{-r}なので前処理は正しい。使われる変数もO(rm)=O_{q,r}(k)個。",
+          "有限領域変数をone-hotで表し、各局所制約の充足表示を定数サイズ回路で表す。満たした制約数の目標は線形サイズの加算器で表す。",
+          "回路と、そのゲート値を一意に決める符号化は、変数・節ともにO_{q,r}(k)個となる。この項目では判定の結論だけを用い、疎なSAT上界を適用する。"
+        ],
+        "caveats": [
+          "パラメータは絶対目標であり、期待値などの保証値からの超過量ではない。",
+          "重み付き版や多重度を圧縮した入力では、別にサイズを追う必要がある。",
+          "Max-Cut、Max-Dicut、固定幅Max-SAT、固定幅Max-Lin2などを含む。"
+        ]
+      },
+      "track": "fpt",
+      "measure_tex": "k"
+    },
+    {
+      "id": "exact-count-independent-sets",
+      "track": "exact",
+      "measure_tex": "n",
+      "origin": "source-corollary",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "counting",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal",
+        "sat26-sparse"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "n",
+        "clauses_tex": "m",
+        "width_tex": "2"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sat26-paper",
+          "locator": "Corollary 1.3 and its proof, pages 2–3; Theorem 1.1"
+        }
+      ],
+      "en": {
+        "name": "Counting Independent Sets",
+        "parameter": "n vertices; m edges",
+        "restrictions": "Simple undirected graphs; count every independent vertex set, including the empty set.",
+        "preprocessing": "Keep one Boolean variable for every declared vertex, including isolated vertices.",
+        "derivation": [
+          "For each edge uv add $\\neg x_u\\vee\\neg x_v$. Each satisfying assignment is exactly one independent set, and every independent set determines exactly one assignment.",
+          "The formula has N=n variables and M=m clauses of width at most two. Apply the general-density exact-counting assumption.",
+          "If m=O(n), the sparse assumption also applies and gives B(n) times a polynomial in the input length. Isolated vertices must remain as free declared variables or contribute the corresponding power of two."
+        ],
+        "caveats": [
+          "The qualitative subexponential-in-n counting result is already stated in Corollary 1.3; the displayed quantitative substitution follows Theorem 1.1.",
+          "Counting vertex covers follows by complementing the selected vertex set."
+        ]
+      },
+      "ja": {
+        "name": "独立集合の厳密計数",
+        "parameter": "nは頂点数、mは辺数",
+        "restrictions": "単純無向グラフ。空集合を含む全ての独立頂点集合を数える。",
+        "preprocessing": "孤立点を含む全ての頂点に、宣言されたBoolean変数を一つずつ置く。",
+        "derivation": [
+          "各辺uvに $\\neg x_u\\vee\\neg x_v$ を課す。充足割当てと独立集合は一対一に対応する。",
+          "変数N=n、節M=m、幅は高々2なので、一般密度の厳密計数の仮定を適用する。",
+          "m=O(n)なら疎な仮定も適用でき、B(n)に入力長の多項式を掛けた上界になる。孤立点は自由な宣言変数として残すか、個数に応じた2のべき因子を掛け戻す。"
+        ],
+        "caveats": [
+          "頂点数に関する劣指数時間の計数という定性的な系は原稿のCorollary 1.3に既にある。表示する定量的上界はTheorem 1.1への代入による。",
+          "選ぶ頂点集合の補集合を取れば、vertex coverの計数も同じ。"
+        ]
+      }
+    },
+    {
+      "id": "exact-count-independent-sets-cardinality",
+      "track": "exact",
+      "measure_tex": "n",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "counting",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal",
+        "sat26-sparse"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(n)",
+        "clauses_tex": "O(n+m)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sat26-paper",
+          "locator": "Corollary 1.3 encoding and Theorem 1.1; the cardinality extension is a catalog deduction"
+        }
+      ],
+      "en": {
+        "name": "Counting Independent Sets of a Specified Size",
+        "parameter": "n vertices; target size t is part of the input",
+        "restrictions": "Simple undirected graphs; this is an n-measure exact algorithm, not an FPT claim in t.",
+        "preprocessing": "Handle t outside [0,n] directly; retain all vertices, including isolates.",
+        "derivation": [
+          "Use the independent-set edge clauses and add the equality $\\sum_v x_v=t$. The balanced adder uses O(n) gates.",
+          "Encode every gate with equivalences. Each independent set of size t has exactly one gate extension, so the count is preserved.",
+          "There are O(n) variables and O(n+m) clauses. Apply the general-density profile; on m=O(n) graphs the sparse profile gives B(n) times a polynomial factor."
+        ],
+        "caveats": [
+          "Counting at-most-t sets is obtained by replacing equality with an inequality.",
+          "The target t is not substituted for n in the exponent."
+        ]
+      },
+      "ja": {
+        "name": "指定サイズの独立集合の厳密計数",
+        "parameter": "nは頂点数。目標サイズtは入力の一部",
+        "restrictions": "単純無向グラフ。頂点数nによるexactアルゴリズムであり、tについてのFPT主張ではない。",
+        "preprocessing": "tが[0,n]の外なら直接処理する。孤立点を含む全ての頂点を残す。",
+        "derivation": [
+          "独立性の辺の節に、等式 $\\sum_v x_v=t$ を加える。平衡加算器のゲート数はO(n)。",
+          "各ゲートを同値で定義すると、サイズtの各独立集合からゲート変数への拡張が一意になり、計数を保存する。",
+          "変数O(n)、節O(n+m)なので一般密度の仮定を使う。m=O(n)のグラフでは疎な仮定からB(n)に多項式因子を掛けた上界を得る。"
+        ],
+        "caveats": [
+          "等式を不等式にすれば、サイズt以下の集合の計数にも使える。",
+          "指数中のnを目標サイズtで置き換える主張ではない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-maximum-independent-set",
+      "track": "exact",
+      "measure_tex": "n",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "optimization",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal",
+        "sat26-sparse"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(n)",
+        "clauses_tex": "O(n+m)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sat26-paper",
+          "locator": "Theorem 1.1 and Corollary 1.3; optimization and reconstruction are catalog deductions"
+        }
+      ],
+      "en": {
+        "name": "Maximum Independent Set / Minimum Vertex Cover",
+        "parameter": "n vertices; m edges",
+        "restrictions": "Unweighted simple undirected graphs. Output the optimum value and, if requested, an optimum vertex set.",
+        "preprocessing": "Use the original graph directly; no decision kernel is used.",
+        "derivation": [
+          "For a threshold t, combine the independent-set edge clauses with $\\sum_v x_v\\ge t$, using O(n) auxiliary variables for a linear-size adder.",
+          "The threshold formula has O(n) variables and O(n+m) clauses. Binary search on t in [0,n] takes O(log(n+1)) calls to the fixed-width SAT algorithm.",
+          "After finding the optimum, fix vertex bits one at a time while preserving satisfiability of the optimum-threshold formula. This uses O(n) additional calls, only unit clauses, and polynomial space. The minimum vertex cover is the complement of a maximum independent set.",
+          "The polynomial number of calls preserves the displayed exponent. If m=O(n), use the sparse profile for B(n) times a polynomial factor."
+        ],
+        "caveats": [
+          "This is an exact optimization algorithm in vertex count n, distinct from the solution-size FPT entry.",
+          "No weighted extension is asserted here."
+        ]
+      },
+      "ja": {
+        "name": "Maximum Independent Set / Minimum Vertex Cover",
+        "parameter": "nは頂点数、mは辺数",
+        "restrictions": "非重み付き単純無向グラフ。最適値を求め、必要なら最適な頂点集合も出力する。",
+        "preprocessing": "元のグラフを直接使い、判定カーネルを通さない。",
+        "derivation": [
+          "閾値tについて、独立性の辺の節に $\\sum_v x_v\\ge t$ を加える。線形加算器の補助変数はO(n)個。",
+          "閾値の式は変数O(n)、節O(n+m)。[0,n]で二分探索するとSATの呼出しはO(log(n+1))回。",
+          "最適値を求めた後、その閾値の式の充足可能性を保ちながら各頂点のビットを順に固定する。追加の呼出しはO(n)回で、単位節しか増えず、多項式領域で行える。最大独立集合の補集合が最小vertex coverになる。",
+          "多項式回の呼出しなので表示する指数は変わらない。m=O(n)なら疎な仮定からB(n)に多項式因子を掛けた上界を得る。"
+        ],
+        "caveats": [
+          "頂点数nによるexact最適化であり、解サイズでパラメータ化するFPTの項目とは異なる。",
+          "この項目は重み付き版を主張しない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-count-fixed-colorings",
+      "track": "exact",
+      "measure_tex": "n",
+      "origin": "source-corollary",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "counting",
+      "fixed_constants": [
+        "q"
+      ],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal",
+        "sat26-sparse"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "qn",
+        "clauses_tex": "O_q(n+m)",
+        "width_tex": "\\max\\{q,2\\}"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sat26-paper",
+          "locator": "Corollary 1.3 and its proof; list constraints add only fixed-width clauses"
+        }
+      ],
+      "en": {
+        "name": "Counting Fixed-q Colorings",
+        "parameter": "n vertices; m edges",
+        "restrictions": "q≥2 is fixed; colors are labeled. Lists, when supplied, are subsets of [q].",
+        "preprocessing": "Keep all vertices. The list-free case is explicitly covered by the manuscript.",
+        "derivation": [
+          "For each vertex v and color c use one bit $z_{v,c}$. Require exactly one allowed color per vertex and forbid equal colors across each edge.",
+          "The one-hot encoding is bijective with proper list colorings. It has qn variables, O_q(n+m) clauses, and constant width max(q,2).",
+          "Apply the general-density counting profile. If m=O(n), the same encoding is sparse and yields B(n) times a polynomial factor."
+        ],
+        "caveats": [
+          "Corollary 1.3 explicitly states the result for ordinary fixed-q colorings; the list extension is a direct catalog deduction.",
+          "This does not establish a bound uniform in growing q or an exact subexponential algorithm for the chromatic number."
+        ]
+      },
+      "ja": {
+        "name": "固定色数の彩色の厳密計数",
+        "parameter": "nは頂点数、mは辺数",
+        "restrictions": "q≥2は固定。色はラベル付き。リストがある場合は[q]の部分集合とする。",
+        "preprocessing": "全ての頂点を残す。リストを付けない場合は原稿に明記されている。",
+        "derivation": [
+          "頂点vと色cごとにビット $z_{v,c}$ を置く。各頂点で許された色をちょうど一つ選び、各辺の両端が同色になることを禁止する。",
+          "one-hot符号化と適正なリスト彩色は一対一。変数qn、節O_q(n+m)、固定幅max(q,2)となる。",
+          "一般密度の計数の仮定を適用する。m=O(n)なら同じ符号化が疎になり、B(n)に多項式因子を掛けた上界を得る。"
+        ],
+        "caveats": [
+          "通常の固定q彩色は原稿のCorollary 1.3に明記されている。リスト付きへの拡張はカタログ側の直接の導出。",
+          "qが増える場合の一様な評価や、chromatic numberのexact劣指数時間計算を示すものではない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-count-finite-csp",
+      "track": "exact",
+      "measure_tex": "n",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "counting",
+      "fixed_constants": [
+        "q",
+        "r"
+      ],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal",
+        "sat26-sparse"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "qn",
+        "clauses_tex": "O_{q,r}(n+m)",
+        "width_tex": "\\max\\{q,r,2\\}"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [],
+      "en": {
+        "name": "Counting Finite-Domain Bounded-Arity CSP Solutions",
+        "parameter": "n variables; m constraints",
+        "restrictions": "Fixed positive domain size q and arity bound r; relations are explicitly represented.",
+        "preprocessing": "Retain declared variables even if unused. Treat impossible nullary constraints immediately.",
+        "derivation": [
+          "Use one-hot bits for the q possible values of each original variable, with exactly-one constraints.",
+          "For every forbidden tuple of a constraint, add a clause forbidding its one-hot value combination. Each relation has at most q^r tuples, a constant; each tuple clause has width at most r.",
+          "Every CSP assignment corresponds to exactly one Boolean assignment. There are qn variables and O_{q,r}(n+m) fixed-width clauses, so apply the general-density counting profile.",
+          "When m=O(n), the sparse profile gives B(n) times a polynomial factor. Fixed-target graph homomorphism and list homomorphism are included as binary-CSP examples."
+        ],
+        "caveats": [
+          "The constants q and r must be fixed. Succinct relations or growing domains require a separate analysis.",
+          "This is a direct encoding of the entire instance, not elimination of a modulator that loses extension multiplicities."
+        ]
+      },
+      "ja": {
+        "name": "固定領域・固定arityのCSP解の厳密計数",
+        "parameter": "nは変数数、mは制約数",
+        "restrictions": "領域サイズqとarity上限rは固定された正整数。制約関係は明示的に与える。",
+        "preprocessing": "未使用の宣言変数も残す。充足不能な0項制約は直接処理する。",
+        "derivation": [
+          "元の各変数のq個の値をone-hotビットで表し、ちょうど一つを選ぶ条件を課す。",
+          "各制約の禁止タプルごとに、その値の組合せを禁止する節を置く。タプル数は高々q^rで定数、各節の幅は高々r。",
+          "CSPの割当てとBoolean割当ては一対一。変数qn、節O_{q,r}(n+m)、幅固定なので一般密度の計数の仮定を適用する。",
+          "m=O(n)なら疎な仮定からB(n)に多項式因子を掛けた上界を得る。固定グラフへの準同型・リスト準同型は2項CSPの例として含まれる。"
+        ],
+        "caveats": [
+          "qとrを固定する。簡潔表現の関係や、入力とともに増える領域は別に評価する必要がある。",
+          "入力全体の直接符号化であり、拡張数を失うmodulatorの消去ではない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-count-perfect-matchings",
+      "track": "exact",
+      "measure_tex": "m",
+      "origin": "source-corollary",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "counting",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "encoding": {
+        "variables_tex": "O(m)",
+        "clauses_tex": "O(m)",
+        "width_tex": "3"
+      },
+      "comparison_status": "classical-benchmark-only",
+      "source_refs": [
+        {
+          "source_id": "sat26-paper",
+          "locator": "Corollary 1.3 and proof; the edge-measure refinement is a catalog deduction"
+        }
+      ],
+      "en": {
+        "name": "Counting Perfect Matchings",
+        "parameter": "m edges; n vertices are read in polynomial time",
+        "restrictions": "Unweighted simple undirected graphs. The graph with zero vertices has one empty perfect matching.",
+        "preprocessing": "If n=0, return one. If n>0 and an isolated vertex exists, return zero. Otherwise the active vertex count is at most 2m.",
+        "derivation": [
+          "Use one selection bit per edge. At every vertex, a linear-size counting circuit requires exactly one incident edge to be selected.",
+          "The sum of all vertex degrees is 2m, so the circuits and their bidirectional gate encodings have O(m) variables and clauses. Each selected edge set extends uniquely to gate values.",
+          "Apply the sparse counting assumption. Small m is handled directly; asymptotically the bound is B(m) times a polynomial in the full input length."
+        ],
+        "caveats": [
+          "Corollary 1.3 states 2^{o(n+m)}; removing the isolated-vertex cases gives the displayed edge-measure refinement.",
+          "A 0–1 matrix permanent is the bipartite special case. For a dense t×t matrix, m=Θ(t²); this route does not establish 2^{o(t)} time.",
+          "No arbitrary-weight permanent is claimed."
+        ]
+      },
+      "ja": {
+        "name": "Perfect Matchingの厳密計数",
+        "parameter": "mは辺数。頂点数nについては入力を多項式時間で読む",
+        "restrictions": "非重み付き単純無向グラフ。頂点数0のグラフの空perfect matchingは一つと数える。",
+        "preprocessing": "n=0なら1を返す。n>0で孤立点があれば0を返す。それ以外では活動する頂点数は高々2m。",
+        "derivation": [
+          "各辺に選択ビットを置き、各頂点で選んだ接続辺がちょうど一本という線形サイズの計数回路を作る。",
+          "次数の総和は2mなので、回路と両方向のゲート同値制約は変数・節ともにO(m)個。各辺集合からゲート値への拡張は一意。",
+          "疎な計数の仮定を適用する。小さいmは直接処理し、漸近的にはB(m)に入力長全体の多項式を掛けた上界となる。"
+        ],
+        "caveats": [
+          "Corollary 1.3の記述は2^{o(n+m)}。孤立点の場合を先に処理すると、表示した辺数による評価にできる。",
+          "0–1行列のpermanentは二部グラフの特殊例。密なt×t行列ではm=Θ(t²)なので、この方法から2^{o(t)}時間は出ない。",
+          "任意の重みを持つpermanentについては主張しない。"
+        ]
+      },
+      "comparison_note": {
+        "en": "For the bipartite 0–1 case, Ryser’s formula is a classical $2^t\\operatorname{poly}(t)$ bit-time benchmark for t×t matrices. The new guarantee B(m) is subexponential in t when m=O(t), but the substitution m=Θ(t²) gives no improvement over that benchmark. This is not a claim about the latest best bound.",
+        "ja": "二部グラフに対応する0–1の場合、t×t行列に対するRyserの公式の古典的な比較用上界は $2^t\\operatorname{poly}(t)$ ビット時間。B(m)はm=O(t)ならtに関して劣指数だが、m=Θ(t²)を代入した保証はこの比較用上界を改善しない。最新の最良上界を調べ尽くしたという主張ではない。"
+      },
+      "comparison_refs": [
+        {
+          "source_id": "servedio-wan2005",
+          "locator": "Section 2, page 3: Θ(t·2^t) arithmetic operations; 0–1 inputs have polynomial intermediate bit lengths"
+        }
+      ]
+    },
+    {
+      "id": "exact-count-degree-constrained-edge-sets",
+      "track": "exact",
+      "measure_tex": "m",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "counting",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "encoding": {
+        "variables_tex": "O(m)",
+        "clauses_tex": "O(m)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [],
+      "en": {
+        "name": "Counting Degree-Constrained Edge Sets",
+        "parameter": "m edges; input length also includes all degree bounds",
+        "restrictions": "Simple undirected graph with integer bounds lower_v ≤ deg_F(v) ≤ upper_v; count F⊆E.",
+        "preprocessing": "Intersect each degree interval with [0,deg_G(v)], returning zero if empty. Check isolated vertices separately; then discard them.",
+        "derivation": [
+          "Use one bit for each edge. At vertex v sum the incident bits using O(deg_G(v)) gates, then compare with the clipped lower and upper bounds.",
+          "The comparisons cost O(log(deg_G(v)+1)) gates at nonisolated vertices, so the entire circuit has O(m) gates. Equivalence encodings give one auxiliary extension per edge subset.",
+          "Thus O(m) variables and 3-clauses suffice, and the sparse counting profile applies. Reading even very long input bounds contributes only to the polynomial input-length factor."
+        ],
+        "caveats": [
+          "Includes all matchings, b-matchings, perfect matchings, edge covers, f-factors, and 2-factors through local degree bounds. These are applications of one shared argument.",
+          "A 2-factor need not be connected. This does not count Hamiltonian cycles.",
+          "The bounds are degree constraints, not arbitrary objective weights on edges."
+        ]
+      },
+      "ja": {
+        "name": "次数制約を満たす辺集合の厳密計数",
+        "parameter": "mは辺数。入力長には次数上下限の符号も含む",
+        "restrictions": "単純無向グラフと整数上下限lower_v ≤ deg_F(v) ≤ upper_vを与え、条件を満たすF⊆Eを数える。",
+        "preprocessing": "各次数区間を[0,deg_G(v)]と交差させ、空なら0を返す。孤立点の条件を確認した後、それらを除く。",
+        "derivation": [
+          "各辺にビットを置く。頂点vでincidentなビットをO(deg_G(v))ゲートで加算し、切り詰めた上下限と比較する。",
+          "非孤立頂点の比較回路はO(log(deg_G(v)+1))ゲートなので、全体でO(m)ゲート。同値符号化により各辺集合から補助変数への拡張は一意。",
+          "変数と幅3の節がともにO(m)個となり、疎な計数の仮定を使える。長い入力上下限を読む処理も、入力長に対する多項式因子に含まれる。"
+        ],
+        "caveats": [
+          "局所次数の上下限を指定することで、全matching、b-matching、perfect matching、edge cover、f-factor、2-factorを含む。一つの共通の議論の応用。",
+          "2-factorは連結とは限らない。Hamiltonian cycleの計数ではない。",
+          "次数の制約であり、辺の任意の目的関数重みを扱うものではない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-count-dominating-sets",
+      "track": "exact",
+      "measure_tex": "n+m",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "counting",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "encoding": {
+        "variables_tex": "O(n+m)",
+        "clauses_tex": "O(n+m)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [],
+      "en": {
+        "name": "Counting Dominating Sets",
+        "parameter": "n vertices plus m edges",
+        "restrictions": "Unweighted simple undirected graphs; all dominating vertex sets, or those of a specified cardinality.",
+        "preprocessing": "Keep the original graph. An isolated vertex is forced into every dominating set.",
+        "derivation": [
+          "Use one selection bit per vertex. For each vertex v build an OR circuit for $y_v=\\bigvee_{u\\in N[v]}x_u$ and require y_v=1.",
+          "The total neighborhood size is $\\sum_v |N[v]|=n+2m$. Bidirectional gate definitions produce O(n+m) variables and clauses and a unique extension for every chosen vertex set.",
+          "Apply the sparse counting profile. A specified cardinality requires only O(n) additional gates. If m=O(n), this becomes B(n) times a polynomial factor."
+        ],
+        "caveats": [
+          "A satisfiability-preserving long-clause replacement alone is not enough for counting; use full gate equivalences.",
+          "For dense graphs this n+m-measure bound need not improve vertex-exponential algorithms."
+        ]
+      },
+      "ja": {
+        "name": "Dominating Setの厳密計数",
+        "parameter": "nは頂点数、mは辺数。指数の尺度はn+m",
+        "restrictions": "非重み付き単純無向グラフ。全支配頂点集合、または指定したサイズの集合を数える。",
+        "preprocessing": "元のグラフを使う。孤立点は全ての支配集合に含まれる。",
+        "derivation": [
+          "各頂点に選択ビットを置き、各vについて $y_v=\\bigvee_{u\\in N[v]}x_u$ のOR回路を作ってy_v=1を要求する。",
+          "近傍サイズの総和は $\\sum_v |N[v]|=n+2m$。各ゲートを両方向の同値で定義すれば、変数・節がともにO(n+m)で、各頂点集合からの拡張は一意。",
+          "疎な計数の仮定を適用する。サイズ指定を加えても追加ゲートはO(n)。m=O(n)ならB(n)に多項式因子を掛けた上界になる。"
+        ],
+        "caveats": [
+          "単に充足可能性を保存する長節の分割だけでは計数保存は保証されない。完全なゲート同値制約を使う。",
+          "密なグラフでは、このn+mによる上界は頂点数による指数時間アルゴリズムの改善とは限らない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-minimum-dominating-set",
+      "track": "exact",
+      "measure_tex": "n+m",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "optimization",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "encoding": {
+        "variables_tex": "O(n+m)",
+        "clauses_tex": "O(n+m)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [],
+      "en": {
+        "name": "Minimum Dominating Set",
+        "parameter": "n vertices plus m edges",
+        "restrictions": "Unweighted simple undirected graphs; optimum cardinality and an optimum set.",
+        "preprocessing": "Use the closed-neighborhood OR circuits on the original graph.",
+        "derivation": [
+          "Combine the exact OR-gate encoding with the threshold $\\sum_v x_v\\le t$, adding O(n) cardinality gates.",
+          "Each threshold test has O(n+m) variables and clauses. Binary search over [0,n] and bit-fixing self-reduction use polynomially many calls and polynomial space.",
+          "The sparse SAT profile therefore gives B(n+m) times a polynomial input-length factor. This is subexponential in n when m=O(n)."
+        ],
+        "caveats": [
+          "The input has no degree restriction, but the n-based subexponential conclusion is stated only for sparse graphs.",
+          "No weighted variant is included."
+        ]
+      },
+      "ja": {
+        "name": "Minimum Dominating Set",
+        "parameter": "nは頂点数、mは辺数。指数の尺度はn+m",
+        "restrictions": "非重み付き単純無向グラフ。最小サイズと、そのサイズの支配集合を求める。",
+        "preprocessing": "元のグラフ上で閉近傍のOR回路を作る。",
+        "derivation": [
+          "ORゲートの同値符号化に閾値 $\\sum_v x_v\\le t$ を加える。追加の個数制約はO(n)ゲート。",
+          "各閾値判定は変数・節ともにO(n+m)。[0,n]での二分探索と、ビットを順に固定する自己帰着は多項式回の呼出し・多項式領域で行える。",
+          "疎なSAT仮定よりB(n+m)に入力長の多項式を掛けた上界となる。m=O(n)ならnに関する劣指数時間。"
+        ],
+        "caveats": [
+          "入力に次数制限はないが、頂点数nに関する劣指数という結論は疎なグラフについて述べている。",
+          "重み付き版は含めない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-max-cut",
+      "track": "exact",
+      "measure_tex": "n+m",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "optimization",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "encoding": {
+        "variables_tex": "O(n+m)",
+        "clauses_tex": "O(n+m)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [],
+      "en": {
+        "name": "Max-Cut",
+        "parameter": "n vertices plus m edges",
+        "restrictions": "Unweighted simple undirected graphs; optimum cut value and a realizing partition.",
+        "preprocessing": "Keep one side bit per vertex; isolated vertices may be assigned arbitrarily.",
+        "derivation": [
+          "For each edge uv define $y_{uv}\\leftrightarrow(x_u\\oplus x_v)$ with a constant-size equivalence encoding.",
+          "For a threshold t impose $\\sum_{uv\\in E}y_{uv}\\ge t$ using O(m) adder gates. The whole encoding has O(n+m) variables and clauses.",
+          "Binary search t in [0,m] to find the exact optimum, and fix the vertex bits to recover a cut. The polynomial number of calls preserves B(n+m) and polynomial space."
+        ],
+        "caveats": [
+          "This is exact optimization, distinct from the additive-approximation corollary for dense instances in the manuscript.",
+          "Sparse graphs give a vertex-subexponential bound; dense graphs do not follow from this accounting.",
+          "This entry does not count unordered cuts or distinct cut edge sets."
+        ]
+      },
+      "ja": {
+        "name": "Max-Cut",
+        "parameter": "nは頂点数、mは辺数。指数の尺度はn+m",
+        "restrictions": "非重み付き単純無向グラフ。最大cut値と、それを実現する分割を求める。",
+        "preprocessing": "各頂点に所属側のビットを置く。孤立点の側は任意に決められる。",
+        "derivation": [
+          "各辺uvについて $y_{uv}\\leftrightarrow(x_u\\oplus x_v)$ を定数サイズの同値制約で定義する。",
+          "閾値tに対し $\\sum_{uv\\in E}y_{uv}\\ge t$ をO(m)ゲートの加算器で表す。変数・節は全体でO(n+m)。",
+          "[0,m]でtを二分探索して最適値を求め、頂点ビットを固定してcutを復元する。呼出しが多項式回なのでB(n+m)という指数と多項式領域を保つ。"
+        ],
+        "caveats": [
+          "厳密な最適化であり、原稿にある密な入力の加法近似の系とは区別する。",
+          "疎なグラフなら頂点数に関する劣指数上界になる。密なグラフについてはこの評価からは出ない。",
+          "順序なしcutや、異なるcut辺集合の個数を数える項目ではない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-max-finite-csp",
+      "track": "exact",
+      "measure_tex": "n+m",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "draft",
+      "review_history": [],
+      "variant": "optimization",
+      "fixed_constants": [
+        "q",
+        "r"
+      ],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "encoding": {
+        "variables_tex": "O_{q,r}(n+m)",
+        "clauses_tex": "O_{q,r}(n+m)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [],
+      "en": {
+        "name": "Exact Finite-Domain Bounded-Arity Max-CSP",
+        "parameter": "n variables plus m constraints",
+        "restrictions": "Fixed positive q,r; unweighted explicit constraints. Includes fixed-width Max-SAT, Max-Cut, and Max-Dicut.",
+        "preprocessing": "Retain declared variables, or record removed unused variables when reconstructing a witness.",
+        "derivation": [
+          "Represent each domain variable by q one-hot bits, enforcing the exactly-one condition with bounded-fan-in gates. Compute the truth value of each constraint with a constant-size circuit, because q,r are fixed. All gates receive width-3 equivalence encodings.",
+          "Add a linear-size sum of the m satisfaction indicators and a threshold comparison. The circuit and its gate-equivalence encoding have O_{q,r}(n+m) variables and clauses.",
+          "Binary search over the possible numbers of satisfied constraints, then fix variable values to obtain a realizing assignment. Polynomially many sparse-SAT calls give the stated exact bound and polynomial space."
+        ],
+        "caveats": [
+          "The m satisfaction indicators matter: this does not give A(n) or B(n) for arbitrary dense instances.",
+          "No approximation error is allowed here, unlike an additive-approximation result.",
+          "Binary objective weights require separate bit-length accounting."
+        ]
+      },
+      "ja": {
+        "name": "固定領域・固定arityのMax-CSPの厳密最適化",
+        "parameter": "nは変数数、mは制約数。指数の尺度はn+m",
+        "restrictions": "q,rは固定された正整数。非重み付きで制約は明示的。固定幅Max-SAT、Max-Cut、Max-Dicutなどを含む。",
+        "preprocessing": "宣言変数を残すか、未使用変数を除く場合は解の復元時の値を記録する。",
+        "derivation": [
+          "各領域変数をq個のone-hotビットで表し、入力数を定数に制限したゲートでexactly-one条件を課す。q,rが固定なので、各制約が満たされるかを定数サイズの回路で計算できる。全ゲートを幅3の同値制約で符号化する。",
+          "m個の充足表示を線形サイズで加算し、閾値と比較する。ゲート同値による符号化を含めて、変数・節はともにO_{q,r}(n+m)。",
+          "満たす制約数を二分探索し、変数値を順に固定して最適な割当てを得る。疎なSATへの呼出しは多項式回なので、表示するexact上界と多項式領域を保つ。"
+        ],
+        "caveats": [
+          "m個の充足表示の変数を無視しない。任意の密な入力でA(n)やB(n)になるという主張ではない。",
+          "加法近似の結果とは異なり、ここでは近似誤差を許していない。",
+          "二進の目的関数重みは、ビット長を別に評価する必要がある。"
+        ]
+      }
+    }
+  ],
+  "candidates": [
+    {
+      "id": "cluster-editing-budget",
+      "claim_status": "not-obtained-by-this-route",
+      "review_status": "draft",
+      "source_refs": [
+        {
+          "source_id": "cluster-editing2010",
+          "locator": "Abstract and kernel statement"
+        }
+      ],
+      "en": {
+        "name": "Cluster Editing",
+        "parameter": "Edge-edit budget k",
+        "obstacle": "A linear-vertex kernel still leaves quadratically many potential edge choices in the natural encoding. This route does not establish O(k) Boolean variables.",
+        "next_step": "Investigate whether a representation with sufficiently few variables exists; distinguish weighted and unweighted kernel outputs."
+      },
+      "ja": {
+        "name": "Cluster Editing",
+        "parameter": "編集辺数の上限 k",
+        "obstacle": "線形頂点カーネルでも、自然な符号化で選ぶ頂点対は二乗個ある。この方法だけではBoolean変数O(k)を示せない。",
+        "next_step": "十分小さい変数数の表現を調べる。カーネルの出力が重み付きかどうかも区別する。"
+      },
+      "track": "fpt"
+    },
+    {
+      "id": "tournament-fvs-budget",
+      "claim_status": "not-obtained-by-this-route",
+      "review_status": "draft",
+      "source_refs": [
+        {
+          "source_id": "rainbow2023",
+          "locator": "Corollary 3, Section 7"
+        }
+      ],
+      "en": {
+        "name": "Feedback Vertex Set in Tournaments",
+        "parameter": "Vertex-deletion budget k",
+        "obstacle": "The cited kernel has $k^{1+O(1)/\\sqrt{\\log k}}$ vertices. Its stated size guarantee is too large to yield a subexponential-in-k bound by direct substitution.",
+        "next_step": "Check for improved kernels or a different direct encoding. This is not a lower bound against a faster algorithm."
+      },
+      "ja": {
+        "name": "Tournament Feedback Vertex Set",
+        "parameter": "削除頂点数の上限 k",
+        "obstacle": "引用したカーネルは $k^{1+O(1)/\\sqrt{\\log k}}$ 頂点。このサイズ保証をそのまま代入してもkに関する劣指数上界は出ない。",
+        "next_step": "改良されたカーネルや別の直接符号化を調べる。高速アルゴリズムを否定する下界ではない。"
+      },
+      "track": "fpt"
+    },
+    {
+      "id": "general-d-hitting-set",
+      "claim_status": "candidate",
+      "review_status": "draft",
+      "source_refs": [],
+      "en": {
+        "name": "General d-Hitting Set",
+        "parameter": "Solution budget k, fixed d",
+        "obstacle": "Bounded set size alone does not justify the O(k) variables used in the bounded-occurrence entry. No adequate complete route is supplied here.",
+        "next_step": "Locate and read current primary kernelization sources, then count variables and the preprocessing cost explicitly."
+      },
+      "ja": {
+        "name": "一般のd-Hitting Set",
+        "parameter": "解サイズの上限 k、dは固定",
+        "obstacle": "集合サイズの制限だけでは、出現回数有界の場合のO(k)変数という評価を使えない。この初版には十分な導出を掲載していない。",
+        "next_step": "現在の一次資料でカーネル結果を調べ、変数数と前処理コストを明示的に追う。"
+      },
+      "track": "fpt"
+    },
+    {
+      "id": "counting-structural-coloring",
+      "claim_status": "candidate",
+      "review_status": "draft",
+      "source_refs": [],
+      "en": {
+        "name": "Counting fixed-q colorings with a small modulator",
+        "parameter": "Vertex cover number or cograph-deletion number k",
+        "obstacle": "Eliminating outside vertices preserves existence of an extension but discards the number of extensions. Counting the boundary CNF gives the wrong quantity in general.",
+        "next_step": "Investigate a weighted or algebraic representation of extension multiplicities, with its own explicit source theorem and bit-complexity accounting."
+      },
+      "ja": {
+        "name": "小さいmodulatorを使う固定q彩色の計数",
+        "parameter": "vertex cover numberまたはcograph deletion number k",
+        "obstacle": "外側の消去は拡張の存在を保存するが、拡張数を捨てる。境界上のCNFの計数は一般に欲しい値と異なる。",
+        "next_step": "拡張数を重みや代数的表現で保持する方法を調べ、使用する定理とビット計算量を明示する。"
+      },
+      "track": "fpt"
+    },
+    {
+      "id": "exact-dense-permanent-vertex-measure",
+      "track": "exact",
+      "claim_status": "not-obtained-by-this-route",
+      "review_status": "draft",
+      "source_refs": [
+        {
+          "source_id": "sat26-paper",
+          "locator": "Corollary 1.3"
+        },
+        {
+          "source_id": "servedio-wan2005",
+          "locator": "Section 2, page 3"
+        }
+      ],
+      "en": {
+        "name": "Dense 0–1 Permanent",
+        "parameter": "Matrix dimension n, not the number m of nonzero entries",
+        "obstacle": "The edge-variable encoding gives B(m); at $m=\\Theta(n^2)$ its guarantee is $2^{O(n^2/\\sqrt{\\log n})}$, which does not improve the classical vertex/dimension-exponential benchmark.",
+        "next_step": "Investigate a representation handling dense linear factors without paying for all matrix incidences. Treat any stronger algebraic theorem as a separate assumption profile."
+      },
+      "ja": {
+        "name": "密な0–1行列のpermanent",
+        "parameter": "非零要素数mではなく、行列の次数n",
+        "obstacle": "辺変数の符号化はB(m)を与える。$m=\\Theta(n^2)$ では保証は $2^{O(n^2/\\sqrt{\\log n})}$ となり、古典的な行列次数による指数時間の比較用上界を改善しない。",
+        "next_step": "行列の全incidenceにコストを払わずに、密な線形因子を扱う表現を調べる。より強い代数的定理を使うなら独立の仮定として記録する。"
+      }
+    },
+    {
+      "id": "exact-hamiltonian-cycle-vertex-measure",
+      "track": "exact",
+      "claim_status": "candidate",
+      "review_status": "draft",
+      "source_refs": [
+        {
+          "source_id": "sat26-paper",
+          "locator": "Proposition 3.4 and Appendix D, Theorem D.1; no completed application is asserted"
+        }
+      ],
+      "en": {
+        "name": "Hamiltonian Cycle, especially sparse graphs",
+        "parameter": "Number n of vertices; separately record m edges",
+        "obstacle": "Local degree-two constraints count 2-factors, which need not be connected. The earlier Cut&Count idea requires an algebraic counting routine beyond the current SAT profiles, including weight and coefficient bit complexity.",
+        "next_step": "Audit the manuscript’s general algebra routine as a separate profile. In particular, a polynomial ring of degree O(m²) cannot simply be assumed to satisfy the linear truncation bound of the tensor theorem. Track randomness and isolate the connectivity step."
+      },
+      "ja": {
+        "name": "Hamiltonian Cycle、特に疎なグラフ",
+        "parameter": "頂点数n。辺数mも別に記録する",
+        "obstacle": "局所的な次数2の制約が数えるのは2-factorであり、連結とは限らない。以前のCut&Count案には、現在のSAT仮定以外の代数的計数ルーチンと、重み・係数のビット計算量の確認が必要。",
+        "next_step": "原稿の一般の代数的計数ルーチンを独立の仮定として点検する。特に次数O(m²)の多項式環が、テンソル定理の線形の打切り条件を満たすと仮定しない。乱択性と連結性の処理を追う。"
+      }
+    },
+    {
+      "id": "exact-chromatic-number",
+      "track": "exact",
+      "claim_status": "not-obtained-by-this-route",
+      "review_status": "draft",
+      "source_refs": [
+        {
+          "source_id": "sat26-paper",
+          "locator": "Corollary 1.3 explicitly fixes q"
+        }
+      ],
+      "en": {
+        "name": "Chromatic Number",
+        "parameter": "Number n of vertices; the number of colors is not fixed",
+        "obstacle": "The fixed-q encoding has q-dependent size, width, and hidden constants. Applying it for all q up to n does not establish a uniform subexponential-in-n optimization bound.",
+        "next_step": "Seek a uniform encoding or direct algorithm for an unrestricted number of colors, with an explicit total runtime."
+      },
+      "ja": {
+        "name": "Chromatic Number",
+        "parameter": "頂点数n。色数は固定しない",
+        "obstacle": "固定qの符号化は、変数数・幅・隠れた定数がqに依存する。qをnまで動かして適用しても、nに関する一様な劣指数最適化上界は示せない。",
+        "next_step": "色数に制限を置かない一様な符号化か直接アルゴリズムを調べ、総時間を明示する。"
+      }
+    },
+    {
+      "id": "exact-binary-weight-tsp",
+      "track": "exact",
+      "claim_status": "candidate",
+      "review_status": "draft",
+      "source_refs": [],
+      "en": {
+        "name": "Binary-Weighted TSP",
+        "parameter": "Number n of vertices, with weight bit length tracked separately",
+        "obstacle": "Besides connectivity, a weight-generating polynomial can have degree depending on numerical weight values, rather than their bit length. The local degree-constraint counting entry does not resolve either issue.",
+        "next_step": "Seek a method whose nonexponential cost is polynomial in weight bit length; separately prove connectivity and exact optimization."
+      },
+      "ja": {
+        "name": "二進重み付きTSP",
+        "parameter": "頂点数n。重みのビット長を別に追う",
+        "obstacle": "連結性に加えて、重みの生成多項式の次数がビット長ではなく重みの数値に依存し得る。局所次数制約の計数の項目からは、どちらも解決しない。",
+        "next_step": "指数以外の部分が重みのビット長の多項式になる方法を調べ、連結性と厳密最適化をそれぞれ証明する。"
+      }
+    },
+    {
+      "id": "exact-binary-subset-sum",
+      "track": "exact",
+      "claim_status": "not-obtained-by-this-route",
+      "review_status": "draft",
+      "source_refs": [],
+      "en": {
+        "name": "Binary Subset Sum",
+        "parameter": "Number n of integers; maximum bit length b is separate",
+        "obstacle": "A direct addition circuit uses O(nb) gates after trivial target checks. Applying the sparse SAT profile at this size does not establish a bound subexponential in n for unrestricted binary weights.",
+        "next_step": "Study whether numerical bit length can be kept in a polynomial factor instead of the exponent, or record an explicit restricted-bit-length consequence."
+      },
+      "ja": {
+        "name": "二進入力のSubset Sum",
+        "parameter": "整数の個数n。最大ビット長bは別の量",
+        "obstacle": "自明な目標値を処理した後の直接の加算回路はO(nb)ゲート。このサイズで疎なSAT仮定を使っても、一般の二進重みでnに関する劣指数上界は示せない。",
+        "next_step": "数値のビット長を指数から切り離して多項式因子に置けるか調べるか、ビット長を制限した正確な系を記録する。"
+      }
+    }
+  ]
+}

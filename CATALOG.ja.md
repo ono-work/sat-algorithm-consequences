@@ -25,7 +25,7 @@ $$
 
 | 問題 | パラメータ | 固定定数 | 計算時間の因子 | 確認 |
 | --- | --- | --- | --- | --- |
-| [Vertex Cover](docs/ja/vertex-cover-solution-size.md) | 解サイズの上限 k | なし | $A(k)$ | `draft` |
+| [Vertex Cover](docs/ja/vertex-cover-solution-size.md) | 解サイズの上限 k | なし | $A(k)$ | `ai-audited` |
 | [Cluster Vertex Deletion](docs/ja/cluster-vertex-deletion.md) | 削除頂点数の上限 k | なし | $A(k)$ | `draft` |
 | [Bounded-Degree Vertex Deletion](docs/ja/bounded-degree-vertex-deletion.md) | 削除頂点数の上限 k | d | $A(k)$ | `draft` |
 | [Component Order Connectivity](docs/ja/component-order-connectivity.md) | 削除頂点数の上限 k | ell | $A(k)$ | `draft` |
@@ -37,6 +37,7 @@ $$
 | [出現回数有界のd-Hitting Set](docs/ja/bounded-occurrence-hitting-set.md) | 選ぶ要素数の上限 k | d, r | $B(k)$ | `draft` |
 | [出現回数有界のd-Set Packing](docs/ja/bounded-occurrence-set-packing.md) | 選ぶ互いに素な集合の目標個数 k | d, r | $B(k)$ | `draft` |
 | [固定領域・固定arityのMax-CSP](docs/ja/max-csp-absolute-target.md) | 満たす制約数の絶対目標 k | q, r | $B(k)$ | `draft` |
+| [有界次数グラフのEdge Dominating Set](docs/ja/bounded-degree-edge-dominating-set.md) | 選択辺数の上限 k | maximum degree Δ ≥ 1 | $B(k)$ | `ai-audited` |
 
 ## 厳密指数時間アルゴリズム
 
@@ -55,6 +56,7 @@ $$
 | [Minimum Dominating Set](docs/ja/exact-minimum-dominating-set.md) | 最適化 | $n+m$ | $B(n+m)$ | `draft` |
 | [Max-Cut](docs/ja/exact-max-cut.md) | 最適化 | $n+m$ | $B(n+m)$ | `draft` |
 | [固定領域・固定arityのMax-CSPの厳密最適化](docs/ja/exact-max-finite-csp.md) | 最適化 | $n+m$ | $B(n+m)$ | `draft` |
+| [Minimum Edge Dominating Set](docs/ja/exact-edge-dominating-set.md) | 最適化 | $m$ | $B(m)$ | `ai-audited` |
 
 **既知結果との比較：** 以下に列挙した項目を除き、体系的な比較は未実施です。記録済みの評価：
 

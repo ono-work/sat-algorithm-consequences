@@ -24,16 +24,18 @@ The initial focus is the **October 25, 2026 revision** of *The Exponential Time 
 
 ## Current snapshot
 
+The latest October 28 update expands the [Vertex Cover derivation](docs/en/vertex-cover-solution-size.md) and [cardinality-encoding explanation](METHODS.md), with exact gate clauses, a worked example, and the distinction between O(k) variables and O(k²) clauses. It also adds [Edge Dominating Set with fixed maximum degree](docs/en/bounded-degree-edge-dominating-set.md) and [exact optimization measured by the number of edges](docs/en/exact-edge-dominating-set.md). The solution-size parameter on unrestricted graphs is recorded separately as an unresolved transfer in [Candidates](CANDIDATES.md).
+
 The October 28, 2026 update adds [**Complexity-Theoretic Consequences**](COMPLEXITY.md): the conditional equality FPT = M[1], concrete miniaturized problems and their parameters, the scope of W-hierarchy and ETH-based lower-bound consequences, the distinction between two subexponential time scales in the NP-versus-EXP question, and circuit lower bounds. This companion note is a Codex-prepared draft with no human verification recorded; its statements are not counted as additional algorithm entries.
 
-The catalog contains **23 entries: 12 FPT and 11 exact-algorithm entries**, plus **9 candidate/obstacle notes**, in English and Japanese. All are labeled **draft**. Most of the research, derivation, and writing were carried out by Codex; this is not a collection whose correctness has been carefully verified by a human. The exact entries cover counting and unweighted optimization, including optimum witnesses. A systematic comparison against the latest best algorithms remains open; the perfect-matching entry records one classical permanent benchmark explicitly as such.
+The catalog contains **25 entries: 13 FPT and 12 exact-algorithm entries**, plus **10 candidate/obstacle notes**, in English and Japanese. The expanded VC entry, the two EDS entries, and the general-EDS candidate have scoped **AI audit** records; all other entries and candidates remain **draft**. No human review is recorded. Most of the research, derivation, and writing were carried out by Codex; an AI audit does not certify the underlying SAT theorem or replace human verification. The exact entries cover counting and unweighted optimization, including optimum witnesses. A systematic comparison against the latest best algorithms remains open; the perfect-matching entry records one classical permanent benchmark explicitly as such.
 
 | Track | Representative scope | Main scale |
 | --- | --- | --- |
 | [FPT](FPT.md) | Decision algorithms using linear kernels, small modulators, or target-based size reductions | Parameter $k$ |
-| [Exact algorithms](EXACT.md) | Counting independent sets, fixed-color colorings, CSP solutions and constrained edge sets; optimizing Independent Set, Dominating Set, Max-Cut and fixed-domain Max-CSP | $n$, $m$, or $n+m$, as stated per entry |
+| [Exact algorithms](EXACT.md) | Counting independent sets, fixed-color colorings, CSP solutions and constrained edge sets; optimizing Independent Set, Dominating Set, Edge Dominating Set, Max-Cut and fixed-domain Max-CSP | $n$, $m$, or $n+m$, as stated per entry |
 | [Complexity theory](COMPLEXITY.md) | Class equalities, precisely parameterized M[1]-complete examples, limits of classical-class conclusions, and circuit lower bounds | Declared class, parameter, reduction type, and model |
-| [Candidates and obstacles](CANDIDATES.md) | Incomplete routes including dense permanent by matrix dimension, Hamiltonian Cycle, Chromatic Number and binary-weight problems | The specific target scale, not a generic problem-name claim |
+| [Candidates and obstacles](CANDIDATES.md) | Incomplete routes including unrestricted Edge Dominating Set by solution size, dense permanent by matrix dimension, Hamiltonian Cycle, Chromatic Number and binary-weight problems | The specific target scale, not a generic problem-name claim |
 
 Three qualitative exact-counting consequences—independent sets, fixed-color colorings and perfect matchings—already appear in the source manuscript's Corollary 1.3. Their entries are labeled `source-corollary`, with quantitative refinements identified. Other entries record `catalog-deduction`. These provenance labels do not assert novelty.
 

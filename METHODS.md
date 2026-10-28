@@ -26,15 +26,118 @@ For exact algorithms, replace k by the explicitly declared size measure s (for e
 
 ## 2. Cardinality in linear size / 個数制約の線形符号化
 
-Sum N input bits using a balanced binary addition tree. At level j there are O(N/2^j) additions of O(j)-bit numbers. Thus the number of bounded-fan-in gates is
+The binary-counter/comparator approach is an established technique; see Carsten Sinz, [*Towards an Optimal CNF Encoding of Boolean Cardinality Constraints*](https://www.carstensinz.de/techreports/CardConstraints.pdf), CP 2005, author technical report §4, especially §§4.1–4.2 and Theorem 2. Below we give a full-equivalence implementation so that its variable count, width and counting behavior can be checked directly. These properties are derived from the gates below, rather than attributed to every optimized encoding in that paper.
+
+二進カウンタと比較器を使う方法は既知の手法です。Carsten Sinzの[上記論文](https://www.carstensinz.de/techreports/CardConstraints.pdf)（CP 2005、著者の技術報告版§4、特に§§4.1–4.2とTheorem 2）を参照してください。以下では全ゲートを同値で符号化する実装を示し、変数数・節幅・計数の保存を直接確認できるようにします。これらの性質は以下のゲートから導くもので、同論文の最適化された符号化がすべて同じ性質を持つという意味ではありません。
+
+### 2.1 Exact gate clauses / ゲートを表す節
+
+Use a fresh output variable z for each binary gate. The following CNFs express the indicated equivalences exactly; each uses at most four clauses of width at most three.
+
+二入力ゲートごとに新しい出力変数zを置きます。次のCNFは各同値を正確に表し、一ゲート当たり高々4節、各節の幅は3以下です。
 
 $$
-O\!\left(\sum_{j\ge1}\frac{Nj}{2^j}\right)=O(N).
+\begin{aligned}
+z\leftrightarrow(a\land b)\quad&:\quad
+(\neg z\lor a)\land(\neg z\lor b)\land(z\lor\neg a\lor\neg b),\\
+z\leftrightarrow(a\lor b)\quad&:\quad
+(z\lor\neg a)\land(z\lor\neg b)\land(\neg z\lor a\lor b),\\
+z\leftrightarrow(a\oplus b)\quad&:\quad
+(a\lor b\lor\neg z)\land(a\lor\neg b\lor z)\\
+&\phantom{{}:\quad}\land(\neg a\lor b\lor z)\land(\neg a\lor\neg b\lor\neg z).
+\end{aligned}
 $$
 
-A comparison with the target adds O(log N) gates after handling trivial targets. Encode each gate by equivalences, not only one-way implications. This yields O(N) auxiliary variables and constant-width clauses; every input assignment has a unique gate extension. The construction handles ≤, ≥, and =.
+Here ⊕ is exclusive OR. Literals such as ¬s can be used as gate inputs, and fixed constants can be substituted and simplified. In an acyclic circuit, the input bits determine every gate output uniquely. Adding a unit clause requiring the final output to be true therefore preserves the number of accepted input assignments. Merely preserving satisfiability with one-way implications would not by itself justify this counting claim.
 
-N個の入力ビットを平衡二分木状に加算します。第j段ではO(j)ビットの加算がO(N/2^j)個なので、総ゲート数は上式のとおりO(N)です。自明な目標値を処理した後の比較器はO(log N)ゲート。各ゲートを片向きの含意だけでなく同値として符号化すれば、補助変数と固定幅節はO(N)個で、入力からゲート値への拡張は一意です。≤、≥、=のいずれも扱えます。
+⊕は排他的論理和です。ゲートの入力には¬sのようなリテラルも使え、定数は代入して簡約できます。閉路のない回路では、入力ビットから全ゲートの出力が一意に決まります。最終出力を真にする単位節を加えると、受理される入力割当てと充足割当てが一対一に対応します。片向きの含意で充足可能性だけを保存しても、この計数の主張はそれだけでは正当化されません。
+
+### 2.2 A balanced addition tree / 平衡加算木
+
+To encode x₁+⋯+xᵣ≤K, first handle trivial bounds (including r=0, K<0 and K≥r). Sum the r input bits in a balanced binary tree, padding to the next power of two with zero constants if necessary. Each node adds the binary sums of its two children. A ripple-carry adder needs a constant number of the above gates per bit, so adding O(j)-bit numbers uses O(j) gates.
+
+x₁+⋯+xᵣ≤Kを符号化するには、まずr=0、K<0、K≥rなどの自明な場合を処理します。r個の入力ビットを平衡二分木状に加算し、必要なら次の2の冪まで定数0で埋めます。各節点で二つの子の二進和を足します。桁上がりを順に伝える加算器は一桁当たり定数個の上記ゲートで作れるため、O(j)ビットの数の加算はO(j)ゲートで済みます。
+
+At level j there are O(r/2^j) such additions. The upper levels add longer numbers but contain fewer adders; all intermediate sum and carry gates are included in
+
+第j段にはこの加算がO(r/2^j)個あります。上段ほど足す数の桁数は増えますが、加算器の個数は減ります。途中の和と桁上がりを含む総ゲート数は
+
+$$
+O\!\left(\sum_{j\ge1}\frac{rj}{2^j}\right)=O(r)
+\qquad\left(\sum_{j\ge1}\frac{j}{2^j}=2\right).
+$$
+
+The sum has b=O(log(r+1)) bits, enough to represent every value from 0 to r. Thus the counter uses O(r) auxiliary variables and O(r) clauses, not O(r log r).
+
+和は0からrまでを表せるb=O(log(r+1))ビットです。したがって、カウンタの補助変数と節はO(r)個であり、O(r log r)個にはなりません。
+
+### 2.3 Comparing the binary sum with K / 二進和とKの比較
+
+Write the sum as s_{b−1}⋯s₀ and the fixed threshold as K_{b−1}⋯K₀, with leading zeros as needed. Set q₀=1 and process bits from least significant to most significant. Define
+
+和をs_{b−1}⋯s₀、固定閾値をK_{b−1}⋯K₀と二進表記し、必要なら先頭を0で埋めます。q₀=1とし、下位ビットから上位ビットへ次のように定義します。
+
+$$
+q_{j+1}\leftrightarrow
+\begin{cases}
+\neg s_j\land q_j,&K_j=0,\\
+\neg s_j\lor q_j,&K_j=1,
+\end{cases}
+\qquad 0\le j<b.
+$$
+
+The invariant is that q_j is true exactly when the lowest j bits of the sum represent a number at most the lowest j bits of K. The next bit is more significant than all the bits already processed, which gives the two cases above. Encode each equivalence using §2.1 and add the unit clause q_b. The threshold bits are constants; q₀ can also be a constant or a variable fixed by a unit clause. The comparator therefore adds only O(log(r+1)) gates and clauses of width at most three.
+
+q_jは「和の下位jビットが表す数が、Kの下位jビットが表す数以下である」ときに限り真、という不変条件を持ちます。次のビットはそれまでの全ビットより上位なので、上の二通りで比較を更新できます。各同値を§2.1の節に展開し、最後に単位節q_bを加えます。閾値の各ビットは定数です。q₀も定数として扱うか、単位節で固定します。比較器が加えるのはO(log(r+1))ゲートと、幅3以下の節だけです。
+
+Together, the counter and comparator give O(r) auxiliary variables and O(r) clauses of width at most three, with a unique extension precisely for the inputs satisfying the cardinality bound. The same sum circuit also supports ≥ (compare K−1 and require a false comparison output) and = (fix the sum bits to K), after handling trivial bounds.
+
+カウンタと比較器を合わせても、補助変数O(r)、節O(r)、節幅3以下です。個数制約を満たす入力に限り、充足割当てへの拡張が一意に存在します。自明な場合を処理した上で、同じ和の回路から≥（K−1との比較結果を偽に固定）や=（和のビットをKに固定）も扱えます。
+
+### 2.4 Four inputs with a bound of two / 4入力の和を2以下にする例
+
+For x₁+x₂+x₃+x₄≤2, first add two pairs of input bits, then add their two-bit results. The following are all binary gates of the types in §2.1:
+
+x₁+x₂+x₃+x₄≤2では、まず入力を二つずつ足し、その2ビットの結果どうしを足します。以下はすべて§2.1の二入力ゲートです。
+
+$$
+\begin{aligned}
+a_0&\leftrightarrow x_1\oplus x_2,&a_1&\leftrightarrow x_1\land x_2,\\
+b_0&\leftrightarrow x_3\oplus x_4,&b_1&\leftrightarrow x_3\land x_4,\\
+s_0&\leftrightarrow a_0\oplus b_0,&c&\leftrightarrow a_0\land b_0,\\
+t&\leftrightarrow a_1\oplus b_1,&s_1&\leftrightarrow t\oplus c,\\
+u&\leftrightarrow a_1\land b_1,&v&\leftrightarrow t\land c,\\
+s_2&\leftrightarrow u\lor v.&&
+\end{aligned}
+$$
+
+These gates enforce x₁+x₂+x₃+x₄=4s₂+2s₁+s₀. The desired comparison is just the following two clauses:
+
+これらのゲートによりx₁+x₂+x₃+x₄=4s₂+2s₁+s₀となります。求める比較は次の2節です。
+
+$$
+\neg s_2\ \land\ (\neg s_1\lor\neg s_0).
+$$
+
+They allow the binary sums 000, 001 and 010, and reject 011 (three) and 100 (four). Expanding each gate with §2.1 and conjoining these two clauses gives the actual CNF; the arithmetic equality is an explanation of its meaning, not an additional SAT primitive.
+
+二進和000、001、010を許し、011（3）と100（4）を拒否します。各ゲートを§2.1で展開し、この2節とすべてANDで結んだものが実際のCNFです。算術の等式はその意味の説明であり、SATに別の演算を追加するわけではありません。
+
+### 2.5 Vertex Cover: variables and clauses / Vertex Coverの変数数と節数
+
+In the [Vertex Cover entry](docs/en/vertex-cover-solution-size.md), the unweighted kernel has r≤2k vertices and a reduced budget k′. Assign one selection bit x_v to each kernel vertex. Every kernel edge uv contributes the binary clause x_u∨x_v directly, using no auxiliary variable. Add the circuit above for ∑_v x_v≤k′. For a simple kernel graph,
+
+[Vertex Coverの項目](docs/ja/vertex-cover-solution-size.md)で用いる非重み付きカーネルはr≤2k頂点と残りの予算k′を持ちます。各頂点に選択ビットx_vを一つ置き、各辺uvには二項節x_u∨x_vを直接置きます。辺ごとの補助変数は不要です。∑_v x_v≤k′には上の回路を加えます。単純グラフなので、
+
+$$
+N=r+O(r)=O(k),\qquad
+M=|E'|+O(r)=O(k^2),\qquad
+\text{width}\le3.
+$$
+
+The general-density SAT assumption permits polynomially many clauses: substituting these counts gives A(k)L^{O(1)}, including polynomial-time kernelization. Here the linear quantity is the variable count; the clause count may be quadratic. A B(k) bound cannot be read from the sparse assumption when |E′|=Θ(k²). Applying the forced-variable padding of §5 in that case would introduce Θ(k²) variables, losing the O(k) variable bound.
+
+一般密度のSATの仮定は多項式個の節を許すため、上の変数数と節数を代入すると、多項式時間のカーネル化も含めてA(k)L^{O(1)}を得ます。線形なのは変数数であり、節数は二次になり得ます。|E′|=Θ(k²)なら、疎なSATの仮定からB(k)をそのまま得ることはできません。この場合に§5の固定変数による密度調整をするとΘ(k²)個の変数を加えることになり、O(k)変数という評価を失います。
 
 Unique gate extension does not make an earlier decision kernel counting-preserving.
 

@@ -10,6 +10,26 @@ Data date: 2026-10-28
 
 These entries are not established consequences in this catalog. Failure of a particular kernel/encoding route is not an impossibility result, a lower bound, or a statement about the best known algorithm.
 
+## Edge Dominating Set on general graphs
+
+ID: `edge-dominating-set-budget`
+
+Track: `fpt`
+
+Claim status: `not-obtained-by-this-route`; review: `ai-audited`
+
+**Parameter.** Selected-edge budget k, with no maximum-degree or sparsity restriction
+
+**Obstacle for this route.** The explicit Xiao–Kloks–Poon kernel used for this route has at most 2k²+2k vertices and O(k³) edges. The shared endpoint-OR encoding uses one variable per remaining edge, plus O(m′) auxiliary variables, so its guarantee is N+M = O(k³), not O(k). Substituting into the sparse SAT bound gives only $2^{O(k^3/\sqrt{\log k})}L^{O(1)}$; it does not establish a subexponential-in-k consequence. Having a VC of size at most 2k is only necessary for EDS of size at most k: two disjoint edges with k=1 are a counterexample to the converse. The guarantees of ordinary VC kernelization do not by themselves justify fixing the same vertices as mandatory endpoints for Edge Dominating Set. On the path a-b-c-d, {a,c} and {b,c} are both minimum vertex covers, but requiring {a,c} to be endpoints needs two selected edges, whereas the single edge bc dominates the graph. Section 2 of the source explains the additional matching step after a cover is fixed.
+
+**Next step.** Seek a fixed-width CNF with O(k) total Boolean variables, including the witness/verification of edge pairing, or a different reduction that preserves EDS. Polynomial-time matching verification alone gives no linear-variable bound. This records the limitation of one explicit kernel/encoding route, not a lower bound, an impossibility result, or a latest-best kernel claim. The general-m exact entry and fixed-maximum-degree FPT entry are separate positive consequences.
+
+**Sources.**
+
+- **`xiao-kloks-poon2011`** — [Mingyu Xiao, Ton Kloks, and Sheung-Hung Poon, New Parameterized Algorithms for Edge Dominating Set](https://arxiv.org/pdf/1104.4160v1). Version: arXiv:1104.4160v1, 21 April 2011; 18-page preprint. Locator: Section 2, printed page 2 (matching after choosing a minimal vertex cover); Section 6, Lemma 9, printed page 11 (2k²+2k vertices and O(k³) edges).
+
+- 2026-10-28 — Codex agent fpt_other_routes (`ai`): 2026-10-28 VC/EDS revision; reviewed payload SHA-256 47f78b888dd6413f7b8aec47bd37ea6051e40acf1f1a8403aef83e734014fcf7 (canonical JSON without review fields), METHODS.md SHA-256 bb914959f31c04d956ecd3b1a24952f469200a2d0b8b5b3bd554e60c17655750. Checked both languages, the cited kernel route and size substitution, the two-disjoint-edge and P4 examples, and the restriction to a failed route rather than an impossibility claim. Applied the auditor-recommended qualification of ordinary VC kernel guarantees. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、引用カーネルとサイズ代入、独立な2辺とP4の例、不可能性ではなく特定経路の限界であることを確認。監査提案に従いVCの保証に関する英日表現を限定。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。
+
 ## Cluster Editing
 
 ID: `cluster-editing-budget`

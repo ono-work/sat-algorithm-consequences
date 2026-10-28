@@ -57,6 +57,18 @@
       "version": "arXiv:1601.00164v1, 2 January 2016",
       "locator": "Theorem 1 (Vertex Cover) and Theorem 3 (Bounded-Degree Vertex Deletion)"
     },
+    "sinz2005": {
+      "title": "Carsten Sinz, Towards an Optimal CNF Encoding of Boolean Cardinality Constraints",
+      "url": "https://www.carstensinz.de/techreports/CardConstraints.pdf",
+      "version": "Author-hosted 14-page technical report accompanying the CP 2005 paper; accessed 28 October 2026",
+      "locator": "Section 2, Definition 2 (extension semantics); Sections 4.1–4.2 and Theorem 2 (parallel binary counter, comparator, and linear-size encoding). The gate-by-gate 3-CNF construction in METHODS.md is an explicit standard construction, not an attribution of its width, unique-extension property, or exact constants to the source's optimized encoding."
+    },
+    "xiao-kloks-poon2011": {
+      "title": "Mingyu Xiao, Ton Kloks, and Sheung-Hung Poon, New Parameterized Algorithms for Edge Dominating Set",
+      "url": "https://arxiv.org/pdf/1104.4160v1",
+      "version": "arXiv:1104.4160v1, 21 April 2011; 18-page preprint",
+      "locator": "Section 2, printed page 2 (vertex covers, endpoints, and matching); Section 6, Lemma 9 (2k²+2k vertices and O(k³) edges in linear time and space). Used as one explicit kernel route, not as a latest-best claim."
+    },
     "rainbow2023": {
       "title": "Bessy, Bougeret, Thilikos, Wiederrecht, Kernelization for Graph Packing and Hitting Problems via Rainbow Matching",
       "url": "https://arxiv.org/html/2207.06874v4",
@@ -147,8 +159,15 @@
       "id": "vertex-cover-solution-size",
       "origin": "catalog-deduction",
       "claim_status": "derivation-available",
-      "review_status": "draft",
-      "review_history": [],
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent linear_kernel_fpt",
+          "scope": "2026-10-28 VC/EDS revision; reviewed payload SHA-256 06d183085de02ad012c4c57944b4c68f9026d45c786b4f7b23e343490ba4ed4b (canonical JSON without review fields), METHODS.md SHA-256 bb914959f31c04d956ecd3b1a24952f469200a2d0b8b5b3bd554e60c17655750. Checked both languages, all AND/OR/XOR gate clauses, the balanced-adder count, comparator invariant, four-input example, VC variable/clause accounting, general-density substitution, and the scope of the Sinz reference. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、ゲートの節、平衡加算木、比較器、4入力例、VCの変数数・節数、一般密度版への代入、Sinzの引用範囲を確認。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
       "variant": "decision",
       "fixed_constants": [],
       "depends_on": [
@@ -166,36 +185,52 @@
         {
           "source_id": "xiao2016",
           "locator": "Theorem 1 and the following 2k-kernel discussion"
+        },
+        {
+          "source_id": "sinz2005",
+          "locator": "Section 2, Definition 2, and Section 4: auxiliary-variable semantics and a linear-size parallel-counter encoding of a cardinality bound"
         }
       ],
       "en": {
         "name": "Vertex Cover",
         "parameter": "Solution budget k",
         "restrictions": "Unweighted simple undirected graphs.",
-        "preprocessing": "Apply the Nemhauser–Trotter 2k-vertex kernel, with the reduced budget k′ ≤ k.",
+        "preprocessing": "Apply the Nemhauser–Trotter kernel in polynomial time. Handle trivial YES/NO instances directly; otherwise obtain (G′, k′), with k′ ≤ k and r = |V(G′)| ≤ 2k′ ≤ 2k. Let m′ = |E(G′)|; only m′ = O(k²), not m′ = O(k), is guaranteed.",
         "derivation": [
-          "For each kernel vertex v use a deletion bit x_v. For every edge uv add the clause $x_u\\vee x_v$.",
-          "Encode $\\sum_v x_v\\le k^\\prime$ using the linear-size balanced binary-adder construction in METHODS.md. Gate equivalences add O(k) variables and 3-clauses.",
-          "The formula is satisfiable exactly when the kernel has a vertex cover within budget. It has O(k) variables and O(k²) clauses; use the general-density assumption. Kernelization and encoding use polynomial time and space."
+          "For each kernel vertex v use one selection bit x_v. For every edge uv output the existing-variable clause $x_u\\vee x_v$ directly. This contributes r variables and m′ two-literal clauses: no auxiliary variable is needed for an edge, and no conjunction circuit for all edge clauses is introduced.",
+          "Encode the budget with a CNF C(x,y) satisfying $\\exists y\\,C(x,y)\\iff\\sum_v x_v\\le k^\\prime$ for every fixed choice of x. The auxiliary variables y represent intermediate sum bits, carries, and comparison results. Full gate equivalences force their values; they cannot be chosen to understate the number of selected vertices.",
+          "Sum the r selection bits in a balanced binary tree. At level j there are O(r/2^j) additions of O(j)-bit numbers, each using O(j) bounded-fan-in gates. The total is $O(r\\sum_{j\\ge1}j/2^j)=O(r)$. Comparing the final sum with the known budget k′ uses O(log(r+1)) further gates. AND, OR, and XOR gates each require one output variable and a constant number of clauses of width at most three. Thus the complete cardinality constraint adds O(r) variables and O(r) clauses.",
+          "For example, when four selection bits have computed sum $4s_2+2s_1+s_0$, a budget of two is imposed by the two clauses $\\neg s_2$ and $\\neg s_1\\vee\\neg s_0$. The sum bits themselves must also satisfy the adder-gate clauses. See [METHODS.md, Section 2](../../METHODS.md) for the exact gates, the worked example, and the comparator for an arbitrary budget.",
+          "Conjoin C(x,y) with all edge clauses. An extension y exists exactly when x selects a vertex cover of size at most k′. The final counts are N = O(r) = O(k), M = m′ + O(r) = O(k²), and w ≤ 3. Including variable indices, the CNF bit length is O(k² log(k+2)).",
+          "Apply the general-density SAT assumption, which has no fixed-density requirement. Substituting N = O(k) and M = O(k²) gives $k^{O(1)}2^{O(k\\log\\log k/\\sqrt{\\log k})}$. Constructing and reading the quadratic number of clauses is included in the polynomial factor. Add polynomial-time kernelization and encoding to obtain the displayed bound in the original input length L, with polynomial space.",
+          "This is a conditional consequence assembled from a known kernel, a standard cardinality encoding, and the assumed SAT bound. The cardinality technique is established prior work, represented here by Sinz's parallel-counter construction; neither the encoding nor inclusion of this consequence is presented as a novelty claim."
         ],
         "caveats": [
           "This parameter is the total solution size, not excess above an LP bound.",
-          "The decision kernel does not automatically preserve the number of vertex covers."
+          "The decision kernel does not automatically preserve the number of vertex covers, even though the gate variables have a unique extension.",
+          "This is a linear-variable encoding, not a linear-total-size CNF. A 2k-vertex graph can have Θ(k²) edges, including YES instances such as K_{k,k}. The sparse bound with exponent O(k/sqrt(log k)) is not justified by this route.",
+          "Encoding the edge clauses through a fresh output gate for each edge would unnecessarily add O(k²) variables and lose this derivation. Only the cardinality circuit requires gate variables; edge clauses are already in CNF."
         ]
       },
       "ja": {
         "name": "Vertex Cover",
         "parameter": "解サイズの上限 k",
         "restrictions": "非重み付き単純無向グラフ。",
-        "preprocessing": "Nemhauser–Trotterによる2k頂点カーネルを使う。縮約後の予算を k′ ≤ k とする。",
+        "preprocessing": "Nemhauser–Trotterのカーネル化を多項式時間で行う。自明なYES/NOを処理した後、k′ ≤ k、r = |V(G′)| ≤ 2k′ ≤ 2kを満たす(G′, k′)を得る。m′ = |E(G′)|とすると、保証されるのはm′ = O(k²)であり、m′ = O(k)ではない。",
         "derivation": [
-          "カーネルの各頂点 v に削除変数 x_v を置き、各辺 uv に節 $x_u\\vee x_v$ を加える。",
-          "$\\sum_v x_v\\le k^\\prime$ は METHODS.md の平衡二進加算器で符号化する。ゲートの同値制約による追加変数と幅3の節はO(k)個。",
-          "式が充足可能であることと、予算内のvertex coverが存在することが同値になる。変数O(k)、節O(k²)なので一般密度の仮定を使う。前処理・符号化は多項式時間・領域。"
+          "カーネルの各頂点vに選択変数x_vを一つ置く。各辺uvには、既存の変数を使う節 $x_u\\vee x_v$ をそのまま出力する。この段階では変数r個、二項節m′個である。辺ごとの補助変数や、全辺の節を結ぶAND回路は作らない。",
+          "個数制約には、各xの固定値について $\\exists y\\,C(x,y)\\iff\\sum_v x_v\\le k^\\prime$ を満たすCNF C(x,y)を使う。補助変数yは途中の和のビット、繰り上がり、比較結果を表す。各ゲートの完全な同値制約で値が強制されるため、選択数を実際より少なく見せる値を自由に選ぶことはできない。",
+          "r個の選択ビットを平衡二分木状に加算する。第j段ではO(j)ビットの加算器がO(r/2^j)個あり、各加算器はO(j)個の入力数が有界なゲートで作れる。総ゲート数は $O(r\\sum_{j\\ge1}j/2^j)=O(r)$。最終和と既知の予算k′との比較にはさらにO(log(r+1))ゲートを使う。AND・OR・XORは各出力変数一つと定数個の幅3以下の節で書けるので、個数制約全体の追加変数・節はともにO(r)個である。",
+          "例えば4個の選択ビットの和を $4s_2+2s_1+s_0$ と計算した場合、予算2は $\\neg s_2$ と $\\neg s_1\\vee\\neg s_0$ の2節で課せる。和のビットには、加算が正しいことを強制するゲートの節も必要である。ゲートの具体的なCNF、計算例、任意の予算との比較器は [METHODS.md第2節](../../METHODS.md) を参照。",
+          "C(x,y)と全辺の節の論理積を取る。補助変数yへの拡張が存在することと、xの選んだ頂点がサイズk′以下のvertex coverであることが同値になる。最終的にN = O(r) = O(k)、M = m′ + O(r) = O(k²)、w ≤ 3。変数番号の記述まで含むCNFのビット長はO(k² log(k+2))である。",
+          "固定密度を要求しないSATの一般密度版を適用する。N = O(k)、M = O(k²)を代入すると $k^{O(1)}2^{O(k\\log\\log k/\\sqrt{\\log k})}$ となる。二乗個の節の生成・読み取りも多項式因子に含まれる。カーネル化と符号化の多項式時間を加えると、元入力長Lに関する表示の上界と多項式領域が得られる。",
+          "既知のカーネル、標準的な個数制約の符号化、仮定したSAT上界を組み合わせた条件付きの帰結である。個数制約の技法はSinzの並列カウンタなどの先行研究にあるものであり、符号化自体にも、この帰結の掲載にも新規性を主張しない。"
         ],
         "caveats": [
           "パラメータは解サイズそのものであり、LP値からの超過量ではない。",
-          "通常の判定カーネルから解の個数の保存は導けない。"
+          "ゲート変数への拡張が一意でも、通常の判定カーネルからvertex coverの個数の保存は導けない。",
+          "線形なのは変数数であり、CNF全体のサイズではない。2k頂点のグラフでもΘ(k²)辺を持ち得て、K_{k,k}のようなYESインスタンスもある。この方法から指数O(k/sqrt(log k))の疎な場合の上界は正当化できない。",
+          "各辺の節を新しい出力ゲートで表すと、不要なO(k²)個の変数を加えてしまい、この導出が成立しなくなる。ゲート変数を使うのは個数制約の回路であり、辺の条件は既にCNFなのでそのまま使う。"
         ]
       },
       "track": "fpt",
@@ -830,6 +865,81 @@
       },
       "track": "fpt",
       "measure_tex": "k"
+    },
+    {
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent fpt_other_routes",
+          "scope": "2026-10-28 VC/EDS revision; reviewed payload SHA-256 902e9e51d244ad68b737785bf397296593d4fcd9e1062c1795cedcbe8c4a1cee (canonical JSON without review fields), METHODS.md SHA-256 bb914959f31c04d956ecd3b1a24952f469200a2d0b8b5b3bd554e60c17655750. Checked both languages, the fixed-maximum-degree cutoff, endpoint OR encoding, cardinality circuit, width and size accounting, and sparse-profile substitution. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、固定最大次数でのNO判定、端点OR、個数制約、節幅・サイズ、疎な上界への代入を確認。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: standard cardinality encodings; the explicit width-three gate-equivalence construction is given in METHODS.md"
+        },
+        {
+          "source_id": "xiao-kloks-poon2011",
+          "locator": "Sections 1–2: definition of Edge Dominating Set and relation to endpoints/vertex covers; the SAT encoding and bounds here are catalog deductions"
+        }
+      ],
+      "id": "bounded-degree-edge-dominating-set",
+      "track": "fpt",
+      "measure_tex": "k",
+      "variant": "decision",
+      "fixed_constants": [
+        "maximum degree Δ ≥ 1"
+      ],
+      "encoding": {
+        "variables_tex": "O_\\Delta(k)",
+        "clauses_tex": "O_\\Delta(k)",
+        "width_tex": "3"
+      },
+      "en": {
+        "name": "Edge Dominating Set on bounded-degree graphs",
+        "parameter": "Selected-edge budget k",
+        "restrictions": "Unweighted simple undirected graphs with maximum degree at most a fixed constant Δ ≥ 1.",
+        "preprocessing": "Let m = |E(G)|. Handle edgeless graphs directly. Return NO if m > (2Δ−1)k; otherwise keep the graph and remove isolated vertices.",
+        "derivation": [
+          "One selected edge uv dominates at most deg(u)+deg(v)−1 ≤ 2Δ−1 edges, including itself. Hence every YES instance satisfies m ≤ (2Δ−1)k. After the rejection rule, m = O_Δ(k) and there are at most 2m nonisolated vertices.",
+          "Use one choice bit x_e per remaining edge. For each vertex compute $z_v\\leftrightarrow\\bigvee_{e\\ni v}x_e$ by shared binary OR gates with full equivalences. For each edge uv add $z_u\\vee z_v$. These conditions exactly express edge domination.",
+          "Add $\\sum_e x_e\\le k$ with the linear cardinality circuit. The [general-m encoding](exact-edge-dominating-set.md) has O(m) variables and clauses, so here N+M = O_Δ(k) and w ≤ 3.",
+          "Apply the sparse SAT assumption, using forced-zero density padding if necessary. The preprocessing and encoding are polynomial-time and decision-preserving; the resulting bound is B(k)L^{O(1)}, with constants depending on fixed Δ."
+        ],
+        "caveats": [
+          "Δ must be fixed independently of k and of the input. The displayed constants do not provide the same bound for unrestricted maximum degree.",
+          "The budget is the number of selected edges. Without the maximum-degree restriction, one selected edge can dominate arbitrarily many edges and the rejection rule gives no O(k) edge bound.",
+          "This is a direct size-reduction and encoding argument, not a claim that the ordinary Vertex Cover kernel preserves Edge Dominating Set."
+        ]
+      },
+      "ja": {
+        "name": "有界次数グラフのEdge Dominating Set",
+        "parameter": "選択辺数の上限 k",
+        "restrictions": "最大次数が固定定数Δ ≥ 1以下の、非重み付き単純無向グラフ。",
+        "preprocessing": "m = |E(G)|とする。辺のないグラフを直接処理する。m > (2Δ−1)kならNOとし、それ以外ではグラフを保持して孤立頂点を除く。",
+        "derivation": [
+          "選択した1辺uvが支配する辺数は、自分自身を含めて高々deg(u)+deg(v)−1 ≤ 2Δ−1である。したがってYESならm ≤ (2Δ−1)kが必要である。NO判定後はm = O_Δ(k)であり、非孤立頂点数も高々2mとなる。",
+          "残った各辺に選択変数x_eを置く。頂点ごとに共有する二入力OR回路と完全な同値制約で $z_v\\leftrightarrow\\bigvee_{e\\ni v}x_e$ を計算し、各辺uvに $z_u\\vee z_v$ を加える。これらは辺支配と同値である。",
+          "線形サイズの個数制約 $\\sum_e x_e\\le k$ を加える。[一般グラフの辺数mに対する符号化](exact-edge-dominating-set.md)はO(m)変数・節なので、ここではN+M = O_Δ(k)、w ≤ 3となる。",
+          "必要なら0固定変数による密度調整を行い、疎なSATの仮定を適用する。前処理と符号化は多項式時間で判定を保存する。固定したΔに定数が依存するB(k)L^{O(1)}上界を得る。"
+        ],
+        "caveats": [
+          "Δはkや入力から独立な定数に固定する。表示の定数を使って、最大次数に制限がない場合にも同じ上界が成り立つとはしない。",
+          "予算は選択する辺の本数である。最大次数の制限がなければ、1本の辺でも任意に多くの辺を支配でき、上のNO判定からO(k)辺の上限は得られない。",
+          "サイズ上限と直接符号化による導出であり、通常のVertex CoverのカーネルがEdge Dominating Setを保存するという主張ではない。"
+        ]
+      }
     },
     {
       "id": "exact-count-independent-sets",
@@ -1473,9 +1583,118 @@
           "二進の目的関数重みは、ビット長を別に評価する必要がある。"
         ]
       }
+    },
+    {
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent fpt_other_routes",
+          "scope": "2026-10-28 VC/EDS revision; reviewed payload SHA-256 0b22e892ec630c37863f0c89b307c32981c8401ca431c7087b0971de28f21951 (canonical JSON without review fields), METHODS.md SHA-256 bb914959f31c04d956ecd3b1a24952f469200a2d0b8b5b3bd554e60c17655750. Checked both languages, the original-edge-count measure, endpoint OR and cardinality encodings, unique gate extension, optimization and witness query counts, and polynomial space. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、元の辺数という尺度、端点ORと個数制約、一意拡張、最適化・復元の呼出し回数、多項式領域を確認。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
+      "depends_on": [
+        "sat26-sparse",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "sparse",
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: standard cardinality encodings; the explicit width-three gate-equivalence construction is given in METHODS.md"
+        },
+        {
+          "source_id": "xiao-kloks-poon2011",
+          "locator": "Sections 1–2: definition of Edge Dominating Set and relation to endpoints/vertex covers; the SAT encoding and bounds here are catalog deductions"
+        }
+      ],
+      "id": "exact-edge-dominating-set",
+      "track": "exact",
+      "measure_tex": "m",
+      "variant": "optimization",
+      "fixed_constants": [],
+      "encoding": {
+        "variables_tex": "O(m)",
+        "clauses_tex": "O(m)",
+        "width_tex": "3"
+      },
+      "en": {
+        "name": "Minimum Edge Dominating Set",
+        "parameter": "m = |E(G)|, the original number of edges; n = |V(G)| is not the exponential-time measure",
+        "restrictions": "Unweighted simple undirected graphs. Compute the minimum cardinality and an optimum edge set.",
+        "preprocessing": "Remove isolated vertices, which do not affect edge domination. Handle m = 0 directly; otherwise the remaining graph has at most 2m vertices. For threshold queries, handle budgets outside [0,m] directly.",
+        "derivation": [
+          "For each edge e introduce a selection bit x_e. For each nonisolated vertex v, introduce an endpoint indicator z_v and enforce that z_v is true exactly when at least one selected edge is incident with v.",
+          "Implement $z_v\\leftrightarrow\\bigvee_{e\\ni v}x_e$ with binary OR gates and full equivalences. Degree-one vertices need only an equality with their incident edge bit. There are $O(\\sum_v\\deg(v))=O(m)$ gates in total; each gate has a constant number of clauses of width at most three.",
+          "For every edge uv add $z_u\\vee z_v$. This holds exactly when uv is selected or shares an endpoint with a selected edge. Add the cardinality encoding $\\sum_e x_e\\le b$ for a queried budget b, using [METHODS.md, Section 2](../../METHODS.md).",
+          "The threshold formula has N = O(m), M = O(m), and width at most three. Every selected edge set has a unique gate extension. Thus the fixed-density SAT assumption, with forced-zero padding if needed, decides the threshold in B(m) times a polynomial in the original input length L. All construction and gate evaluation costs are polynomial.",
+          "Binary search over b in [0,m] finds the optimum with O(log(m+1)) threshold queries. Keep the optimum budget, then fix each edge bit to zero if the resulting formula is satisfiable, and to one otherwise. At most m further SAT queries recover an optimum set; added unit clauses preserve the size and width bounds. Calls are sequential, so the stated time and polynomial-space bound hold."
+        ],
+        "caveats": [
+          "The exponent is measured in edges m. It yields B(n) on classes with m = O(n), but does not establish a vertex-based subexponential bound for arbitrary dense graphs.",
+          "This entry does not assert an A(k) or B(k) bound for the solution budget k on general graphs. See the general-k candidate and the separate fixed-maximum-degree FPT entry.",
+          "The edge-selection variables number m before auxiliary variables are added. A direct line-graph construction or separate long domination clauses is not needed; shared endpoint OR circuits keep the total at O(m).",
+          "No weighted objective or latest-best comparison is claimed."
+        ]
+      },
+      "ja": {
+        "name": "Minimum Edge Dominating Set",
+        "parameter": "m = |E(G)| は元の辺数。n = |V(G)| は指数時間の尺度ではない",
+        "restrictions": "非重み付き単純無向グラフ。最小辺数と最適な辺集合を求める。",
+        "preprocessing": "辺支配に影響しない孤立頂点を除く。m = 0は直接処理し、それ以外では残る頂点数は高々2m。しきい値判定では[0,m]の外にある予算を直接処理する。",
+        "derivation": [
+          "各辺eに選択変数x_eを置く。各非孤立頂点vには端点表示z_vを置き、選択した辺が少なくとも1本vに接続するとき、かつそのときに限ってz_vが真となるようにする。",
+          "$z_v\\leftrightarrow\\bigvee_{e\\ni v}x_e$ を二入力ORゲートと完全な同値制約で表す。次数1の頂点では接続する辺の変数との同値だけでよい。総ゲート数は $O(\\sum_v\\deg(v))=O(m)$ であり、各ゲートの節数は定数、幅は高々3である。",
+          "各辺uvに $z_u\\vee z_v$ を加える。これはuv自身が選ばれるか、選ばれた辺と端点を共有することと同値である。問い合わせる予算bについて、[METHODS.md第2節](../../METHODS.md)の個数制約 $\\sum_e x_e\\le b$ を加える。",
+          "しきい値判定の式はN = O(m)、M = O(m)、幅高々3となる。各選択辺集合からゲート変数への拡張は一意である。必要なら0固定変数によるpaddingを加え、固定密度のSATの仮定から、B(m)と元入力長Lの多項式因子の積で判定できる。式の生成とゲートの評価は多項式時間である。",
+          "bを[0,m]で二分探索し、O(log(m+1))回のしきい値判定で最適値を得る。その予算を固定し、各辺の変数を順に0へ固定して充足可能なら0、そうでなければ1とする。高々m回の追加SAT呼出しで最適辺集合を復元できる。追加する単位節はサイズ・幅の上界を保ち、逐次呼出しにより表示の時間・多項式領域を保つ。"
+        ],
+        "caveats": [
+          "指数の尺度は辺数mである。m = O(n)のクラスではB(n)になるが、任意の密なグラフで頂点数に関する劣指数上界を示すものではない。",
+          "一般グラフの解サイズkについてA(k)やB(k)を主張する項目ではない。一般kの候補・障害と、最大次数を固定した別のFPT項目を参照。",
+          "補助変数を加える前から、辺の選択変数はm個ある。line graphの明示的な構築や、各辺の長い支配節は必要なく、端点ごとに共有するOR回路で全体をO(m)に保つ。",
+          "重み付きの目的関数や、最新の最良上界との比較は主張しない。"
+        ]
+      }
     }
   ],
   "candidates": [
+    {
+      "id": "edge-dominating-set-budget",
+      "track": "fpt",
+      "claim_status": "not-obtained-by-this-route",
+      "review_status": "ai-audited",
+      "source_refs": [
+        {
+          "source_id": "xiao-kloks-poon2011",
+          "locator": "Section 2, printed page 2 (matching after choosing a minimal vertex cover); Section 6, Lemma 9, printed page 11 (2k²+2k vertices and O(k³) edges)"
+        }
+      ],
+      "en": {
+        "name": "Edge Dominating Set on general graphs",
+        "parameter": "Selected-edge budget k, with no maximum-degree or sparsity restriction",
+        "obstacle": "The explicit Xiao–Kloks–Poon kernel used for this route has at most 2k²+2k vertices and O(k³) edges. The shared endpoint-OR encoding uses one variable per remaining edge, plus O(m′) auxiliary variables, so its guarantee is N+M = O(k³), not O(k). Substituting into the sparse SAT bound gives only $2^{O(k^3/\\sqrt{\\log k})}L^{O(1)}$; it does not establish a subexponential-in-k consequence. Having a VC of size at most 2k is only necessary for EDS of size at most k: two disjoint edges with k=1 are a counterexample to the converse. The guarantees of ordinary VC kernelization do not by themselves justify fixing the same vertices as mandatory endpoints for Edge Dominating Set. On the path a-b-c-d, {a,c} and {b,c} are both minimum vertex covers, but requiring {a,c} to be endpoints needs two selected edges, whereas the single edge bc dominates the graph. Section 2 of the source explains the additional matching step after a cover is fixed.",
+        "next_step": "Seek a fixed-width CNF with O(k) total Boolean variables, including the witness/verification of edge pairing, or a different reduction that preserves EDS. Polynomial-time matching verification alone gives no linear-variable bound. This records the limitation of one explicit kernel/encoding route, not a lower bound, an impossibility result, or a latest-best kernel claim. The general-m exact entry and fixed-maximum-degree FPT entry are separate positive consequences."
+      },
+      "ja": {
+        "name": "一般グラフのEdge Dominating Set",
+        "parameter": "選択辺数の上限k。最大次数や疎性の制限なし",
+        "obstacle": "この方法で使うXiao–Kloks–Poonの明示的なカーネルは、高々2k²+2k頂点・O(k³)辺である。端点OR回路を共有する符号化でも、残った各辺の選択変数に加えてO(m′)個の補助変数を使うため、保証されるのはN+M = O(k³)でありO(k)ではない。疎なSAT上界への代入は $2^{O(k^3/\\sqrt{\\log k})}L^{O(1)}$ にとどまり、kに関する劣指数の帰結を示さない。サイズ2k以下のVCの存在は、サイズk以下のEDSの必要条件にすぎず、独立な2辺とk=1が逆向きの反例になる。通常のVCのカーネル化の保証だけでは、同じ頂点をEDSの必須端点として固定することは正当化できない。道a-b-c-dでは{a,c}と{b,c}はともに最小VCだが、{a,c}を端点に含めるには2本の選択辺が必要な一方、中央の1辺bcで全辺を支配できる。出典の第2節は、被覆を固定した後に必要なマッチング計算を説明している。",
+        "next_step": "辺の組合せの証拠・検証も含めて、全Boolean変数数をO(k)に保つ固定幅CNFか、EDSを保存する別の帰着を調べる。マッチングを多項式時間で検証できることだけでは、変数数が線形という保証にならない。特定のカーネルと符号化による導出の限界を記録するもので、下界・不可能性・最新最良のカーネルに関する主張ではない。一般グラフの辺数mに対するexact項目と、最大次数を固定したFPT項目は、別の導出済みの帰結として扱う。"
+      },
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent fpt_other_routes",
+          "scope": "2026-10-28 VC/EDS revision; reviewed payload SHA-256 47f78b888dd6413f7b8aec47bd37ea6051e40acf1f1a8403aef83e734014fcf7 (canonical JSON without review fields), METHODS.md SHA-256 bb914959f31c04d956ecd3b1a24952f469200a2d0b8b5b3bd554e60c17655750. Checked both languages, the cited kernel route and size substitution, the two-disjoint-edge and P4 examples, and the restriction to a failed route rather than an impossibility claim. Applied the auditor-recommended qualification of ordinary VC kernel guarantees. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、引用カーネルとサイズ代入、独立な2辺とP4の例、不可能性ではなく特定経路の限界であることを確認。監査提案に従いVCの保証に関する英日表現を限定。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ]
+    },
     {
       "id": "cluster-editing-budget",
       "claim_status": "not-obtained-by-this-route",

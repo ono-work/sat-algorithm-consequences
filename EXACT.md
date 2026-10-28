@@ -32,6 +32,7 @@ $$
 | [Minimum Dominating Set](docs/en/exact-minimum-dominating-set.md) | Optimization | $n+m$ | $B(n+m)$ | `draft` |
 | [Max-Cut](docs/en/exact-max-cut.md) | Optimization | $n+m$ | $B(n+m)$ | `draft` |
 | [Exact Finite-Domain Bounded-Arity Max-CSP](docs/en/exact-max-finite-csp.md) | Optimization | $n+m$ | $B(n+m)$ | `draft` |
+| [Minimum Edge Dominating Set](docs/en/exact-edge-dominating-set.md) | Optimization | $m$ | $B(m)$ | `ai-audited` |
 
 **Comparison status:** entries not listed below have not been systematically compared with known algorithms. Recorded assessments:
 

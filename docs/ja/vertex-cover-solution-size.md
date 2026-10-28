@@ -20,7 +20,7 @@
 | 固定定数 | なし |
 | 問題の版 | `decision` |
 | 由来 / 主張の状態 | `catalog-deduction` / `derivation-available` |
-| 確認状態 | `draft` |
+| 確認状態 | `ai-audited` |
 | 比較の状態 | `not-systematically-surveyed` |
 
 **本カタログでの導出。** この項目は本カタログで組み立てた導出を記録しており、帰結全体が出典の定理に明記されているとは主張していません。確認状態と既知結果との比較状態は別途示しています。
@@ -46,7 +46,7 @@ $$
 
 ## 前処理
 
-Nemhauser–Trotterによる2k頂点カーネルを使う。縮約後の予算を k′ ≤ k とする。
+Nemhauser–Trotterのカーネル化を多項式時間で行う。自明なYES/NOを処理した後、k′ ≤ k、r = |V(G′)| ≤ 2k′ ≤ 2kを満たす(G′, k′)を得る。m′ = |E(G′)|とすると、保証されるのはm′ = O(k²)であり、m′ = O(k)ではない。
 
 ## 符号化のサイズ
 
@@ -58,16 +58,26 @@ Nemhauser–Trotterによる2k頂点カーネルを使う。縮約後の予算�
 
 ## 導出
 
-1. カーネルの各頂点 v に削除変数 x_v を置き、各辺 uv に節 $x_u\vee x_v$ を加える。
+1. カーネルの各頂点vに選択変数x_vを一つ置く。各辺uvには、既存の変数を使う節 $x_u\vee x_v$ をそのまま出力する。この段階では変数r個、二項節m′個である。辺ごとの補助変数や、全辺の節を結ぶAND回路は作らない。
 
-2. $\sum_v x_v\le k^\prime$ は METHODS.md の平衡二進加算器で符号化する。ゲートの同値制約による追加変数と幅3の節はO(k)個。
+2. 個数制約には、各xの固定値について $\exists y\,C(x,y)\iff\sum_v x_v\le k^\prime$ を満たすCNF C(x,y)を使う。補助変数yは途中の和のビット、繰り上がり、比較結果を表す。各ゲートの完全な同値制約で値が強制されるため、選択数を実際より少なく見せる値を自由に選ぶことはできない。
 
-3. 式が充足可能であることと、予算内のvertex coverが存在することが同値になる。変数O(k)、節O(k²)なので一般密度の仮定を使う。前処理・符号化は多項式時間・領域。
+3. r個の選択ビットを平衡二分木状に加算する。第j段ではO(j)ビットの加算器がO(r/2^j)個あり、各加算器はO(j)個の入力数が有界なゲートで作れる。総ゲート数は $O(r\sum_{j\ge1}j/2^j)=O(r)$。最終和と既知の予算k′との比較にはさらにO(log(r+1))ゲートを使う。AND・OR・XORは各出力変数一つと定数個の幅3以下の節で書けるので、個数制約全体の追加変数・節はともにO(r)個である。
+
+4. 例えば4個の選択ビットの和を $4s_2+2s_1+s_0$ と計算した場合、予算2は $\neg s_2$ と $\neg s_1\vee\neg s_0$ の2節で課せる。和のビットには、加算が正しいことを強制するゲートの節も必要である。ゲートの具体的なCNF、計算例、任意の予算との比較器は [METHODS.md第2節](../../METHODS.md) を参照。
+
+5. C(x,y)と全辺の節の論理積を取る。補助変数yへの拡張が存在することと、xの選んだ頂点がサイズk′以下のvertex coverであることが同値になる。最終的にN = O(r) = O(k)、M = m′ + O(r) = O(k²)、w ≤ 3。変数番号の記述まで含むCNFのビット長はO(k² log(k+2))である。
+
+6. 固定密度を要求しないSATの一般密度版を適用する。N = O(k)、M = O(k²)を代入すると $k^{O(1)}2^{O(k\log\log k/\sqrt{\log k})}$ となる。二乗個の節の生成・読み取りも多項式因子に含まれる。カーネル化と符号化の多項式時間を加えると、元入力長Lに関する表示の上界と多項式領域が得られる。
+
+7. 既知のカーネル、標準的な個数制約の符号化、仮定したSAT上界を組み合わせた条件付きの帰結である。個数制約の技法はSinzの並列カウンタなどの先行研究にあるものであり、符号化自体にも、この帰結の掲載にも新規性を主張しない。
 
 ## 注意点と比較上の限界
 
 - パラメータは解サイズそのものであり、LP値からの超過量ではない。
-- 通常の判定カーネルから解の個数の保存は導けない。
+- ゲート変数への拡張が一意でも、通常の判定カーネルからvertex coverの個数の保存は導けない。
+- 線形なのは変数数であり、CNF全体のサイズではない。2k頂点のグラフでもΘ(k²)辺を持ち得て、K_{k,k}のようなYESインスタンスもある。この方法から指数O(k/sqrt(log k))の疎な場合の上界は正当化できない。
+- 各辺の節を新しい出力ゲートで表すと、不要なO(k²)個の変数を加えてしまい、この導出が成立しなくなる。ゲート変数を使うのは個数制約の回路であり、辺の条件は既にCNFなのでそのまま使う。
 
 判定を保存するカーネルは、解の個数を自動的に保存するものではありません。
 
@@ -78,9 +88,10 @@ Nemhauser–Trotterによる2k頂点カーネルを使う。縮約後の予算�
 ## 出典と参照箇所
 
 - **`xiao2016`** — [Mingyu Xiao, On a generalization of Nemhauser and Trotter’s local optimization theorem](https://arxiv.org/html/1601.00164v1). 版：arXiv:1601.00164v1, 2 January 2016. 参照箇所：Theorem 1 and the following 2k-kernel discussion.
+- **`sinz2005`** — [Carsten Sinz, Towards an Optimal CNF Encoding of Boolean Cardinality Constraints](https://www.carstensinz.de/techreports/CardConstraints.pdf). 版：Author-hosted 14-page technical report accompanying the CP 2005 paper; accessed 28 October 2026. 参照箇所：Section 2, Definition 2, and Section 4: auxiliary-variable semantics and a linear-size parallel-counter encoding of a cardinality bound.
 
 ## 確認履歴
 
-状態：`draft`
+状態：`ai-audited`
 
-氏名・日付・対象範囲を伴う人による確認は記録されていません。
+- 2026-10-28 — Codex agent linear_kernel_fpt (`ai`): 2026-10-28 VC/EDS revision; reviewed payload SHA-256 06d183085de02ad012c4c57944b4c68f9026d45c786b4f7b23e343490ba4ed4b (canonical JSON without review fields), METHODS.md SHA-256 bb914959f31c04d956ecd3b1a24952f469200a2d0b8b5b3bd554e60c17655750. Checked both languages, all AND/OR/XOR gate clauses, the balanced-adder count, comparator invariant, four-input example, VC variable/clause accounting, general-density substitution, and the scope of the Sinz reference. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、ゲートの節、平衡加算木、比較器、4入力例、VCの変数数・節数、一般密度版への代入、Sinzの引用範囲を確認。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。

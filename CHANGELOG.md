@@ -1,5 +1,19 @@
 # Changelog / 更新履歴
 
+## 2026-10-28 — Vertex Cover encoding and Edge Dominating Set / VCの符号化とEdge Dominating Set
+
+- Expanded the bilingual Vertex Cover derivation: edge clauses use existing vertex variables, the cardinality circuit adds only O(k) variables, and the final O(k)-variable/O(k²)-clause formula uses the general-density SAT assumption. The bound itself is unchanged.
+- Expanded METHODS.md Section 2 with exact AND/OR/XOR clauses, the balanced-adder size proof, a comparator for an arbitrary budget, and the four-input/at-most-two example. Added Sinz's parallel-counter reference and distinguished its optimized encoding from the explicit width-three, unique-extension implementation used here.
+- Added Edge Dominating Set on fixed-maximum-degree graphs as a B(k) FPT decision consequence, and general-graph exact optimization with an optimum witness as a B(m) consequence measured by the original edge count.
+- Added a separate general-k EDS obstacle note. The checked quadratic-vertex/cubic-edge kernel does not yield O(k) Boolean variables; the vertex-cover necessary condition and a P4 example do not justify reusing VC kernel guarantees. This is not an impossibility or latest-best claim.
+- The snapshot now has 13 FPT entries, 12 exact entries, and 10 candidate/obstacle notes. Scoped AI audits are recorded for the three updated/new entries and the general-EDS note; no human review or verification of the assumed SAT theorem is asserted. Existing SAT assumptions remain pinned and unchanged.
+
+- VCの英日導出を拡充。辺の節は既存の頂点変数だけで書け、個数制約の追加変数はO(k)、全体は変数O(k)・節O(k²)となるため、SATの一般密度版を使うことを明示。上界自体は変更していません。
+- METHODS.md第2節にAND・OR・XORの具体的な節、平衡加算木のサイズ評価、任意の予算との比較器、4入力の和を2以下にする例を追加。Sinzの文献を加え、その最適化された符号化と、ここで用いる幅3・一意拡張の明示的実装を区別しました。
+- 最大次数を固定したEDSのB(k)のFPT判定と、元の辺数mを尺度にする一般グラフのB(m)の厳密最適化・最適解復元を追加。
+- 一般kのEDSは別の候補・障害として記録。確認した二乗頂点・三乗辺カーネルではO(k)変数が得られず、頂点被覆という必要条件やP4の例からもVCの保証をそのまま使えないことを説明。不可能性や最新最良の主張ではありません。
+- 現在はFPT 13項目、厳密12項目、候補10項目。更新・追加した3項目と一般EDSの記録には範囲限定のAI監査を記録し、人間の確認や元のSAT定理の検証とは扱いません。SATの仮定と固定版は維持しています。
+
 ## 2026-10-28 — Complexity-theoretic consequences / 計算量理論への影響
 
 - Added matched English and Japanese companion notes, [COMPLEXITY.md](COMPLEXITY.md) and [COMPLEXITY.ja.md](COMPLEXITY.ja.md), with conditional scope, draft status, and exact primary-source locations.

@@ -32,6 +32,7 @@ $$
 | [Minimum Dominating Set](docs/ja/exact-minimum-dominating-set.md) | 最適化 | $n+m$ | $B(n+m)$ | `draft` |
 | [Max-Cut](docs/ja/exact-max-cut.md) | 最適化 | $n+m$ | $B(n+m)$ | `draft` |
 | [固定領域・固定arityのMax-CSPの厳密最適化](docs/ja/exact-max-finite-csp.md) | 最適化 | $n+m$ | $B(n+m)$ | `draft` |
+| [Minimum Edge Dominating Set](docs/ja/exact-edge-dominating-set.md) | 最適化 | $m$ | $B(m)$ | `ai-audited` |
 
 **既知結果との比較：** 以下に列挙した項目を除き、体系的な比較は未実施です。記録済みの評価：
 

@@ -166,6 +166,13 @@ $$
 - 版：Author manuscript dated 18 June 2005
 - 参照箇所：Section 2, page 3: Ryser formula in Gray-code order takes Θ(n·2^n) arithmetic operations; used only as a classical benchmark
 
+## sinz2005
+
+[Carsten Sinz, Towards an Optimal CNF Encoding of Boolean Cardinality Constraints](https://www.carstensinz.de/techreports/CardConstraints.pdf)
+
+- 版：Author-hosted 14-page technical report accompanying the CP 2005 paper; accessed 28 October 2026
+- 参照箇所：Section 2, Definition 2 (extension semantics); Sections 4.1–4.2 and Theorem 2 (parallel binary counter, comparator, and linear-size encoding). The gate-by-gate 3-CNF construction in METHODS.md is an explicit standard construction, not an attribution of its width, unique-extension property, or exact constants to the source's optimized encoding.
+
 ## vadhan2007
 
 [Salil Vadhan, CS225 Lecture 5: Basic Derandomization Techniques](https://people.seas.harvard.edu/~salil/cs225/spring07/lecnotes/lec5.pdf)
@@ -179,6 +186,13 @@ $$
 
 - 版：Author full version dated 4 May 2010; journal version in SIAM Journal on Computing 42(3) (2013), 1218–1244
 - 参照箇所：Theorem 6.1, PDF page 21: if ETH is false, E^NP does not have linear-size circuits
+
+## xiao-kloks-poon2011
+
+[Mingyu Xiao, Ton Kloks, and Sheung-Hung Poon, New Parameterized Algorithms for Edge Dominating Set](https://arxiv.org/pdf/1104.4160v1)
+
+- 版：arXiv:1104.4160v1, 21 April 2011; 18-page preprint
+- 参照箇所：Section 2, printed page 2 (vertex covers, endpoints, and matching); Section 6, Lemma 9 (2k²+2k vertices and O(k³) edges in linear time and space). Used as one explicit kernel route, not as a latest-best claim.
 
 ## xiao2016
 

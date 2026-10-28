@@ -10,6 +10,26 @@
 
 以下は本カタログで導出済みの帰結ではありません。特定のカーネル・符号化による導出が得られないことは、不可能性・下界・最良既知アルゴリズムについての主張ではありません。
 
+## 一般グラフのEdge Dominating Set
+
+ID: `edge-dominating-set-budget`
+
+区分：`fpt`
+
+主張の状態：`not-obtained-by-this-route`; 確認：`ai-audited`
+
+**パラメータ。** 選択辺数の上限k。最大次数や疎性の制限なし
+
+**この方法での障害。** この方法で使うXiao–Kloks–Poonの明示的なカーネルは、高々2k²+2k頂点・O(k³)辺である。端点OR回路を共有する符号化でも、残った各辺の選択変数に加えてO(m′)個の補助変数を使うため、保証されるのはN+M = O(k³)でありO(k)ではない。疎なSAT上界への代入は $2^{O(k^3/\sqrt{\log k})}L^{O(1)}$ にとどまり、kに関する劣指数の帰結を示さない。サイズ2k以下のVCの存在は、サイズk以下のEDSの必要条件にすぎず、独立な2辺とk=1が逆向きの反例になる。通常のVCのカーネル化の保証だけでは、同じ頂点をEDSの必須端点として固定することは正当化できない。道a-b-c-dでは{a,c}と{b,c}はともに最小VCだが、{a,c}を端点に含めるには2本の選択辺が必要な一方、中央の1辺bcで全辺を支配できる。出典の第2節は、被覆を固定した後に必要なマッチング計算を説明している。
+
+**次に確認すること。** 辺の組合せの証拠・検証も含めて、全Boolean変数数をO(k)に保つ固定幅CNFか、EDSを保存する別の帰着を調べる。マッチングを多項式時間で検証できることだけでは、変数数が線形という保証にならない。特定のカーネルと符号化による導出の限界を記録するもので、下界・不可能性・最新最良のカーネルに関する主張ではない。一般グラフの辺数mに対するexact項目と、最大次数を固定したFPT項目は、別の導出済みの帰結として扱う。
+
+**出典。**
+
+- **`xiao-kloks-poon2011`** — [Mingyu Xiao, Ton Kloks, and Sheung-Hung Poon, New Parameterized Algorithms for Edge Dominating Set](https://arxiv.org/pdf/1104.4160v1). 版：arXiv:1104.4160v1, 21 April 2011; 18-page preprint. 参照箇所：Section 2, printed page 2 (matching after choosing a minimal vertex cover); Section 6, Lemma 9, printed page 11 (2k²+2k vertices and O(k³) edges).
+
+- 2026-10-28 — Codex agent fpt_other_routes (`ai`): 2026-10-28 VC/EDS revision; reviewed payload SHA-256 47f78b888dd6413f7b8aec47bd37ea6051e40acf1f1a8403aef83e734014fcf7 (canonical JSON without review fields), METHODS.md SHA-256 bb914959f31c04d956ecd3b1a24952f469200a2d0b8b5b3bd554e60c17655750. Checked both languages, the cited kernel route and size substitution, the two-disjoint-edge and P4 examples, and the restriction to a failed route rather than an impossibility claim. Applied the auditor-recommended qualification of ordinary VC kernel guarantees. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、引用カーネルとサイズ代入、独立な2辺とP4の例、不可能性ではなく特定経路の限界であることを確認。監査提案に従いVCの保証に関する英日表現を限定。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。
+
 ## Cluster Editing
 
 ID: `cluster-editing-budget`

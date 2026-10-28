@@ -20,7 +20,7 @@ Data date: 2026-10-28
 | Fixed constants | None |
 | Variant | `decision` |
 | Origin / claim status | `catalog-deduction` / `derivation-available` |
-| Review status | `draft` |
+| Review status | `ai-audited` |
 | Comparison status | `not-systematically-surveyed` |
 
 **Catalog deduction.** This entry records a derivation assembled in this catalog, rather than attributing the full consequence to a source theorem. Its review and comparison status are stated separately.
@@ -46,7 +46,7 @@ The resulting algorithm is deterministic and uses polynomial space, conditional 
 
 ## Preprocessing
 
-Apply the Nemhauser–Trotter 2k-vertex kernel, with the reduced budget k′ ≤ k.
+Apply the Nemhauser–Trotter kernel in polynomial time. Handle trivial YES/NO instances directly; otherwise obtain (G′, k′), with k′ ≤ k and r = |V(G′)| ≤ 2k′ ≤ 2k. Let m′ = |E(G′)|; only m′ = O(k²), not m′ = O(k), is guaranteed.
 
 ## Encoding size
 
@@ -58,16 +58,26 @@ Apply the Nemhauser–Trotter 2k-vertex kernel, with the reduced budget k′ ≤
 
 ## Derivation
 
-1. For each kernel vertex v use a deletion bit x_v. For every edge uv add the clause $x_u\vee x_v$.
+1. For each kernel vertex v use one selection bit x_v. For every edge uv output the existing-variable clause $x_u\vee x_v$ directly. This contributes r variables and m′ two-literal clauses: no auxiliary variable is needed for an edge, and no conjunction circuit for all edge clauses is introduced.
 
-2. Encode $\sum_v x_v\le k^\prime$ using the linear-size balanced binary-adder construction in METHODS.md. Gate equivalences add O(k) variables and 3-clauses.
+2. Encode the budget with a CNF C(x,y) satisfying $\exists y\,C(x,y)\iff\sum_v x_v\le k^\prime$ for every fixed choice of x. The auxiliary variables y represent intermediate sum bits, carries, and comparison results. Full gate equivalences force their values; they cannot be chosen to understate the number of selected vertices.
 
-3. The formula is satisfiable exactly when the kernel has a vertex cover within budget. It has O(k) variables and O(k²) clauses; use the general-density assumption. Kernelization and encoding use polynomial time and space.
+3. Sum the r selection bits in a balanced binary tree. At level j there are O(r/2^j) additions of O(j)-bit numbers, each using O(j) bounded-fan-in gates. The total is $O(r\sum_{j\ge1}j/2^j)=O(r)$. Comparing the final sum with the known budget k′ uses O(log(r+1)) further gates. AND, OR, and XOR gates each require one output variable and a constant number of clauses of width at most three. Thus the complete cardinality constraint adds O(r) variables and O(r) clauses.
+
+4. For example, when four selection bits have computed sum $4s_2+2s_1+s_0$, a budget of two is imposed by the two clauses $\neg s_2$ and $\neg s_1\vee\neg s_0$. The sum bits themselves must also satisfy the adder-gate clauses. See [METHODS.md, Section 2](../../METHODS.md) for the exact gates, the worked example, and the comparator for an arbitrary budget.
+
+5. Conjoin C(x,y) with all edge clauses. An extension y exists exactly when x selects a vertex cover of size at most k′. The final counts are N = O(r) = O(k), M = m′ + O(r) = O(k²), and w ≤ 3. Including variable indices, the CNF bit length is O(k² log(k+2)).
+
+6. Apply the general-density SAT assumption, which has no fixed-density requirement. Substituting N = O(k) and M = O(k²) gives $k^{O(1)}2^{O(k\log\log k/\sqrt{\log k})}$. Constructing and reading the quadratic number of clauses is included in the polynomial factor. Add polynomial-time kernelization and encoding to obtain the displayed bound in the original input length L, with polynomial space.
+
+7. This is a conditional consequence assembled from a known kernel, a standard cardinality encoding, and the assumed SAT bound. The cardinality technique is established prior work, represented here by Sinz's parallel-counter construction; neither the encoding nor inclusion of this consequence is presented as a novelty claim.
 
 ## Caveats and comparison limits
 
 - This parameter is the total solution size, not excess above an LP bound.
-- The decision kernel does not automatically preserve the number of vertex covers.
+- The decision kernel does not automatically preserve the number of vertex covers, even though the gate variables have a unique extension.
+- This is a linear-variable encoding, not a linear-total-size CNF. A 2k-vertex graph can have Θ(k²) edges, including YES instances such as K_{k,k}. The sparse bound with exponent O(k/sqrt(log k)) is not justified by this route.
+- Encoding the edge clauses through a fresh output gate for each edge would unnecessarily add O(k²) variables and lose this derivation. Only the cardinality circuit requires gate variables; edge clauses are already in CNF.
 
 A decision-preserving kernel does not automatically preserve the number of solutions.
 
@@ -78,9 +88,10 @@ Not systematically surveyed
 ## Sources and exact locators
 
 - **`xiao2016`** — [Mingyu Xiao, On a generalization of Nemhauser and Trotter’s local optimization theorem](https://arxiv.org/html/1601.00164v1). Version: arXiv:1601.00164v1, 2 January 2016. Locator: Theorem 1 and the following 2k-kernel discussion.
+- **`sinz2005`** — [Carsten Sinz, Towards an Optimal CNF Encoding of Boolean Cardinality Constraints](https://www.carstensinz.de/techreports/CardConstraints.pdf). Version: Author-hosted 14-page technical report accompanying the CP 2005 paper; accessed 28 October 2026. Locator: Section 2, Definition 2, and Section 4: auxiliary-variable semantics and a linear-size parallel-counter encoding of a cardinality bound.
 
 ## Review record
 
-Status: `draft`
+Status: `ai-audited`
 
-No named human review is recorded.
+- 2026-10-28 — Codex agent linear_kernel_fpt (`ai`): 2026-10-28 VC/EDS revision; reviewed payload SHA-256 06d183085de02ad012c4c57944b4c68f9026d45c786b4f7b23e343490ba4ed4b (canonical JSON without review fields), METHODS.md SHA-256 bb914959f31c04d956ecd3b1a24952f469200a2d0b8b5b3bd554e60c17655750. Checked both languages, all AND/OR/XOR gate clauses, the balanced-adder count, comparator invariant, four-input example, VC variable/clause accounting, general-density substitution, and the scope of the Sinz reference. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、ゲートの節、平衡加算木、比較器、4入力例、VCの変数数・節数、一般密度版への代入、Sinzの引用範囲を確認。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。

@@ -25,7 +25,7 @@ $$
 
 | Problem | Parameter | Fixed constants | Bound factor | Review |
 | --- | --- | --- | --- | --- |
-| [Vertex Cover](docs/en/vertex-cover-solution-size.md) | Solution budget k | None | $A(k)$ | `draft` |
+| [Vertex Cover](docs/en/vertex-cover-solution-size.md) | Solution budget k | None | $A(k)$ | `ai-audited` |
 | [Cluster Vertex Deletion](docs/en/cluster-vertex-deletion.md) | Vertex-deletion budget k | None | $A(k)$ | `draft` |
 | [Bounded-Degree Vertex Deletion](docs/en/bounded-degree-vertex-deletion.md) | Vertex-deletion budget k | d | $A(k)$ | `draft` |
 | [Component Order Connectivity](docs/en/component-order-connectivity.md) | Vertex-deletion budget k | ell | $A(k)$ | `draft` |
@@ -37,6 +37,7 @@ $$
 | [Bounded-Occurrence d-Hitting Set](docs/en/bounded-occurrence-hitting-set.md) | Solution budget k | d, r | $B(k)$ | `draft` |
 | [Bounded-Occurrence d-Set Packing](docs/en/bounded-occurrence-set-packing.md) | Target number k of pairwise disjoint sets | d, r | $B(k)$ | `draft` |
 | [Finite-domain bounded-arity Max-CSP](docs/en/max-csp-absolute-target.md) | Absolute target k of satisfied constraints | q, r | $B(k)$ | `draft` |
+| [Edge Dominating Set on bounded-degree graphs](docs/en/bounded-degree-edge-dominating-set.md) | Selected-edge budget k | maximum degree Δ ≥ 1 | $B(k)$ | `ai-audited` |
 
 ## Exact exponential-time algorithms
 
@@ -55,6 +56,7 @@ $$
 | [Minimum Dominating Set](docs/en/exact-minimum-dominating-set.md) | Optimization | $n+m$ | $B(n+m)$ | `draft` |
 | [Max-Cut](docs/en/exact-max-cut.md) | Optimization | $n+m$ | $B(n+m)$ | `draft` |
 | [Exact Finite-Domain Bounded-Arity Max-CSP](docs/en/exact-max-finite-csp.md) | Optimization | $n+m$ | $B(n+m)$ | `draft` |
+| [Minimum Edge Dominating Set](docs/en/exact-edge-dominating-set.md) | Optimization | $m$ | $B(m)$ | `ai-audited` |
 
 **Comparison status:** entries not listed below have not been systematically compared with known algorithms. Recorded assessments:
 

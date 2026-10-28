@@ -8,7 +8,7 @@
 
 一回の作業では一つの問題族、または三つまでの具体的な候補を調べます。単位は **問題 × パラメータまたはサイズ尺度 × 入力クラス**。さらに判定・計数・最適化・探索を区別します。発見した件数を目標にして、導出が不完全な項目を主表へ移さないでください。
 
-2026-10-28の対象拡張時点では、FPT 12項目、厳密アルゴリズム11項目、候補9項目を収録し、すべてdraftです。これは新規性を主張する論文の結果一覧ではありません。
+2026-10-28のVC・EDS更新時点では、FPT 13項目、厳密アルゴリズム12項目、候補10項目を収録しています。VCとEDSの3項目および一般EDSの候補に範囲限定のAI監査を記録し、それ以外はdraftです。人間による確認の記録はなく、新規性を主張する論文の結果一覧でもありません。
 
 [計算量理論への影響](COMPLEXITY.ja.md)は、個別アルゴリズムの項目数とは別の解説です。クラスの一致、パラメータを明示した完全問題、仮説に基づく下界、回路下界を扱います。帰着の種類、サイズの定義、導けることの範囲を保ち、英日両版と共通の出典一覧を更新してください。ある議論から分離を導けないことを、論理的独立性の証明として扱わないでください。
 
@@ -56,15 +56,15 @@ schema version 2では、`track` は `fpt` または `exact`、`measure_tex` は
 
 ### 次に調べるもの
 
-- FPT 12項目と厳密11項目について、同じ尺度での既存上界の調査と追加出典の補完。
+- FPT 13項目と厳密12項目について、同じ尺度での既存上界の調査と追加出典の補完。
 - finite-obstruction deletionの他の線形カーネル。
 - 固定q彩色のmodulator先の拡張と、計数版の拡張数。
-- 候補9項目の未完了部分。FPTのカーネル・符号化の障害と、厳密アルゴリズムの密な入力・連結性・重みの障害を区別する。
+- 候補10項目の未完了部分。一般EDSの辺選択・マッチング条件を含め、FPTのカーネル・符号化の障害と、厳密アルゴリズムの密な入力・連結性・重みの障害を区別する。
 - 重み付き版、above-guarantee版、探索版をそれぞれ別項目として検討。
 
 ## English
 
-**Parameterized and Exact Algorithms from Faster SAT** is a living bilingual reference; its selected publication target is `ono-work/sat-algorithm-consequences`, and its archive slug is `sat-algorithm-consequences`. At the 2026-10-28 scope extension it contains 12 FPT entries, 11 exact-algorithm entries, and 9 candidates, all draft. Inclusion is not a novelty claim.
+**Parameterized and Exact Algorithms from Faster SAT** is a living bilingual reference; its selected publication target is `ono-work/sat-algorithm-consequences`, and its archive slug is `sat-algorithm-consequences`. At the 2026-10-28 VC/EDS update it contains 13 FPT entries, 12 exact-algorithm entries, and 10 candidates. The three VC/EDS entries and the general-EDS candidate have scoped AI audit records; the rest are draft, with no human review recorded. Inclusion is not a novelty claim.
 
 [Complexity-Theoretic Consequences](COMPLEXITY.md) is a companion note outside the algorithm-entry counts. It covers class equalities, complete problems with explicit parameters, hypothesis-based lower bounds, and circuit lower bounds. Preserve reduction types, size definitions, and the scope of each inference; update both languages and the shared source register. Failure of one separation argument is not a proof of logical independence.
 
@@ -86,4 +86,4 @@ Updates can follow new candidates, upstream revisions, algorithm/kernel improvem
 
 Treat assumption versions as immutable. Trace `depends_on`, `source_refs`, and `comparison_refs` across both tracks and the candidates; recheck affected derivations and comparisons before migrating dependencies. New assumption IDs or theorem shapes may require an explicit update to profile validation. Preserve corrections in CHANGELOG.md.
 
-The next batch should compare all 23 entries under their actual measures, broaden finite-obstruction deletion and coloring-modulator families, study extension counts, and investigate the nine candidates. Distinguish FPT kernel/encoding obstacles from dense-input, connectivity, and weight obstacles for exact algorithms; keep variant-specific claims separate.
+The next batch should compare all 25 entries under their actual measures, broaden finite-obstruction deletion and coloring-modulator families, study extension counts, and investigate the ten candidates, including edge selection and matching conditions for general EDS. Distinguish FPT kernel/encoding obstacles from dense-input, connectivity, and weight obstacles for exact algorithms; keep variant-specific claims separate.

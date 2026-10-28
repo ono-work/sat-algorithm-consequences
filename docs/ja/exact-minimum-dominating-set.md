@@ -14,60 +14,69 @@
 | --- | --- |
 | ID | `exact-minimum-dominating-set` |
 | 区分 | 厳密指数時間アルゴリズム |
-| サイズ尺度 | nは頂点数、mは辺数。指数の尺度はn+m |
-| 尺度の記号 | $n+m$ |
-| 制限 | 非重み付き単純無向グラフ。最小サイズと、そのサイズの支配集合を求める。 |
+| サイズ尺度 | n = \|V(G)\| は元の頂点数、m = \|E(G)\| は元の辺数。主たる指数時間の尺度はnで、Lは元入力のビット長。 |
+| 尺度の記号 | $n$ |
+| 制限 | 次数・密度の制限がない非重み付き単純無向グラフ。最小サイズと、そのサイズの支配頂点集合を求める。 |
 | 固定定数 | なし |
 | 問題の版 | `optimization` |
 | 由来 / 主張の状態 | `catalog-deduction` / `derivation-available` |
-| 確認状態 | `draft` |
+| 確認状態 | `ai-audited` |
 | 比較の状態 | `not-systematically-surveyed` |
 
 **本カタログでの導出。** この項目は本カタログで組み立てた導出を記録しており、帰結全体が出典の定理に明記されているとは主張していません。確認状態と既知結果との比較状態は別途示しています。
 
 ## 依存する仮定と条件付き上界
 
-- [`sat26-sparse`](../../ASSUMPTIONS.ja.md#sat26-sparse)
+- [`sat26-general`](../../ASSUMPTIONS.ja.md#sat26-general)
 - [`sat26-reported-formal`](../../ASSUMPTIONS.ja.md#sat26-reported-formal)
+- [`sat26-sparse`](../../ASSUMPTIONS.ja.md#sat26-sparse)
 
-`sat26-sparse` を仮定した場合：
+`sat26-general` を仮定した場合：
 
 $$
-2^{O((n+m)/\sqrt{\log(n+m)})}L^{O(1)}
+2^{O(n\log\log n/\sqrt{\log n})}L^{O(1)}
 $$
 
 別途、`sat26-reported-formal` を仮定した場合：
 
 $$
-2^{O((n+m)(\log\log(n+m))^2/\sqrt{\log(n+m)})}L^{O(1)}
+2^{O(n(\log\log n)^2/\sqrt{\log n})}L^{O(1)}
 $$
 
 対応する仮定と本導出のもとで、決定的・多項式領域のアルゴリズムを得ます。$L$ は元の入力長であり、隠れた定数は明記した固定定数に依存し得ます。漸近上界の対数は、指定した尺度が小さい場合に適宜正則化します。
 
 ## 前処理
 
-元のグラフ上で閉近傍のOR回路を作る。
+孤立頂点を含む全頂点と元のグラフを保持する。n = 0なら値0と空集合を返す。予算が[0,n]の外にある場合は直接処理する。
 
 ## 符号化のサイズ
 
 | 量 | 上界 |
 | --- | --- |
-| 補助変数を含むBoolean変数数 | $O(n+m)$ |
+| 補助変数を含むBoolean変数数 | $O(n)$ |
 | 節数 | $O(n+m)$ |
 | 最大節幅 | $3$ |
 
 ## 導出
 
-1. ORゲートの同値符号化に閾値 $\sum_v x_v\le t$ を加える。追加の個数制約はO(n)ゲート。
+1. 予算bについて、選択変数x_vと任意に選べる印y_vを置き、各u∈N[v]に $\neg y_v\vee\neg x_u$ を加える。全y_vのXORを幅3の完全同値ゲートで計算する。線形サイズの個数制約 $\sum_v x_v\le b$ を加え、印の偶奇がそれぞれ偶数・奇数となる2つの式を作る。
 
-2. 各閾値判定は変数・節ともにO(n+m)。[0,n]での二分探索と、ビットを順に固定する自己帰着は多項式回の呼出し・多項式領域で行える。
+2. 偶数側の個数から奇数側の個数を引いた値をC_bとする。サイズb以下の各選択集合Sの寄与は、未支配頂点の集合U(S)について $\sum_{T\subseteq U(S)}(-1)^{|T|}$ となる。したがってC_bは予算内の支配集合を正確に数え、C_b>0が必要な存在判定になる。既に固定したxの値も両方の式に同じように課す。
 
-3. 疎なSAT仮定よりB(n+m)に入力長の多項式を掛けた上界となる。m=O(n)ならnに関する劣指数時間。
+3. 各式は選択変数と印が計2n個、偶奇回路の出力が高々n−1個、カウンタ・比較器の補助変数がO(n)個である。xとyを固定するとゲート変数への拡張は一意。よってN=O(n)、M=O(n+m)、幅高々3となる。計数値はO(n)ビットで、正確な差を多項式時間で求められる。明示的なCNFの符号長はO((n+m) log(n+2))で、元入力長Lの多項式以内である。
+
+4. C_b>0となる最初のbを二分探索すると、存在判定はO(log(n+1))回で、各回は正確な#SATの2回の呼出しからなる。最適値をb*とする。元のグラフと予算b*を保持し、これまでの固定値に加えて各x_v=0を試す。対応する偶奇差が正なら0を残し、それ以外なら1に固定する。高々n回の追加判定でサイズちょうどb*の支配集合を得る。より小さければ最適性に反するためである。
+
+5. 式の生成、O(n)ビットの算術、解の固定済み部分の保持を含め、多項式回の正確な計数を逐次実行するので、A(n)L^{O(1)}時間・多項式領域となる。報告された形式化の仮定では、別に表示されたより弱い上界を使う。偶奇の一方の式だけの充足可能性を存在判定に使っているのではない。
+
+6. 従来の直接OR回路による方法も保持する。各vについて $\bigvee_{u\in N[v]}x_u$ を二入力ORの完全同値で要求し、同じ予算を加える。この方法はN+M=O(n+m)なので、必要なら0固定変数を加え、変更していない疎な仮定から別の上界B(n+m)L^{O(1)}を得る。この直接符号化では、二分探索とビット固定に通常のSAT判定を使える。固定Dについてm≤Dnとなるクラスでは、どちらの方法もB(n)L^{O(1)}を与える。
 
 ## 注意点と比較上の限界
 
-- 入力に次数制限はないが、頂点数nに関する劣指数という結論は疎なグラフについて述べている。
-- 重み付き版は含めない。
+- 主たる上界は密なグラフでも元の頂点数nについて劣指数であり、固定幅SATの仮定のうち正確な計数の機能を使う。
+- 復元中は元の支配近傍を保ち、選択変数の単位節を加える。判定に使うのは正確な偶数側と奇数側の個数の差が正かどうかであり、補助的な片方の式の充足可能性ではない。
+- 従来のB(n+m)の方法はサイズの評価が異なる別の上界として残る。SATの仮定や出典の版を強めたり変更したりしない。
+- 重み付き版や最新最良のアルゴリズムとの比較は含めない。
 
 導出では目的関数の保存と数値の符号長を扱う必要があります。判定版の帰結だけでは、ここに示す最適化版の上界は得られません。
 
@@ -77,10 +86,11 @@ $$
 
 ## 出典と参照箇所
 
-追加の文献依存は記録されていません。導出と、そこで指定したSATの仮定を参照してください。
+- **`van-rooij-nederlof-van-dijk2008`** — [Johan M. M. van Rooij, Jesper Nederlof, and Thomas C. van Dijk, Inclusion/Exclusion Meets Measure and Conquer: Exact algorithms for counting dominating sets](https://ics-archive.science.uu.nl/research/techreps/repo/CS-2008/2008-043.pdf). 版：Utrecht University Technical Report UU-CS-2008-043, November 2008; 20-page report including cover pages. 参照箇所：Abstract and Section 1: historical context for inclusion/exclusion in counting dominating sets. The marker/parity transformation and its conditional SAT bounds below are catalog deductions, not results attributed to this paper..
+- **`sinz2005`** — [Carsten Sinz, Towards an Optimal CNF Encoding of Boolean Cardinality Constraints](https://www.carstensinz.de/techreports/CardConstraints.pdf). 版：Author-hosted 14-page technical report accompanying the CP 2005 paper; accessed 28 October 2026. 参照箇所：Sections 4.1–4.2 and Theorem 2: binary-counter/comparator cardinality encodings; use the explicit full-equivalence width-three implementation in METHODS.md, Section 2, for linear auxiliary size and unique extension..
 
 ## 確認履歴
 
-状態：`draft`
+状態：`ai-audited`
 
-氏名・日付・対象範囲を伴う人による確認は記録されていません。
+- 2026-10-28 — Codex agent linear_kernel_fpt (`ai`): 2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 220419d79f5b960bf6d0621c8a3a5ae1d1009b820fc3280d4ee7b5b63714e43b (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, marker implications, exact even-minus-odd cancellation, unique XOR/cardinality extensions, all auxiliary-variable/clause/width counts, original measures, count bit lengths, positive-difference optimization and reconstruction, at-most-threshold monotonicity, isolated/empty-input cases, sparse/direct alternatives, and historical-source scope. METHODS.md Section 9 was checked against these entries. Two English U(S) definitions were clarified and rechecked. Small-instance checks covered 76 simple graphs through n=4 and 1,111 CNF inputs; these finite checks do not prove the general claims. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、印の含意、偶数側と奇数側の正確な相殺、XOR・個数制約の一意拡張、補助変数・節・幅、元の尺度、計数値のビット長、差の正値性による最適化・復元、サイズ上限の閾値の単調性、孤立点・空入力、疎な場合と直接符号化、引用範囲を確認。METHODS第9節との一致と英語のU(S)の定義2箇所の修正を再確認した。小例は頂点数4以下の単純グラフ76個とCNF入力1,111個で検査し、一般の証明とは区別する。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。

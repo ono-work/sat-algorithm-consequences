@@ -180,6 +180,13 @@ $$
 - 版：Harvard CS225 lecture notes, 15 February 2007; based on scribe notes by Arthur Rudolph and Chun-Yun Hsiao
 - 参照箇所：Section 2, page 2, Definition 1 and the following time-hierarchy statement: SUBEXP = intersection over epsilon > 0 of DTIME(2^{n^epsilon}), and SUBEXP is properly contained in EXP
 
+## van-rooij-nederlof-van-dijk2008
+
+[Johan M. M. van Rooij, Jesper Nederlof, and Thomas C. van Dijk, Inclusion/Exclusion Meets Measure and Conquer: Exact algorithms for counting dominating sets](https://ics-archive.science.uu.nl/research/techreps/repo/CS-2008/2008-043.pdf)
+
+- 版：Utrecht University Technical Report UU-CS-2008-043, November 2008; 20-page report including cover pages
+- 参照箇所：Abstract and Section 1: inclusion/exclusion in exact algorithms for counting dominating sets. Historical context only; the two-query marker/parity transformation and conditional SAT substitutions in this catalog are not attributed to this paper.
+
 ## williams2010
 
 [Ryan Williams, Improving Exhaustive Search Implies Superpolynomial Lower Bounds](https://people.csail.mit.edu/rrw/improved-algs-lbs2.pdf)

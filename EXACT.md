@@ -28,11 +28,18 @@ $$
 | [Counting Finite-Domain Bounded-Arity CSP Solutions](docs/en/exact-count-finite-csp.md) | Counting | $n$ | $A(n)$ | `draft` |
 | [Counting Perfect Matchings](docs/en/exact-count-perfect-matchings.md) | Counting | $m$ | $B(m)$ | `draft` |
 | [Counting Degree-Constrained Edge Sets](docs/en/exact-count-degree-constrained-edge-sets.md) | Counting | $m$ | $B(m)$ | `draft` |
-| [Counting Dominating Sets](docs/en/exact-count-dominating-sets.md) | Counting | $n+m$ | $B(n+m)$ | `draft` |
-| [Minimum Dominating Set](docs/en/exact-minimum-dominating-set.md) | Optimization | $n+m$ | $B(n+m)$ | `draft` |
+| [Counting Dominating Sets](docs/en/exact-count-dominating-sets.md) | Counting | $n$ | $A(n)$ | `ai-audited` |
+| [Minimum Dominating Set](docs/en/exact-minimum-dominating-set.md) | Optimization | $n$ | $A(n)$ | `ai-audited` |
 | [Max-Cut](docs/en/exact-max-cut.md) | Optimization | $n+m$ | $B(n+m)$ | `draft` |
 | [Exact Finite-Domain Bounded-Arity Max-CSP](docs/en/exact-max-finite-csp.md) | Optimization | $n+m$ | $B(n+m)$ | `draft` |
 | [Minimum Edge Dominating Set](docs/en/exact-edge-dominating-set.md) | Optimization | $m$ | $B(m)$ | `ai-audited` |
+| [Counting Maximal Independent Sets / Minimal Vertex Covers](docs/en/exact-count-maximal-independent-sets.md) | Counting | $n$ | $A(n)$ | `ai-audited` |
+| [Minimum Independent Dominating Set / Upper Vertex Cover](docs/en/exact-minimum-independent-dominating-set.md) | Optimization | $n$ | $A(n)$ | `ai-audited` |
+| [Counting Satisfying Assignments of Unrestricted-Width CNF](docs/en/exact-count-unrestricted-cnf.md) | Counting | $n+m$ | $A(n+m)$ | `ai-audited` |
+| [Counting Vertex Deletions for a Fixed Finite Forbidden Family](docs/en/exact-count-finite-obstruction-vertex-deletions.md) | Counting | $n$ | $A(n)$ | `ai-audited` |
+| [Minimum Vertex Deletion for a Fixed Finite Forbidden Family](docs/en/exact-minimum-finite-obstruction-vertex-deletion.md) | Optimization | $n$ | $A(n)$ | `ai-audited` |
+| [Counting Feedback Vertex Sets in Tournaments](docs/en/exact-count-tournament-feedback-vertex-sets.md) | Counting | $n$ | $A(n)$ | `ai-audited` |
+| [Minimum Feedback Vertex Set in Tournaments](docs/en/exact-minimum-tournament-feedback-vertex-set.md) | Optimization | $n$ | $A(n)$ | `ai-audited` |
 
 **Comparison status:** entries not listed below have not been systematically compared with known algorithms. Recorded assessments:
 

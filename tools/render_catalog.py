@@ -361,8 +361,8 @@ def index_table(entries: list[dict[str, Any]], track: str, lang: str) -> list[st
     if not entries:
         return [choose(lang, "No entries are recorded in this track yet.", "この区分の項目はまだ記録されていません。"), ""]
     if track == "fpt":
-        headers = choose(lang, ["Problem", "Parameter", "Fixed constants", "Bound factor", "Review"],
-                         ["問題", "パラメータ", "固定定数", "計算時間の因子", "確認"])
+        headers = choose(lang, ["Problem", "Variant", "Parameter", "Fixed constants", "Bound factor", "Review"],
+                         ["問題", "問題の版", "パラメータ", "固定定数", "計算時間の因子", "確認"])
     else:
         headers = choose(lang, ["Problem", "Variant", "Size measure", "Bound factor", "Review"],
                          ["問題", "問題の版", "サイズ尺度", "計算時間の因子", "確認"])
@@ -371,7 +371,8 @@ def index_table(entries: list[dict[str, Any]], track: str, lang: str) -> list[st
         local = entry[lang]
         factor = "A" if entry["bound_kind"] == "general" else "B"
         if track == "fpt":
-            middle = [local["parameter"], ", ".join(entry["fixed_constants"]) or choose(lang, "None", "なし")]
+            middle = [variant_label(entry["variant"], lang), local["parameter"],
+                      ", ".join(entry["fixed_constants"]) or choose(lang, "None", "なし")]
         else:
             middle = [variant_label(entry["variant"], lang), inline_math(entry["measure_tex"])]
         rows.append([f"[{local['name']}](docs/{lang}/{entry['id']}.md)", *middle,

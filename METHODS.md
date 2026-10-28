@@ -153,6 +153,10 @@ Use the fixed-width SAT theorem at that width. Replacing every longer constant-w
 
 この幅のままSAT定理を使います。各節を3節の鎖に分解すると節数に比例した補助変数が必要になり、目的の変数数を失う場合があります。
 
+The same construction on the original n-vertex graph gives an exact-algorithm consequence without requiring a kernel. There are O(n) variables and O(n^h+n) clauses of width at most max(h,3). Enumerating all forbidden copies takes polynomial time for fixed h. Every deletion set corresponds to exactly one assignment, including the unique cardinality-gate extension when a size bound is imposed. Thus A(n)L^{O(1)} suffices to count all valid deletion sets or those of a specified size, find the minimum size, and recover an optimum set. This is a consequence measured by n; the A(k) decision consequence still requires the stated linear kernel. No counting claim is transferred through an ordinary decision kernel.
+
+同じ構成を元のn頂点グラフに直接使えば、カーネルを必要としない厳密アルゴリズムの帰結を得ます。変数はO(n)個、節はO(n^h+n)個、幅はmax(h,3)以下で、hが固定なら全禁止コピーの列挙は多項式時間です。各削除集合は一つの割当てに対応し、サイズ制約を課した場合も個数回路への拡張は一意です。したがってA(n)L^{O(1)}で、有効な削除集合全体や指定サイズの集合を数え、最小サイズを求め、最適集合を復元できます。これはnを尺度にした帰結です。kを尺度にしたA(k)の判定上界には、引き続き上記の線形カーネルが必要であり、通常の判定カーネルを通して計数の帰結を主張するものではありません。
+
 ## 4. Small extension witnesses / 小さい延長不能証人
 
 For a fixed-domain problem, keep only the variables of a small modulator when every failed extension has a constant-size witness in the modulator. Enumerate the witness assignments and forbid them by bounded-arity constraints. This gives O(k) variables even when the whole input has many vertices. The fixed-q coloring examples rely on the cited NO-certificate lemmas; existence of a polynomial-time extension test alone is not enough.
@@ -191,15 +195,15 @@ For a chosen edge set F, sum its incident selection bits at each vertex v using 
 
 選択する辺集合Fについて、各頂点vに接続する選択ビットをO(deg_G(v))ゲートで加算します。入力された次数区間を[0,deg_G(v)]と交差させ、O(log(deg_G(v)+1))ゲートで両端と比較します。空の区間なら解なしとし、孤立点は条件を確認してから除きます。次数の総和は2mなので、全体でO(m)ゲートです。全ゲートを同値で符号化すれば拡張は一意となり、O(m)変数・O(m)節・幅3の計数用符号化を得ます。局所次数の区間の指定によりmatching、b-matching、perfect matching、edge cover、f-factor、2-factorを扱えます。ただし全体の連結性は課しません。
 
-For Dominating Set, each vertex requires an OR over its closed neighborhood. Bounded-fan-in OR circuits have a total of O(n+m) gates, since the sum of closed-neighborhood sizes is n+2m. Require every output to be true and encode gates by equivalences; do not use a merely equisatisfiable clause splitting when counting. Cardinality constraints add O(n) gates. This gives B(n+m), and therefore B(n) on sparse graphs without a maximum-degree assumption.
+For Dominating Set, each vertex requires an OR over its closed neighborhood. Bounded-fan-in OR circuits have a total of O(n+m) gates, since the sum of closed-neighborhood sizes is n+2m. Require every output to be true and encode gates by equivalences; do not use a merely equisatisfiable clause splitting when counting. Cardinality constraints add O(n) gates. This direct route gives B(n+m), and therefore B(n) on sparse graphs without a maximum-degree assumption. Section 9 gives a different route using the difference of two exact counts: it has O(n) variables even on dense graphs and yields A(n). Both bounds remain available.
 
-Dominating Setでは、各頂点の閉近傍に選択された頂点があることをOR回路で表します。閉近傍の大きさの総和はn+2mなので、入力数を定数に制限した回路の総ゲート数はO(n+m)です。各出力を真に固定し、ゲートを同値で符号化します。計数では、充足可能性だけを保存する節の分割では不十分です。個数制約の追加はO(n)ゲートであり、B(n+m)、疎グラフでは最大次数の制限なしにB(n)を得ます。
+Dominating Setでは、各頂点の閉近傍に選択された頂点があることをOR回路で表します。閉近傍の大きさの総和はn+2mなので、入力数を定数に制限した回路の総ゲート数はO(n+m)です。各出力を真に固定し、ゲートを同値で符号化します。計数では、充足可能性だけを保存する節の分割では不十分です。個数制約の追加はO(n)ゲートであり、この直接的な方法からB(n+m)、疎グラフでは最大次数の制限なしにB(n)を得ます。第9節では2回の正確な計数の差を用いる別の方法を示します。密なグラフでも変数をO(n)個に保ち、A(n)を得られます。両方の上界を使えます。
 
 ## 8. Exact optimization and witnesses / 厳密最適化と解の復元
 
-For an unweighted objective bounded by a polynomial in the input length, build a fixed-width encoding of feasibility at a threshold. Binary search needs logarithmically many threshold queries; a linear scan also introduces only a polynomial factor. Once the optimum is known, fix the original choice bits one by one, retaining a value whenever a feasibility query permits an optimum extension. Unit clauses do not increase the number of choice variables, and their polynomially many queries can be made sequentially in polynomial space. Unique extensions are needed when counting, but ordinary satisfiability is sufficient for these optimization queries.
+For an unweighted integer objective bounded by a polynomial in the input length, first obtain a test for feasibility at a threshold. With a direct fixed-width CNF encoding, ordinary satisfiability is sufficient. For the signed-count construction in Section 9, use the test Z₀−Z₁>0, requiring two exact #SAT counts per threshold. Binary search needs logarithmically many threshold queries; a linear scan also introduces only a polynomial factor. Once the optimum is known, fix the original choice bits one by one, retaining a value whenever a feasibility query permits an optimum extension. Unit clauses do not increase the number of choice variables, and the polynomially many queries can be made sequentially in polynomial space. Preserving satisfiability suffices for a direct decision encoding; the signed-count route requires the count preservation proved in Section 9.
 
-入力長の多項式で上から抑えられる非重み付き目的関数では、閾値を満たす実行可能解の存在を固定幅CNFで表します。二分探索の問い合わせ回数は対数個で、線形走査でも多項式因子だけの増加です。最適値が分かったら、元の選択ビットを順に固定し、最適解への延長が残る値を選ぶことで解を復元できます。単位節の追加は選択変数数を増やさず、多項式回の問い合わせは逐次実行すれば多項式領域です。計数には拡張の一意性が必要ですが、この最適化の問い合わせには充足可能性の保存で十分です。
+入力長の多項式で上から抑えられる非重み付き整数目的関数では、まず閾値を満たす実行可能解の存在を判定する方法を用意します。直接の固定幅CNF符号化なら、通常の充足可能性判定で十分です。第9節の符号付き計数を使う場合は、閾値ごとに2回の正確な#SAT計数を行い、Z₀−Z₁>0かを判定します。二分探索の問い合わせ回数は対数個で、線形走査でも多項式因子だけの増加です。最適値が分かったら、元の選択ビットを順に固定し、最適解への延長が残る値を選ぶことで解を復元できます。単位節の追加は選択変数数を増やさず、多項式回の問い合わせは逐次実行すれば多項式領域です。直接の判定用符号化なら充足可能性の保存で十分ですが、符号付き計数の方法には第9節で示す計数の保存が必要です。
 
 For fixed-domain, fixed-arity Max-CSP, compute one satisfaction bit for each constraint by a constant-size Boolean circuit, then sum these m bits with Section 2. Including the qn one-hot inputs gives O_{q,r}(n+m) variables and clauses. This yields the exact B(n+m) bound for Max-CSP, including fixed-width MaxSAT and Max-Cut. It is a separate catalog deduction from any source theorem that offers additive approximation measured in n. A general B(n) exact bound does not follow for dense inputs.
 
@@ -208,3 +212,113 @@ For fixed-domain, fixed-arity Max-CSP, compute one satisfaction bit for each con
 Binary weights require a separate bit-cost audit. A sum of n choices with b-bit weights can need O(nb) Boolean gates; a generating polynomial can have degree proportional to the weight values. Neither quantity belongs in a polynomial factor while claiming an unchanged exponent without further argument. Likewise local degree-two constraints yield a 2-factor, not necessarily a Hamiltonian cycle.
 
 二進重みはビットコストを別途調べます。bビットの重みを持つn個の選択の和はO(nb)ゲートを必要とし得て、生成多項式の次数は重みの値に比例し得ます。追加の議論なしに、その分を多項式因子に押し込めて指数を変えずに済ませることはできません。同様に、局所的な次数2の制約から得られるのは2-factorであり、Hamiltonian cycleとは限りません。
+
+## 9. Parity inclusion-exclusion / 偶奇による包含排除
+
+This section records a catalog deduction from the exact-counting assumptions. Grouping inclusion-exclusion terms by parity reduces the computation to at most two #SAT calls. Both calls return exact integers; knowing only their parities, or only whether their formulas are satisfiable, is insufficient.
+
+この節は、正確な計数を行う仮定からのカタログ側の導出です。包含排除の項を偶数側と奇数側にまとめ、高々2回の#SAT呼出しで計算します。各呼出しでは正確な整数値を求めます。その値の偶奇だけ、あるいは式が充足可能かどうかだけでは不十分です。
+
+### 9.1 Avoiding explicitly described bad events / 明示された禁止事象を避ける
+
+Let x comprise p Boolean variables, and let R(x) be a base CNF of fixed width w₀. We want to count assignments satisfying R while avoiding t bad events E₁(x),…,Eₜ(x). Suppose every E_i is explicitly represented as a CNF of fixed width w over the same base variables. Introduce a selector y_i for each event and form
+
+xをp個のBoolean変数、R(x)を固定幅w₀の基本条件とします。Rを満たし、t個の禁止事象E₁(x),…,Eₜ(x)をすべて避ける割当てを数えます。各E_iが同じ基本変数上の固定幅wのCNFとして明示されているとします。事象ごとに選択変数y_iを置き、次を作ります。
+
+$$
+\Psi(x,y)=R(x)\ \land\
+\bigwedge_{i=1}^{t}\ \bigwedge_{C\in E_i}(\neg y_i\lor C).
+$$
+
+Thus y_i=1 is allowed exactly when E_i(x) holds. For a fixed base assignment x, the allowed selector sets are all subsets of I(x)={i:E_i(x) holds}. Compute selector parity using z₀=0 and the gate equivalences
+
+y_i=1を許すのはE_i(x)が成立するときだけです。基本割当てxを固定すると、許される選択集合はI(x)={i:E_i(x)が成立する}のすべての部分集合です。z₀=0とし、次のゲート同値で選択個数の偶奇を計算します。
+
+$$
+z_i\leftrightarrow(z_{i-1}\oplus y_i),\qquad 1\le i\le t.
+$$
+
+Use all four XOR clauses from §2.1 for each gate, substituting the initial constant. Let Z₀ and Z₁ be the numbers of satisfying assignments after forcing z_t=0 and z_t=1, respectively. The XOR outputs are uniquely determined by y. Consequently,
+
+各ゲートに§2.1のXORの4節をすべて使い、初期値の定数を代入します。z_t=0に固定した式の充足割当て数をZ₀、z_t=1に固定した式の個数をZ₁とします。XORの出力はyから一意に決まるので、
+
+$$
+Z_0-Z_1
+=\sum_{x:R(x)}\ \sum_{S\subseteq I(x)}(-1)^{|S|}
+=\#\{x:R(x)\text{ and }I(x)=\varnothing\}.
+$$
+
+If I(x) is empty, its only subset contributes +1. If it is nonempty, toggling any fixed member pairs every even subset with an odd subset, so the contribution is zero. For t=0, set Z₀=#R and Z₁=0 and omit the parity circuit.
+
+I(x)が空なら、唯一の部分集合である空集合が+1を寄与します。空でなければ、固定した一要素を入れる・外す操作で偶数サイズと奇数サイズの部分集合を対にでき、寄与は0になります。t=0では偶奇回路を作らず、Z₀=#R、Z₁=0とします。
+
+Writing M_R for the number of base clauses and |E_i| for the number of clauses describing E_i, each query has
+
+基本条件の節数をM_R、E_iを記述する節数を|E_i|と書くと、各問い合わせは
+
+$$
+N=p+O(t),\qquad
+M=M_R+\sum_i|E_i|+O(t),\qquad
+\text{width}\le\max(w_0,w+1,3).
+$$
+
+The widths must be fixed and the descriptions polynomial in the original input length L. Under these conditions, two calls give A(p+t)L^{O(1)} time and polynomial space. Moreover Z₀+Z₁≤2^{p+t}, so the counts and their difference use O(p+t+1) bits; the exact subtraction introduces only polynomial work. The corresponding reported-formalization profile follows by the same variable substitution.
+
+幅は固定し、各記述の大きさは元入力長Lの多項式以下とします。この条件の下で、2回の呼出しによりA(p+t)L^{O(1)}時間・多項式領域を得ます。またZ₀+Z₁≤2^{p+t}なので、個数と差を表すのはO(p+t+1)ビットで足り、正確な減算に必要な追加時間も多項式です。公開された形式化範囲のプロファイルにも同じ変数数を代入できます。
+
+Additional side conditions may be included in R. If they use auxiliary gates, count those variables in p and ensure a unique extension for each intended base assignment. A merely existential encoding of E_i with arbitrary auxiliary assignments does not meet the stated hypothesis: its multiplicities can invalidate the cancellation. Retain unused base variables or explicitly correct for their multiplicity.
+
+追加の条件はRに含められます。補助ゲートを使う場合は、その変数もpに含め、数えたい元の割当てごとに拡張が一意であることを確保します。任意の補助割当てを許す存在量化だけのE_iの符号化は、上の仮定を満たしません。その多重度によって打ち消しが崩れる可能性があります。使われない基本変数も残すか、その多重度を明示的に補正します。
+
+### 9.2 Arbitrary-width CNF with few clauses / 節数の少ない任意幅CNF
+
+Consider an arbitrary-width CNF F on p declared variables with q clauses C_i. Its bad event for clause i is
+
+p個の宣言変数とq個の節C_iを持つ任意幅CNF Fを考えます。第i節に対する禁止事象は
+
+$$
+E_i(x)=\neg C_i(x)=\bigwedge_{\ell\in C_i}\neg\ell.
+$$
+
+This is a conjunction of unit clauses regardless of the length of C_i. Its activation therefore uses only the binary clauses (¬y_i∨¬ℓ), one per literal occurrence. With R=true and the parity circuit above, each query has
+
+C_iがどれだけ長くても、E_iは単位節のANDです。したがって、その選択条件は各リテラル出現につき二項節(¬y_i∨¬ℓ)を一つ置くだけです。R=trueとして上の偶奇回路を加えると、各問い合わせは
+
+$$
+N=O(p+q),\qquad M=O(p+q+\operatorname{occ}(F)),\qquad
+\text{width}\le3,
+$$
+
+where occ(F) is the total number of literal occurrences. Their difference is exactly #F, including the contribution of unused declared variables. Hence the general-density assumption gives A(p+q)L^{O(1)}; in particular, q=O(p) gives A(p)L^{O(1)} even when clauses are long. This does not assert an A(p) bound with arbitrarily many clauses. Already fixed-width clauses may instead stay in R and need no selectors; the resulting width is the maximum of their width and three.
+
+ここでocc(F)はリテラルの総出現数です。2つの個数の差は、使われない宣言変数の寄与も含めて正確に#Fです。一般密度の仮定からA(p+q)L^{O(1)}を得て、特にq=O(p)なら、長い節を許してもA(p)L^{O(1)}です。節数を無制限に増やした場合のA(p)を主張するものではありません。最初から固定幅の節はRに残せば選択変数が不要で、その場合の最終的な幅は元の固定幅と3の大きい方です。
+
+### 9.3 Dominating sets and maximal independent sets / 支配集合と極大独立集合
+
+Let G be a simple undirected graph with n vertices and m edges. A choice x_v=1 means that v is selected. For each vertex v, the bad event is that its closed neighborhood N[v] contains no selected vertex. The activated clauses are
+
+Gをn頂点・m辺の単純無向グラフとし、x_v=1はvを選ぶことを表します。各頂点vについて、閉近傍N[v]に選択頂点がないことを禁止事象にします。選択条件の節は
+
+$$
+\Psi_G(x,y)=
+\bigwedge_{v\in V(G)}\ \bigwedge_{u\in N[v]}
+(\neg y_v\lor\neg x_u).
+$$
+
+For a fixed x, the eligible selector vertices are precisely its undominated vertices. The even-minus-odd count therefore contributes one for a dominating set and zero for every other vertex set. There are 2n choice and selector variables, O(n) parity-gate variables, and n+2m activated clauses. Thus each query has N=O(n), M=O(n+m) and width at most three. The difference counts all dominating sets in A(n)L^{O(1)} time, including on dense graphs. On sparse graphs, Section 5 also gives B(n); the direct B(n+m) construction in Section 7 remains valid.
+
+xを固定すると、選択可能なyの頂点は、ちょうどxで支配されない頂点です。したがって偶数側から奇数側を引くと、支配集合は1、それ以外の頂点集合は0を寄与します。元の選択変数と事象の選択変数は計2n個、偶奇ゲートの変数はO(n)個、選択条件の節はn+2m個です。各問い合わせはN=O(n)、M=O(n+m)、節幅3以下となり、密なグラフも含めてA(n)L^{O(1)}で全支配集合を数えられます。疎グラフでは第5節からB(n)も得られ、第7節の直接的なB(n+m)の構成も引き続き有効です。
+
+Add a cardinality circuit for ∑_v x_v=s or ∑_v x_v≤s to R to count dominating sets of exactly or at most s vertices. Fixing some original choices with unit clauses is also allowed. These additions require O(n) variables and clauses and have unique gate extensions. Isolated vertices need not be removed: if one is unselected, its bad event holds and its contribution cancels. The empty graph has the single empty dominating set, as the t=0 case requires.
+
+Rに∑_v x_v=sまたは∑_v x_v≤sの個数回路を加えれば、ちょうどs頂点または高々s頂点の支配集合を数えられます。元の選択の一部を単位節で固定することもできます。追加はO(n)変数・節で、ゲートの拡張は一意です。孤立頂点を除く必要はなく、孤立頂点を選ばなければその禁止事象が成立して寄与が打ち消されます。頂点数0のグラフでは空の支配集合が一つあり、t=0の場合の扱いと一致します。
+
+Adding the binary independence clauses ¬x_u∨¬x_v for every edge uv restricts the base assignments to independent sets. An independent set dominates G exactly when it is maximal under inclusion. The same two counts therefore count maximal independent sets. Complementation gives a bijection with minimal vertex covers, with |C|=n−|I|, so their total and size-specific counts have the same A(n) bound. Here maximal and minimal refer to inclusion, not to maximum or minimum cardinality.
+
+各辺uvに二項節¬x_u∨¬x_vを加えれば、基本割当てを独立集合に制限できます。独立集合がGを支配することは、集合包含に関して極大であることと同値です。したがって同じ2回の計数で極大独立集合を数えられます。補集合との対応は極小頂点被覆への全単射で、|C|=n−|I|です。その総数やサイズ別の個数にも同じA(n)上界を得ます。ここでの極大・極小は集合包含に関するもので、頂点数の最大・最小とは区別します。
+
+### 9.4 Feasibility, optimization and reconstruction / 存在判定・最適化・解の復元
+
+For any of these restrictions, feasibility is the positivity of the difference Z₀−Z₁. Satisfiability of either query alone does not generally decide it. Apply Section 8 with the condition ∑x≤s to find a minimum dominating set or a minimum independent dominating set. The at-most threshold is monotone even though the existence of a maximal independent set of exactly s vertices need not be. After obtaining the optimum, fix each x_v in turn and keep a value for which the difference remains positive under the optimum-size bound. There are O(log(n+1)) threshold tests and O(n) reconstruction tests, each using two sequential #SAT calls. All added conditions preserve O(n) variables, polynomial encoding length and polynomial space.
+
+これらの追加条件を課した場合も、実行可能解があることは差Z₀−Z₁が正であることに対応します。どちらか一方の式の充足可能性だけでは、一般には判定できません。∑x≤sという条件で第8節の手順を使えば、最小支配集合や最小独立支配集合を求められます。ちょうどs頂点の極大独立集合が存在するかどうかは単調でなくても、高々s頂点という閾値なら単調です。最適値が分かったら、そのサイズ上限の下で差が正のままになる値を残し、x_vを一つずつ固定して解を復元します。閾値の判定はO(log(n+1))回、復元の判定はO(n)回で、各回につき#SATを2回、逐次実行します。追加条件を含めてもO(n)変数、多項式の符号長、多項式領域を保ちます。

@@ -14,60 +14,69 @@ Data date: 2026-10-28
 | --- | --- |
 | ID | `exact-minimum-dominating-set` |
 | Track | Exact exponential-time algorithms |
-| Size measure | n vertices plus m edges |
-| Measure symbol | $n+m$ |
-| Restrictions | Unweighted simple undirected graphs; optimum cardinality and an optimum set. |
+| Size measure | n = \|V(G)\| original vertices; m = \|E(G)\| original edges. The primary exponential-time measure is n; L denotes the original input bit length. |
+| Measure symbol | $n$ |
+| Restrictions | Unweighted simple undirected graphs with no degree or density restriction. Compute the minimum cardinality and an optimum dominating vertex set. |
 | Fixed constants | None |
 | Variant | `optimization` |
 | Origin / claim status | `catalog-deduction` / `derivation-available` |
-| Review status | `draft` |
+| Review status | `ai-audited` |
 | Comparison status | `not-systematically-surveyed` |
 
 **Catalog deduction.** This entry records a derivation assembled in this catalog, rather than attributing the full consequence to a source theorem. Its review and comparison status are stated separately.
 
 ## Exact assumptions and conditional bounds
 
-- [`sat26-sparse`](../../ASSUMPTIONS.md#sat26-sparse)
+- [`sat26-general`](../../ASSUMPTIONS.md#sat26-general)
 - [`sat26-reported-formal`](../../ASSUMPTIONS.md#sat26-reported-formal)
+- [`sat26-sparse`](../../ASSUMPTIONS.md#sat26-sparse)
 
-Conditional on `sat26-sparse`:
+Conditional on `sat26-general`:
 
 $$
-2^{O((n+m)/\sqrt{\log(n+m)})}L^{O(1)}
+2^{O(n\log\log n/\sqrt{\log n})}L^{O(1)}
 $$
 
 Alternatively, conditional on `sat26-reported-formal`:
 
 $$
-2^{O((n+m)(\log\log(n+m))^2/\sqrt{\log(n+m)})}L^{O(1)}
+2^{O(n(\log\log n)^2/\sqrt{\log n})}L^{O(1)}
 $$
 
 The resulting algorithm is deterministic and uses polynomial space, conditional on the corresponding assumption and this derivation. $L$ denotes the original input length; constants may depend on the stated fixed constants. Logarithms in asymptotic bounds may be regularized when the declared measure is small.
 
 ## Preprocessing
 
-Use the closed-neighborhood OR circuits on the original graph.
+Keep the original graph and every declared vertex, including isolated vertices. For n = 0 return value 0 and the empty set. Handle threshold budgets outside [0,n] directly.
 
 ## Encoding size
 
 | Quantity | Bound |
 | --- | --- |
-| Boolean variables, including auxiliaries | $O(n+m)$ |
+| Boolean variables, including auxiliaries | $O(n)$ |
 | Clauses | $O(n+m)$ |
 | Maximum clause width | $3$ |
 
 ## Derivation
 
-1. Combine the exact OR-gate encoding with the threshold $\sum_v x_v\le t$, adding O(n) cardinality gates.
+1. For a budget b, use selection bits x_v and optional markers y_v, and add $\neg y_v\vee\neg x_u$ for every u∈N[v]. Compute the XOR of all y_v by full-equivalence width-three gates. Add $\sum_v x_v\le b$ with the linear cardinality circuit, and form the two formulas with even and odd marker parity.
 
-2. Each threshold test has O(n+m) variables and clauses. Binary search over [0,n] and bit-fixing self-reduction use polynomially many calls and polynomial space.
+2. Let C_b be the even count minus the odd count. For any chosen S of size at most b, its signed contribution is $\sum_{T\subseteq U(S)}(-1)^{|T|}$, where U(S) is the set of undominated vertices. Thus C_b counts precisely the dominating sets within the budget, and C_b>0 is the required feasibility test. Any already fixed x-bits are imposed in both formulas.
 
-3. The sparse SAT profile therefore gives B(n+m) times a polynomial input-length factor. This is subexponential in n when m=O(n).
+3. The two formulas each use 2n selection/marker bits, at most n−1 parity outputs, and O(n) counter/comparator auxiliaries. Gate extensions are unique for fixed x and y. Hence N=O(n), M=O(n+m), and width is at most three. Each count has O(n) bits; exact subtraction is polynomial-time. The explicit CNF bit length is O((n+m) log(n+2)), polynomial in the original L.
+
+4. Binary search for the first b with C_b>0 uses O(log(n+1)) feasibility queries, each comprising two exact #SAT calls. Let b* be the optimum. Keep the original graph and budget b*, then test each x_v=0 together with the previous fixed choices. Retain 0 when the corresponding parity difference is positive; otherwise fix x_v=1. At most n further feasibility queries recover a dominating set of size exactly b*, since a smaller one would contradict optimality.
+
+5. The polynomial number of sequential exact-counting calls gives A(n)L^{O(1)} time and polynomial space, including construction, O(n)-bit arithmetic, and the stored witness prefix. The reported formalization assumption gives its separate weaker displayed bound. Satisfiability of only one parity formula is not the feasibility oracle used here.
+
+6. The previous direct OR-circuit encoding also remains valid: require $\bigvee_{u\in N[v]}x_u$ for every v by full binary OR equivalences and add the same budget. This has N+M=O(n+m), giving the alternative B(n+m)L^{O(1)} bound under the unchanged sparse assumption with forced-zero padding if needed. Binary search and bit fixing can use ordinary SAT decisions for that direct route. On classes m≤Dn for fixed D, either route gives B(n)L^{O(1)}.
 
 ## Caveats and comparison limits
 
-- The input has no degree restriction, but the n-based subexponential conclusion is stated only for sparse graphs.
-- No weighted variant is included.
+- The primary bound is subexponential in the original vertex count n even for dense graphs, and uses the full exact-counting part of the fixed-width SAT assumption.
+- During reconstruction, preserve the original domination neighborhoods and add unit clauses for the choice bits. The test is positivity of an exact even-minus-odd count, not satisfiability of one auxiliary formula.
+- The older B(n+m) route uses a different size accounting and remains an alternative; no SAT assumption or source version is strengthened or changed.
+- No weighted variant or latest-best algorithm comparison is included.
 
 The derivation must preserve the objective and account for the encoding length of numerical values; a decision consequence alone does not establish the stated optimization bound.
 
@@ -77,10 +86,11 @@ Not systematically surveyed
 
 ## Sources and exact locators
 
-No additional literature dependency is recorded; see the derivation and its named SAT assumptions.
+- **`van-rooij-nederlof-van-dijk2008`** — [Johan M. M. van Rooij, Jesper Nederlof, and Thomas C. van Dijk, Inclusion/Exclusion Meets Measure and Conquer: Exact algorithms for counting dominating sets](https://ics-archive.science.uu.nl/research/techreps/repo/CS-2008/2008-043.pdf). Version: Utrecht University Technical Report UU-CS-2008-043, November 2008; 20-page report including cover pages. Locator: Abstract and Section 1: historical context for inclusion/exclusion in counting dominating sets. The marker/parity transformation and its conditional SAT bounds below are catalog deductions, not results attributed to this paper..
+- **`sinz2005`** — [Carsten Sinz, Towards an Optimal CNF Encoding of Boolean Cardinality Constraints](https://www.carstensinz.de/techreports/CardConstraints.pdf). Version: Author-hosted 14-page technical report accompanying the CP 2005 paper; accessed 28 October 2026. Locator: Sections 4.1–4.2 and Theorem 2: binary-counter/comparator cardinality encodings; use the explicit full-equivalence width-three implementation in METHODS.md, Section 2, for linear auxiliary size and unique extension..
 
 ## Review record
 
-Status: `draft`
+Status: `ai-audited`
 
-No named human review is recorded.
+- 2026-10-28 — Codex agent linear_kernel_fpt (`ai`): 2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 220419d79f5b960bf6d0621c8a3a5ae1d1009b820fc3280d4ee7b5b63714e43b (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, marker implications, exact even-minus-odd cancellation, unique XOR/cardinality extensions, all auxiliary-variable/clause/width counts, original measures, count bit lengths, positive-difference optimization and reconstruction, at-most-threshold monotonicity, isolated/empty-input cases, sparse/direct alternatives, and historical-source scope. METHODS.md Section 9 was checked against these entries. Two English U(S) definitions were clarified and rechecked. Small-instance checks covered 76 simple graphs through n=4 and 1,111 CNF inputs; these finite checks do not prove the general claims. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、印の含意、偶数側と奇数側の正確な相殺、XOR・個数制約の一意拡張、補助変数・節・幅、元の尺度、計数値のビット長、差の正値性による最適化・復元、サイズ上限の閾値の単調性、孤立点・空入力、疎な場合と直接符号化、引用範囲を確認。METHODS第9節との一致と英語のU(S)の定義2箇所の修正を再確認した。小例は頂点数4以下の単純グラフ76個とCNF入力1,111個で検査し、一般の証明とは区別する。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。

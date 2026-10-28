@@ -23,21 +23,24 @@ $$
 
 [この区分の一覧を開く](FPT.ja.md)
 
-| 問題 | パラメータ | 固定定数 | 計算時間の因子 | 確認 |
-| --- | --- | --- | --- | --- |
-| [Vertex Cover](docs/ja/vertex-cover-solution-size.md) | 解サイズの上限 k | なし | $A(k)$ | `ai-audited` |
-| [Cluster Vertex Deletion](docs/ja/cluster-vertex-deletion.md) | 削除頂点数の上限 k | なし | $A(k)$ | `draft` |
-| [Bounded-Degree Vertex Deletion](docs/ja/bounded-degree-vertex-deletion.md) | 削除頂点数の上限 k | d | $A(k)$ | `draft` |
-| [Component Order Connectivity](docs/ja/component-order-connectivity.md) | 削除頂点数の上限 k | ell | $A(k)$ | `draft` |
-| [固定qのList Coloring](docs/ja/list-coloring-vertex-cover.md) | vertex cover number k | q | $A(k)$ | `draft` |
-| [cographへの距離による固定qのList Coloring](docs/ja/list-coloring-cograph-deletion.md) | cograph vertex deletion number k | q | $A(k)$ | `draft` |
-| [固定領域・固定arityのCSP](docs/ja/finite-csp-primal-vertex-cover.md) | primal graphのvertex cover number k | q, r | $A(k)$ | `draft` |
-| [次数有界グラフのIndependent Set](docs/ja/bounded-degree-independent-set.md) | 目標独立集合サイズ k | Delta | $B(k)$ | `draft` |
-| [次数有界グラフのDominating Set](docs/ja/bounded-degree-dominating-set.md) | 解サイズの上限 k | Delta | $B(k)$ | `draft` |
-| [出現回数有界のd-Hitting Set](docs/ja/bounded-occurrence-hitting-set.md) | 選ぶ要素数の上限 k | d, r | $B(k)$ | `draft` |
-| [出現回数有界のd-Set Packing](docs/ja/bounded-occurrence-set-packing.md) | 選ぶ互いに素な集合の目標個数 k | d, r | $B(k)$ | `draft` |
-| [固定領域・固定arityのMax-CSP](docs/ja/max-csp-absolute-target.md) | 満たす制約数の絶対目標 k | q, r | $B(k)$ | `draft` |
-| [有界次数グラフのEdge Dominating Set](docs/ja/bounded-degree-edge-dominating-set.md) | 選択辺数の上限 k | maximum degree Δ ≥ 1 | $B(k)$ | `ai-audited` |
+| 問題 | 問題の版 | パラメータ | 固定定数 | 計算時間の因子 | 確認 |
+| --- | --- | --- | --- | --- | --- |
+| [Vertex Cover](docs/ja/vertex-cover-solution-size.md) | 判定 | 解サイズの上限 k | なし | $A(k)$ | `ai-audited` |
+| [Cluster Vertex Deletion](docs/ja/cluster-vertex-deletion.md) | 判定 | 削除頂点数の上限 k | なし | $A(k)$ | `draft` |
+| [Bounded-Degree Vertex Deletion](docs/ja/bounded-degree-vertex-deletion.md) | 判定 | 削除頂点数の上限 k | d | $A(k)$ | `draft` |
+| [Component Order Connectivity](docs/ja/component-order-connectivity.md) | 判定 | 削除頂点数の上限 k | ell | $A(k)$ | `draft` |
+| [固定qのList Coloring](docs/ja/list-coloring-vertex-cover.md) | 判定 | vertex cover number k | q | $A(k)$ | `draft` |
+| [cographへの距離による固定qのList Coloring](docs/ja/list-coloring-cograph-deletion.md) | 判定 | cograph vertex deletion number k | q | $A(k)$ | `draft` |
+| [固定領域・固定arityのCSP](docs/ja/finite-csp-primal-vertex-cover.md) | 判定 | primal graphのvertex cover number k | q, r | $A(k)$ | `draft` |
+| [次数有界グラフのIndependent Set](docs/ja/bounded-degree-independent-set.md) | 判定 | 目標独立集合サイズ k | Delta | $B(k)$ | `draft` |
+| [次数有界グラフのDominating Set](docs/ja/bounded-degree-dominating-set.md) | 判定 | 解サイズの上限 k | Delta | $B(k)$ | `draft` |
+| [出現回数有界のd-Hitting Set](docs/ja/bounded-occurrence-hitting-set.md) | 判定 | 選ぶ要素数の上限 k | d, r | $B(k)$ | `draft` |
+| [出現回数有界のd-Set Packing](docs/ja/bounded-occurrence-set-packing.md) | 判定 | 選ぶ互いに素な集合の目標個数 k | d, r | $B(k)$ | `draft` |
+| [固定領域・固定arityのMax-CSP](docs/ja/max-csp-absolute-target.md) | 判定 | 満たす制約数の絶対目標 k | q, r | $B(k)$ | `draft` |
+| [有界次数グラフのEdge Dominating Set](docs/ja/bounded-degree-edge-dominating-set.md) | 判定 | 選択辺数の上限 k | maximum degree Δ ≥ 1 | $B(k)$ | `ai-audited` |
+| [Vertex Coverが小さいグラフのMaximum Clique](docs/ja/clique-vertex-cover.md) | 最適化 | 入力グラフのvertex cover number k | なし | $A(k)$ | `ai-audited` |
+| [Vertex Coverが小さいグラフの指定サイズClique計数](docs/ja/count-cliques-vertex-cover.md) | 計数 | vertex cover number k。求めるクリークサイズℓは入力の一部 | なし | $A(k)$ | `ai-audited` |
+| [出現回数の比が有界な固定ランクHitting Set](docs/ja/bounded-ratio-occurrence-hitting-set.md) | 判定 | 選ぶ要素数の上限 k | d, R | $A(k)$ | `ai-audited` |
 
 ## 厳密指数時間アルゴリズム
 
@@ -52,11 +55,18 @@ $$
 | [固定領域・固定arityのCSP解の厳密計数](docs/ja/exact-count-finite-csp.md) | 計数 | $n$ | $A(n)$ | `draft` |
 | [Perfect Matchingの厳密計数](docs/ja/exact-count-perfect-matchings.md) | 計数 | $m$ | $B(m)$ | `draft` |
 | [次数制約を満たす辺集合の厳密計数](docs/ja/exact-count-degree-constrained-edge-sets.md) | 計数 | $m$ | $B(m)$ | `draft` |
-| [Dominating Setの厳密計数](docs/ja/exact-count-dominating-sets.md) | 計数 | $n+m$ | $B(n+m)$ | `draft` |
-| [Minimum Dominating Set](docs/ja/exact-minimum-dominating-set.md) | 最適化 | $n+m$ | $B(n+m)$ | `draft` |
+| [Dominating Setの厳密計数](docs/ja/exact-count-dominating-sets.md) | 計数 | $n$ | $A(n)$ | `ai-audited` |
+| [Minimum Dominating Set](docs/ja/exact-minimum-dominating-set.md) | 最適化 | $n$ | $A(n)$ | `ai-audited` |
 | [Max-Cut](docs/ja/exact-max-cut.md) | 最適化 | $n+m$ | $B(n+m)$ | `draft` |
 | [固定領域・固定arityのMax-CSPの厳密最適化](docs/ja/exact-max-finite-csp.md) | 最適化 | $n+m$ | $B(n+m)$ | `draft` |
 | [Minimum Edge Dominating Set](docs/ja/exact-edge-dominating-set.md) | 最適化 | $m$ | $B(m)$ | `ai-audited` |
+| [極大独立集合 / 極小Vertex Coverの厳密計数](docs/ja/exact-count-maximal-independent-sets.md) | 計数 | $n$ | $A(n)$ | `ai-audited` |
+| [Minimum Independent Dominating Set / Upper Vertex Cover](docs/ja/exact-minimum-independent-dominating-set.md) | 最適化 | $n$ | $A(n)$ | `ai-audited` |
+| [任意幅CNFの充足割当ての厳密計数](docs/ja/exact-count-unrestricted-cnf.md) | 計数 | $n+m$ | $A(n+m)$ | `ai-audited` |
+| [固定有限禁止パターンへの頂点削除の厳密計数](docs/ja/exact-count-finite-obstruction-vertex-deletions.md) | 計数 | $n$ | $A(n)$ | `ai-audited` |
+| [固定有限禁止パターンへの頂点削除の厳密最適化](docs/ja/exact-minimum-finite-obstruction-vertex-deletion.md) | 最適化 | $n$ | $A(n)$ | `ai-audited` |
+| [Tournament Feedback Vertex Setの厳密計数](docs/ja/exact-count-tournament-feedback-vertex-sets.md) | 計数 | $n$ | $A(n)$ | `ai-audited` |
+| [Tournament Feedback Vertex Setの厳密最適化](docs/ja/exact-minimum-tournament-feedback-vertex-set.md) | 最適化 | $n$ | $A(n)$ | `ai-audited` |
 
 **既知結果との比較：** 以下に列挙した項目を除き、体系的な比較は未実施です。記録済みの評価：
 

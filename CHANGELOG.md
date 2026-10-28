@@ -1,5 +1,21 @@
 # Changelog / 更新履歴
 
+## 2026-10-28 — Parity counting and additional consequences / 包含排除による計数と追加の帰結
+
+- Added METHODS.md Section 9 in both languages: fixed-width bad events, optional markers, full-equivalence XOR gates, the difference of two exact #SAT counts, the cancellation identity, integer bit lengths, and positive-difference tests for optimization and witness recovery. The scope requires exact counting, not just SAT decision.
+- Strengthened the two Dominating Set entries to A(n) on general graphs, measured by the original number of vertices. Preserved the direct B(n+m) construction and the B(n) bound for fixed-density graphs.
+- Added seven exact-algorithm entries: maximal independent set/minimal vertex cover counting; minimum independent domination/Upper Vertex Cover; arbitrary-width CNF counting at scale n+m; and separate counting/optimization entries for fixed finite-obstruction vertex deletion and Tournament Feedback Vertex Set at scale n. The latter two families do not establish a solution-size-k bound.
+- Added three FPT entries: maximum Clique and specified-size clique counting parameterized by vertex cover number, and fixed-rank Hitting Set with a fixed maximum/minimum positive occurrence ratio. The ratio condition allows unbounded absolute occurrence; incidence counting gives the required O(k) universe. Added a variant column to the FPT indexes.
+- Added the 2008 van Rooij–Nederlof–van Dijk report as historical context for inclusion-exclusion in dominating-set counting, without attributing the two-query SAT transformation to it. No novelty or systematic latest-best claim is made.
+- The snapshot now has 35 entries (16 FPT and 19 exact) and 10 candidates. Separate AI reviewers audited the twelve added/revised entry records, including their English/Japanese text, encoding sizes, boundary cases, arithmetic, and variant/parameter scope; their reviewed payload hashes and scopes are recorded. There are 15 AI-audited entries and one AI-audited candidate in total; the remaining records are draft. This is not human review or verification of the underlying SAT theorem. The pinned SAT assumptions, other existing entries, and candidate records are unchanged.
+
+- METHODS.md第9節を英日で追加。固定幅の禁止事象、任意に選べる印、完全同値のXORゲート、正確な#SATの2回の計数値の差、相殺の恒等式、整数のビット長、差の正値性による最適化・復元を説明。SATの判定だけでなく、正確な計数を使う範囲を明示しました。
+- Dominating Setの2項目を、一般グラフでも元の頂点数nに関するA(n)へ強化。直接構成によるB(n+m)と、密度を固定したグラフのB(n)を維持しました。
+- 厳密アルゴリズム7項目を追加。極大独立集合・極小vertex coverの計数、最小独立支配集合・Upper Vertex Cover、n+mを尺度とする任意幅CNFの計数、元のnを尺度とする固定有限禁止族への頂点削除とTournament Feedback Vertex Setの計数・最適化を収録。後二者から解サイズkに関する上界は主張しません。
+- FPT 3項目を追加。vertex cover numberに関する最大Cliqueと指定サイズのクリークの計数、rankと最大・最小の正の出現回数の比を固定したHitting Setです。出現回数の絶対値は非有界でもよく、所属関係の数え上げで台集合をO(k)に抑えます。FPT索引にも問題の版の列を追加しました。
+- 支配集合の計数における包含排除の背景としてvan Rooij・Nederlof・van Dijkの2008年報告を追加。SATを2回数える変換の出典とは扱わず、新規性や最新最良の系統的比較は主張しません。
+- 計35項目（FPT 16・厳密19）と候補10項目になりました。追加・更新した12項目は別担当のAIが英日、符号化サイズ、境界例、数値演算、版・パラメータの範囲を監査し、対象データのhashと確認範囲を記録。全体で15項目と候補1項目がAI監査済み、残りはdraftです。人間の確認や元のSAT定理の証明検証を意味しません。固定されたSATの仮定、他の既存項目、候補のデータは維持しています。
+
 ## 2026-10-28 — Vertex Cover encoding and Edge Dominating Set / VCの符号化とEdge Dominating Set
 
 - Expanded the bilingual Vertex Cover derivation: edge clauses use existing vertex variables, the cardinality circuit adds only O(k) variables, and the final O(k)-variable/O(k²)-clause formula uses the general-density SAT assumption. The bound itself is unchanged.

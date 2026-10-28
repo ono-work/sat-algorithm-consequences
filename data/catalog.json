@@ -152,6 +152,12 @@
       "url": "https://cseweb.ucsd.edu/~russell/ipz.pdf",
       "version": "Journal of Computer and System Sciences 63(4) (2001), pages 512–530",
       "locator": "Sections 1.1.1–1.1.4 (size measures and reductions preserving subexponential complexity)"
+    },
+    "van-rooij-nederlof-van-dijk2008": {
+      "title": "Johan M. M. van Rooij, Jesper Nederlof, and Thomas C. van Dijk, Inclusion/Exclusion Meets Measure and Conquer: Exact algorithms for counting dominating sets",
+      "url": "https://ics-archive.science.uu.nl/research/techreps/repo/CS-2008/2008-043.pdf",
+      "version": "Utrecht University Technical Report UU-CS-2008-043, November 2008; 20-page report including cover pages",
+      "locator": "Abstract and Section 1: inclusion/exclusion in exact algorithms for counting dominating sets. Historical context only; the two-query marker/parity transformation and conditional SAT substitutions in this catalog are not attributed to this paper."
     }
   },
   "entries": [
@@ -942,6 +948,240 @@
       }
     },
     {
+      "id": "clique-vertex-cover",
+      "track": "fpt",
+      "measure_tex": "k",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent fpt_other_routes",
+          "scope": "2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 3cb1ea4ae8393458c5c197ef1c4f1b7ec40f3d724fba1ef1df071afe8bff39e0 (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, N/M/width and encoded bit lengths, the maximal-matching cover, clique case decomposition and outside-vertex reconstruction, disjoint specified-size counts and boundary cases, the fixed-rank/fixed-ratio incidence bound, occurrence counts before duplicate removal, decision-versus-counting scope, polynomially many calls, polynomial space, and schema consistency. The cover-computation clarification was rechecked. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、符号化の変数・節・幅・ビット長、極大マッチングからの被覆、クリークの分解・外側頂点を含む復元、非重複計数と境界例、固定rank・出現比の不等式と重複除去の順序、判定と計数の範囲、呼出し回数・領域を確認。被覆の求め方の明確化も再確認した。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
+      "variant": "optimization",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(k)",
+        "clauses_tex": "O(k^2)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: the binary-counter/comparator technique. The explicit width-3 implementation is derived in METHODS.md, Section 2; the clique decomposition is proved in this entry."
+        }
+      ],
+      "en": {
+        "name": "Maximum Clique with Small Vertex Cover",
+        "parameter": "Vertex cover number k of the input graph",
+        "restrictions": "Unweighted simple undirected graphs given explicitly. Compute the maximum clique size and a clique attaining it. The parameter is the minimum vertex cover size, not the requested clique size.",
+        "preprocessing": "Let G have n vertices. Compute any maximal matching and let C contain its endpoints. Put I = V(G) \\ C. A matching of size q forces every vertex cover to contain at least q vertices, so |C| ≤ 2k. Maximality makes C a vertex cover; hence I is independent. This preprocessing is polynomial and does not require a minimum vertex cover. Handle an empty graph directly.",
+        "derivation": [
+          "Every clique uses either no vertex of I or exactly one vertex v of I. Consequently, $\\omega(G)=\\max\\bigl(\\{\\omega(G[C])\\}\\cup\\{1+\\omega(G[C\\cap N(v)]):v\\in I\\}\\bigr)$, where the clique number of the empty graph is zero. Each graph in these subproblems has at most |C| ≤ 2k vertices.",
+          "For one such vertex set B and a threshold t, use one selection bit x_u for each u in B. For every nonedge uv of G[B], add $\\neg x_u\\vee\\neg x_v$ directly. Add the linear-size cardinality circuit for $\\sum_{u\\in B}x_u\\ge t$ from [METHODS.md, Section 2](../../METHODS.md). Thresholds outside [0,|B|] are handled directly.",
+          "The nonedge clauses enforce that the selected vertices form a clique, and the cardinality circuit enforces the threshold. Including all sum, carry, and comparison outputs, each query has N = O(k), M = O(k²), and width at most three. Nonedge clauses use existing selection variables and introduce no auxiliary variable per nonedge.",
+          "Binary search finds the clique number of each of the at most n+1 subproblems using O(log(k+2)) threshold calls. Retain a case attaining the maximum, including its outside vertex v when the case has one. The total number of calls at this stage is O((n+1) log(k+2)).",
+          "For the retained case, fix the optimum threshold and determine its selection bits one by one. Tentatively fix the next bit to zero; keep zero if the formula remains satisfiable and otherwise fix it to one. The current formula always has a satisfying extension, so this takes O(k) additional SAT calls. Add the retained outside vertex, if any, to recover an optimum clique of G. Only O(k) unit clauses are added.",
+          "All subproblem construction and graph access take polynomial time in the original input length L. Execute the queries sequentially. Their polynomial number and the O(k² log(k+2)) bit length of each nontrivial CNF are absorbed into the polynomial factor, giving the displayed conditional A(k) bound with polynomial space.",
+          "The maximal-matching argument and the clique decomposition above are self-contained catalog deductions. Sinz supplies background for the established cardinality technique; inclusion of this consequence is not a novelty claim."
+        ],
+        "caveats": [
+          "The displayed N and M bounds are per query; the algorithm makes polynomially many queries rather than joining all cases into one formula.",
+          "The cover C computed from the maximal matching need not be minimum; the construction guarantees |C| ≤ 2k.",
+          "The nonedge clauses can be quadratic in k. This route justifies the general-density A(k) profile, without a sparse B(k) claim.",
+          "This entry is unweighted. It does not establish an FPT bound in clique size or a bound for binary-weighted Maximum Clique."
+        ]
+      },
+      "ja": {
+        "name": "Vertex Coverが小さいグラフのMaximum Clique",
+        "parameter": "入力グラフのvertex cover number k",
+        "restrictions": "明示的に与えられた非重み付き単純無向グラフ。最大クリークのサイズと、それを達成するクリークを求める。パラメータは最小vertex coverのサイズであり、探すクリークのサイズではない。",
+        "preprocessing": "Gの頂点数をnとする。極大マッチングを一つ計算し、その両端点の集合をC、I = V(G) \\ Cとする。サイズqのマッチングの各辺を覆うには少なくともq頂点が必要なので、|C| ≤ 2k。極大性からCはvertex coverであり、Iは独立集合となる。この前処理は多項式時間で、最小vertex coverの計算は不要。頂点がないグラフは直接処理する。",
+        "derivation": [
+          "クリークがIから使う頂点は0個か1個である。したがって、空グラフの最大クリークサイズを0とすれば、$\\omega(G)=\\max\\bigl(\\{\\omega(G[C])\\}\\cup\\{1+\\omega(G[C\\cap N(v)]):v\\in I\\}\\bigr)$。各部分問題のグラフは高々|C| ≤ 2k頂点を持つ。",
+          "そのような頂点集合Bと閾値tについて、Bの各頂点uに選択ビットx_uを一つ置く。G[B]の各非辺uvには $\\neg x_u\\vee\\neg x_v$ を直接置く。[METHODS.md第2節](../../METHODS.md)の線形サイズの個数回路で $\\sum_{u\\in B}x_u\\ge t$ を加える。tが[0,|B|]の外なら直接処理する。",
+          "非辺の節により選んだ頂点がクリークをなし、個数回路により閾値を満たすことを課せる。和・繰り上がり・比較結果の補助変数を全て含めても、各問い合わせはN = O(k)、M = O(k²)、幅3以下である。非辺の節には既存の選択変数を使い、非辺ごとの補助変数は置かない。",
+          "高々n+1個の各部分問題で、O(log(k+2))回の閾値問い合わせによる二分探索から最大クリークサイズを求める。全体の最大値を与えた場合を一つ記録し、Iの頂点vを使う場合はvも記録する。この段階の問い合わせ総数はO((n+1) log(k+2))回。",
+          "記録した場合について最適閾値を固定し、選択ビットを順に決める。次のビットを仮に0へ固定し、充足可能なら0を採用し、そうでなければ1へ固定する。現在の式は常に充足可能な拡張を持つため、追加のSAT問い合わせO(k)回で求まる。必要なら記録した外側の頂点vを加え、Gの最大クリークを復元する。増えるのはO(k)個の単位節だけである。",
+          "部分問題の構成とグラフの参照は元入力長Lの多項式時間で行う。問い合わせは逐次実行する。多項式回の呼出しと、各非自明なCNFのビット長O(k² log(k+2))を多項式因子に含めることで、表示した条件付きのA(k)上界と多項式領域を得る。",
+          "極大マッチングの議論と上のクリークの分解は、この項目で示した自己完結した導出である。Sinzの論文は既知の個数制約の技法の背景として参照し、この帰結の掲載を新規性の主張とはしない。"
+        ],
+        "caveats": [
+          "表示したN,Mは一回の問い合わせの評価である。全ての場合を一つの式に結合せず、多項式回の問い合わせを行う。",
+          "極大マッチングから計算する被覆Cは最小でなくてよい。この構成により|C| ≤ 2kが保証される。",
+          "非辺の節はkの二次個になり得る。この方法が正当化するのは一般密度のA(k)であり、疎な場合のB(k)は主張しない。",
+          "非重み付きの項目である。クリークサイズについてのFPT上界や、二進重み付きMaximum Cliqueの上界は導いていない。"
+        ]
+      }
+    },
+    {
+      "id": "count-cliques-vertex-cover",
+      "track": "fpt",
+      "measure_tex": "k",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent fpt_other_routes",
+          "scope": "2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 27984780022f518b7002bcea2adeb050f666d38aeffd03be1a3536f12d7ef1b1 (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, N/M/width and encoded bit lengths, the maximal-matching cover, clique case decomposition and outside-vertex reconstruction, disjoint specified-size counts and boundary cases, the fixed-rank/fixed-ratio incidence bound, occurrence counts before duplicate removal, decision-versus-counting scope, polynomially many calls, polynomial space, and schema consistency. The cover-computation clarification was rechecked. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、符号化の変数・節・幅・ビット長、極大マッチングからの被覆、クリークの分解・外側頂点を含む復元、非重複計数と境界例、固定rank・出現比の不等式と重複除去の順序、判定と計数の範囲、呼出し回数・領域を確認。被覆の求め方の明確化も再確認した。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
+      "variant": "counting",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(k)",
+        "clauses_tex": "O(k^2)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: the binary-counter/comparator technique. Width three and unique extension follow from the full-equivalence gates in METHODS.md, Section 2; the disjoint clique partition is proved in this entry."
+        }
+      ],
+      "en": {
+        "name": "Counting Cliques of a Specified Size with Small Vertex Cover",
+        "parameter": "Vertex cover number k; the requested clique size ℓ is part of the input",
+        "restrictions": "Simple undirected graphs given explicitly. Count vertex subsets of size ℓ that induce a clique, without ordering their vertices. The size-zero count is one, representing the empty clique.",
+        "preprocessing": "Keep all original vertices, including isolates. Let C be the endpoints of any maximal matching and put I = V(G) \\ C. Then |C| ≤ 2k and I is independent: every cover meets each matching edge, and an edge entirely outside C would contradict maximality. This is polynomial-time decomposition, with no decision kernel. Handle ℓ < 0 or ℓ > |C|+1 as count zero, and ℓ = 0 as count one.",
+        "derivation": [
+          "Let Q_j(H) be the number of j-vertex cliques in H, with Q_0(H)=1 and Q_j(H)=0 when j<0 or j>|V(H)|. Since a clique uses at most one vertex outside C, $Q_\\ell(G)=Q_\\ell(G[C])+\\sum_{v\\in I}Q_{\\ell-1}(G[C\\cap N(v)])$.",
+          "These cases are disjoint. A clique entirely in C belongs to the first term; every other clique has exactly one outside vertex v, which determines its term uniquely. No outside-extension multiplicity is discarded: each possible outside vertex is represented by its own summand.",
+          "For each term on a vertex set B, use one bit x_u per u in B and impose $\\neg x_u\\vee\\neg x_v$ for each nonedge uv of G[B]. Add $\\sum_{u\\in B}x_u=j$ with the linear-size adder from [METHODS.md, Section 2](../../METHODS.md), using full equivalences for every gate and fixing the sum bits to j. Handle empty B and impossible j directly.",
+          "Each j-clique of G[B] determines one input assignment and exactly one extension to all sum and carry variables. Thus #SAT returns exactly Q_j(G[B]). Each query has N = O(k), M = O(k²), and width at most three, including all auxiliary variables.",
+          "For a specified ℓ, at most n+1 counting calls suffice, where n is the original number of vertices. Add their integer answers. Every answer and their sum have at most n+1 bits because the number of cliques is at most 2^n, so this arithmetic is polynomial in the input length L.",
+          "The whole size distribution, and hence the total number of cliques including the empty clique, can also be obtained by repeating for ℓ = 0,...,|C|+1. This uses O((n+1)(k+2)) calls; all larger sizes have count zero. The specified-size algorithm and this optional extension both satisfy the displayed conditional A(k) bound with polynomial space when calls are executed sequentially.",
+          "The decomposition and counting bijection are self-contained catalog deductions. The argument uses the original vertices throughout and does not infer preservation of counts from a decision kernel."
+        ],
+        "caveats": [
+          "The parameter is the vertex cover number k, not ℓ. An optimum vertex cover need not be supplied or computed.",
+          "A nonminimal computed cover does not cause double counting: the fixed partition C,I determines a unique case for each clique.",
+          "Isolated vertices contribute their singleton cliques through the outside-vertex summands. The empty clique occurs only in the size-zero first term.",
+          "Per-query clause counts can be quadratic in k, so the general-density A(k) profile is used. Full gate equivalences, not mere equisatisfiability, justify the counting step."
+        ]
+      },
+      "ja": {
+        "name": "Vertex Coverが小さいグラフの指定サイズClique計数",
+        "parameter": "vertex cover number k。求めるクリークサイズℓは入力の一部",
+        "restrictions": "明示的に与えられた単純無向グラフ。クリークをなすサイズℓの頂点部分集合を数え、頂点の並べ方は数えない。サイズ0の個数は、空クリークに対応する1とする。",
+        "preprocessing": "孤立点を含む元の頂点を全て残す。極大マッチングの両端点をC、I = V(G) \\ Cとする。被覆はマッチングの各辺を覆い、Cの外に辺があれば極大性に反するので、|C| ≤ 2kかつIは独立集合。これは多項式時間の分解であり、判定カーネルは使わない。ℓ < 0またはℓ > |C|+1なら個数0、ℓ = 0なら個数1として直接処理する。",
+        "derivation": [
+          "Hのj頂点クリーク数をQ_j(H)と書き、Q_0(H)=1、j<0またはj>|V(H)|ならQ_j(H)=0とする。クリークはCの外から高々一頂点しか使わないため、$Q_\\ell(G)=Q_\\ell(G[C])+\\sum_{v\\in I}Q_{\\ell-1}(G[C\\cap N(v)])$。",
+          "これらの場合は互いに重ならない。C内に収まるクリークは最初の項に属し、それ以外のクリークは外側の唯一の頂点vにより属する項が一意に決まる。外側への拡張の多重度は捨てておらず、使える外側の頂点ごとに別の項を置いている。",
+          "各項の頂点集合Bに対して、各uにビットx_uを一つ置き、G[B]の各非辺uvに $\\neg x_u\\vee\\neg x_v$ を課す。[METHODS.md第2節](../../METHODS.md)の線形サイズの加算器で $\\sum_{u\\in B}x_u=j$ を加え、全ゲートを同値で定義し、和のビットをjへ固定する。Bが空の場合とjが不可能な場合は直接処理する。",
+          "G[B]の各j頂点クリークは入力割当て一つを定め、和と繰り上がりの全変数への拡張も一意となる。したがって#SATはQ_j(G[B])を正確に返す。全補助変数を含め、各問い合わせはN = O(k)、M = O(k²)、幅3以下である。",
+          "元の頂点数をnとすると、指定されたℓには高々n+1回の計数問い合わせで足り、その整数の結果を足す。クリーク数は高々2^nなので、各結果とその和のビット長は高々n+1であり、整数演算も元入力長Lの多項式時間で行える。",
+          "ℓ = 0,...,|C|+1について繰り返せば、サイズごとの個数全体と、空クリークを含む総クリーク数も求まる。呼出しはO((n+1)(k+2))回で、それより大きいサイズの個数は0である。指定サイズの計数も、この追加の計数も、問い合わせを逐次実行すれば、表示した条件付きのA(k)上界と多項式領域を満たす。",
+          "分解と計数の一対一対応は、この項目で示した自己完結した導出である。元の頂点を使ったまま議論しており、判定カーネルから計数の保存を推論していない。"
+        ],
+        "caveats": [
+          "パラメータはℓでなくvertex cover number kである。最小vertex coverが入力に付属する必要も、それを計算する必要もない。",
+          "計算した被覆が最小でなくても重複計数は起こらない。固定した分割C,Iにより、各クリークの属する場合が一意に決まる。",
+          "孤立点の一頂点クリークは、外側の頂点に対応する各項から数えられる。空クリークはサイズ0の場合の最初の項だけに現れる。",
+          "一回の問い合わせの節数はkの二次個になり得るため、一般密度のA(k)を使う。計数を正当化するのは全ゲートの同値制約であり、充足可能性の保存だけではない。"
+        ]
+      }
+    },
+    {
+      "id": "bounded-ratio-occurrence-hitting-set",
+      "track": "fpt",
+      "measure_tex": "k",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent fpt_other_routes",
+          "scope": "2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 365cef51f6a29d1f82d33d101ac5363cfe792e0f0f2bfde5752e76e00003c907 (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, N/M/width and encoded bit lengths, the maximal-matching cover, clique case decomposition and outside-vertex reconstruction, disjoint specified-size counts and boundary cases, the fixed-rank/fixed-ratio incidence bound, occurrence counts before duplicate removal, decision-versus-counting scope, polynomially many calls, polynomial space, and schema consistency. The cover-computation clarification was rechecked. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、符号化の変数・節・幅・ビット長、極大マッチングからの被覆、クリークの分解・外側頂点を含む復元、非重複計数と境界例、固定rank・出現比の不等式と重複除去の順序、判定と計数の範囲、呼出し回数・領域を確認。被覆の求め方の明確化も再確認した。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
+      "variant": "decision",
+      "fixed_constants": [
+        "d",
+        "R"
+      ],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O_{d,R}(k)",
+        "clauses_tex": "O_{d,R}(k^d)",
+        "width_tex": "\\max\\{d,3\\}"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: the binary-counter/comparator technique. The linear-size fixed-width implementation is derived in METHODS.md, Section 2; the incidence bound is proved in this entry."
+        }
+      ],
+      "en": {
+        "name": "Fixed-Rank Hitting Set with Bounded Occurrence Ratio",
+        "parameter": "Solution budget k",
+        "restrictions": "An explicitly listed unweighted set family of rank at most a fixed positive integer d. Among elements that occur, let r_min and r_max be the minimum and maximum positive occurrence counts; require r_max ≤ R r_min for a fixed constant R ≥ 1. Occurrence counts use the listed family, including repetitions if any. Their absolute values need not be bounded.",
+        "preprocessing": "Handle a negative budget, an empty set, and an empty family directly. Remove unused universe elements, which are unnecessary for decision. For the remaining nonempty promised input, compute its active universe size n, listed set count m, and positive r_min,r_max before deleting duplicate sets. Reject if n > dRk; otherwise retain the active universe. A budget at least n is an immediate YES. Duplicate sets may then be removed.",
+        "derivation": [
+          "Counting incidences gives $r_{\\min}n\\le\\sum_{S\\in\\mathcal F}|S|\\le dm$. If at most k elements hit every listed set, they cover at most $r_{\\max}k$ listed sets in total, so $m\\le r_{\\max}k$. These necessary conditions imply $n\\le d(r_{\\max}/r_{\\min})k\\le dRk$. Thus the stated rejection is sound, and all remaining nontrivial instances have O_{d,R}(k) active elements.",
+          "The incidence argument uses the original listed family. After the universe bound has been established, removing duplicate sets preserves the decision question. It need not preserve the occurrence-ratio promise, because that promise is no longer needed for the encoding.",
+          "Place one selection bit x_u on each retained element. For every distinct set S add $\\bigvee_{u\\in S}x_u$ directly, and add $\\sum_u x_u\\le k$ with the linear-size cardinality circuit from [METHODS.md, Section 2](../../METHODS.md). A satisfying assignment exists exactly when a hitting set within budget exists.",
+          "There are at most $\\sum_{j=1}^d\\binom{n}{j}=O_d(n^d)$ distinct nonempty sets. Set clauses use only existing selection variables, while the complete cardinality circuit adds O(n) variables and O(n) clauses. Therefore N = O_{d,R}(k), M = O_{d,R}(k^d), and the width is at most max(d,3). Apply the assumed SAT algorithm directly at this fixed width.",
+          "The incidence counts, rejection, removal of unused elements and duplicates, and CNF construction all take polynomial time in the original input length L. For fixed d,R, the CNF has polynomial bit length. Substituting these counts into the general-density SAT assumption gives the displayed conditional A(k) bound with polynomial space.",
+          "The regular case is R=1: all positive occurrence counts have a common value r, which may grow with the input. Thus regular fixed-rank families are included even when r is not fixed. The size reduction follows from the incidence calculation above and does not invoke a kernel theorem for unrestricted Hitting Set."
+        ],
+        "caveats": [
+          "Both the rank d and the ratio bound R are fixed. This does not establish the same bound when either grows with the input.",
+          "A bounded ratio does not bound the absolute occurrence counts or force O(k) clauses. The entry uses A(k); a sparse B(k) conclusion is not supplied.",
+          "Apply the incidence argument before deleting duplicate sets, since duplicate removal can change the occurrence ratio.",
+          "The preprocessing is justified for decision. Removing unused elements does not by itself preserve counts of hitting sets of a specified cardinality.",
+          "The argument concerns the stated occurrence-ratio class; it supplies no derivation for unrestricted fixed-rank Hitting Set."
+        ]
+      },
+      "ja": {
+        "name": "出現回数の比が有界な固定ランクHitting Set",
+        "parameter": "選ぶ要素数の上限 k",
+        "restrictions": "明示的に列挙された非重み付き集合族で、集合サイズは固定正整数d以下。使われる要素の正の出現回数の最小値をr_min、最大値をr_maxとし、固定定数R ≥ 1についてr_max ≤ R r_minを仮定する。出現回数は、重複があればそれも含む入力の列挙に対して数える。出現回数そのものは有界でなくてよい。",
+        "preprocessing": "負の予算、空集合が含まれる場合、空の集合族を直接処理する。使われない要素は判定には不要なので除く。残る非空の入力では、重複集合を削除する前に、使われる要素数n、列挙された集合数m、正のr_min,r_maxを求める。n > dRkならNOとし、そうでなければ使われる要素を残す。予算がn以上なら直ちにYES。ここまで処理してから重複集合を除いてよい。",
+        "derivation": [
+          "所属関係を数えると $r_{\\min}n\\le\\sum_{S\\in\\mathcal F}|S|\\le dm$。高々k要素で列挙された全ての集合をhitできるなら、それらの要素がhitする集合数は合計で高々 $r_{\\max}k$ なので、$m\\le r_{\\max}k$。この必要条件を合わせると $n\\le d(r_{\\max}/r_{\\min})k\\le dRk$ となる。したがって上のNO判定は正しく、残る非自明な入力の要素数はO_{d,R}(k)である。",
+          "この所属関係の計算は、元の列挙された集合族に対して行う。要素数の上界を得た後なら、重複集合を除いても判定結果は変わらない。重複の除去後に出現回数の比の条件が保たれる必要はなく、以後の符号化ではその条件を使わない。",
+          "残した各要素uに選択ビットx_uを一つ置く。相異なる各集合Sに $\\bigvee_{u\\in S}x_u$ を直接置き、[METHODS.md第2節](../../METHODS.md)の線形サイズの個数回路で $\\sum_u x_u\\le k$ を加える。予算内のhitting setがあることと、充足割当てがあることが同値となる。",
+          "相異なる非空集合は高々 $\\sum_{j=1}^d\\binom{n}{j}=O_d(n^d)$ 個。集合の節は既存の選択変数だけを使い、個数回路の全補助変数と全節はそれぞれO(n)個である。したがってN = O_{d,R}(k)、M = O_{d,R}(k^d)、幅はmax(d,3)以下となる。この固定幅のまま、仮定したSATアルゴリズムを使う。",
+          "所属関係の計数、NO判定、使われない要素と重複集合の除去、CNFの構成は、いずれも元入力長Lの多項式時間で行える。固定d,Rに対してCNFのビット長も多項式である。一般密度のSATの仮定へこれらの数を代入すると、表示した条件付きのA(k)上界と多項式領域を得る。",
+          "正則な場合はR=1に対応し、正の出現回数が全て同じrとなる。その共通の値rは入力とともに増えてよい。したがってrを固定しない正則な固定ランク集合族も含む。サイズの縮小は上の所属関係の計算から従い、一般のHitting Setのカーネル定理を使っていない。"
+        ],
+        "caveats": [
+          "ランクdと比の上限Rは両方とも固定する。どちらかが入力とともに増える場合に同じ上界を主張するものではない。",
+          "比が有界でも出現回数そのものは有界とは限らず、節数O(k)も保証しない。この項目ではA(k)を使い、疎な場合のB(k)は導いていない。",
+          "重複集合を削除すると出現回数の比が変わり得るため、所属関係の計算は重複を削除する前に行う。",
+          "前処理は判定について正当化している。使われない要素の除去だけでは、指定サイズのhitting setの個数を保存できない。",
+          "対象は明記した出現回数の比の制限を満たすクラスであり、制限のない固定ランクHitting Setの導出は与えていない。"
+        ]
+      }
+    },
+    {
       "id": "exact-count-independent-sets",
       "track": "exact",
       "measure_tex": "n",
@@ -1368,106 +1608,162 @@
     {
       "id": "exact-count-dominating-sets",
       "track": "exact",
-      "measure_tex": "n+m",
+      "measure_tex": "n",
       "origin": "catalog-deduction",
       "claim_status": "derivation-available",
-      "review_status": "draft",
-      "review_history": [],
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent linear_kernel_fpt",
+          "scope": "2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 bed2bd6efe8fd41df36acbaf0ed697a2b6894339b6b6b66445d2b09ddc27d9ad (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, marker implications, exact even-minus-odd cancellation, unique XOR/cardinality extensions, all auxiliary-variable/clause/width counts, original measures, count bit lengths, positive-difference optimization and reconstruction, at-most-threshold monotonicity, isolated/empty-input cases, sparse/direct alternatives, and historical-source scope. METHODS.md Section 9 was checked against these entries. Two English U(S) definitions were clarified and rechecked. Small-instance checks covered 76 simple graphs through n=4 and 1,111 CNF inputs; these finite checks do not prove the general claims. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、印の含意、偶数側と奇数側の正確な相殺、XOR・個数制約の一意拡張、補助変数・節・幅、元の尺度、計数値のビット長、差の正値性による最適化・復元、サイズ上限の閾値の単調性、孤立点・空入力、疎な場合と直接符号化、引用範囲を確認。METHODS第9節との一致と英語のU(S)の定義2箇所の修正を再確認した。小例は頂点数4以下の単純グラフ76個とCNF入力1,111個で検査し、一般の証明とは区別する。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
       "variant": "counting",
       "fixed_constants": [],
       "depends_on": [
-        "sat26-sparse",
-        "sat26-reported-formal"
+        "sat26-general",
+        "sat26-reported-formal",
+        "sat26-sparse"
       ],
-      "bound_kind": "sparse",
+      "bound_kind": "general",
       "encoding": {
-        "variables_tex": "O(n+m)",
+        "variables_tex": "O(n)",
         "clauses_tex": "O(n+m)",
         "width_tex": "3"
       },
       "comparison_status": "not-systematically-surveyed",
-      "source_refs": [],
+      "source_refs": [
+        {
+          "source_id": "van-rooij-nederlof-van-dijk2008",
+          "locator": "Abstract and Section 1: historical context for inclusion/exclusion in counting dominating sets. The marker/parity transformation and its conditional SAT bounds below are catalog deductions, not results attributed to this paper."
+        },
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: binary-counter/comparator cardinality encodings; use the explicit full-equivalence width-three implementation in METHODS.md, Section 2, for linear auxiliary size and unique extension."
+        }
+      ],
       "en": {
         "name": "Counting Dominating Sets",
-        "parameter": "n vertices plus m edges",
-        "restrictions": "Unweighted simple undirected graphs; all dominating vertex sets, or those of a specified cardinality.",
-        "preprocessing": "Keep the original graph. An isolated vertex is forced into every dominating set.",
+        "parameter": "n = |V(G)| original vertices; m = |E(G)| original edges. The primary exponential-time measure is n; L is the full input bit length.",
+        "restrictions": "Unweighted simple undirected graphs, with no degree or density restriction. Count all dominating vertex sets, those of a specified size, or optimum sets after determining the minimum size.",
+        "preprocessing": "Keep all declared vertices, including isolated vertices; use the original graph directly. Handle n = 0 and requested sizes outside [0,n] directly. For n = 0 the empty set is the unique dominating set.",
         "derivation": [
-          "Use one selection bit per vertex. For each vertex v build an OR circuit for $y_v=\\bigvee_{u\\in N[v]}x_u$ and require y_v=1.",
-          "The total neighborhood size is $\\sum_v |N[v]|=n+2m$. Bidirectional gate definitions produce O(n+m) variables and clauses and a unique extension for every chosen vertex set.",
-          "Apply the sparse counting profile. A specified cardinality requires only O(n) additional gates. If m=O(n), this becomes B(n) times a polynomial factor."
+          "Use one selection bit x_v and one optional marker y_v for each vertex. For every u in the closed neighborhood N[v], add $\\neg y_v\\vee\\neg x_u$. Thus y_v may be 1 exactly when v is undominated by the selected set S; an undominated vertex may also have marker 0. The implications contribute n+2m binary clauses.",
+          "Compute $p=\\bigoplus_v y_v$ using n−1 binary XOR gates when n≥1, with p=y_v when n=1. Encode every XOR by the full equivalences in [METHODS.md, Section 2.1](../../METHODS.md). Form H_0 and H_1 by requiring p=0 and p=1, respectively, and compute their exact satisfying-assignment counts.",
+          "For fixed S, let U(S) be its undominated vertices. The allowed marker sets are precisely all T⊆U(S), so its contribution to $\\#H_0-\\#H_1$ is $\\sum_{T\\subseteq U(S)}(-1)^{|T|}$, equal to 1 if U(S) is empty and 0 otherwise. Hence the difference is exactly the number of dominating sets. XOR auxiliaries have one extension for each assignment of x and y; the marker multiplicities are deliberately canceled by this sum.",
+          "Before an optional size constraint there are 2n original/marker bits and n−1 XOR outputs. Requiring $\\sum_v x_v=r$ or $\\sum_v x_v\\le b$ adds O(n) uniquely determined counter/comparator variables and clauses by [METHODS.md, Section 2](../../METHODS.md). Apply the identical constraint and any fixed x-bits to both parity formulas. Each formula has N=O(n), M=O(n+m), and width at most three.",
+          "Each parity count is at most 2^(2n), so exact subtraction needs O(n) bits. A standard explicit CNF encoding has bit length O((n+m) log(n+2)), polynomial in L. Two sequential calls to the assumed exact #SAT algorithm give A(n)L^{O(1)} time and polynomial space; the separately reported formalization profile yields its own displayed, weaker exponent. This step uses counts, not merely satisfiability.",
+          "For the number of minimum dominating sets, let C_b be the same parity difference with the constraint that the selected size is at most b. Binary search for the first b with C_b>0 takes O(log(n+1)) such queries, each using two #SAT calls. At the resulting optimum b*, two more calls with selected size exactly b* give the optimum count; it equals 1 exactly when the optimum set is unique. These remain polynomially many calls, with no additional variant label.",
+          "The earlier direct route remains valid: compute $z_v\\leftrightarrow\\bigvee_{u\\in N[v]}x_u$ with full binary OR equivalences, require all z_v=1, and add any size constraint. Its N+M=O(n+m) encoding has one extension per dominating set and gives B(n+m)L^{O(1)} under the unchanged sparse assumption, using forced-zero density padding if needed. On classes m≤Dn with fixed D, either route has total size O_D(n) and gives B(n)L^{O(1)}."
         ],
         "caveats": [
-          "A satisfiability-preserving long-clause replacement alone is not enough for counting; use full gate equivalences.",
-          "For dense graphs this n+m-measure bound need not improve vertex-exponential algorithms."
+          "The primary A(n) route is a two-query exact-counting reduction followed by an integer subtraction. Neither parity formula alone is a parsimonious encoding of dominating sets or a valid test for their existence under a budget.",
+          "Markers must express only the implication from being selected as a marker to being undominated. Full equivalences are required for deterministic XOR and cardinality gates; replacing the marker implication by an equivalence changes the cancellation.",
+          "Isolated vertices are retained. Cancellation automatically removes selected sets that omit an isolated vertex; deleting such vertices without accounting for their forced membership and the requested size would change the problem.",
+          "Optimum uniqueness is only the consequence of computing an exact optimum count. No weighted extension, enumeration running-time bound, novelty claim, or latest-best comparison is asserted."
         ]
       },
       "ja": {
         "name": "Dominating Setの厳密計数",
-        "parameter": "nは頂点数、mは辺数。指数の尺度はn+m",
-        "restrictions": "非重み付き単純無向グラフ。全支配頂点集合、または指定したサイズの集合を数える。",
-        "preprocessing": "元のグラフを使う。孤立点は全ての支配集合に含まれる。",
+        "parameter": "n = |V(G)| は元の頂点数、m = |E(G)| は元の辺数。主たる指数時間の尺度はnで、Lは入力全体のビット長。",
+        "restrictions": "次数・密度の制限がない非重み付き単純無向グラフ。全支配集合、指定サイズの支配集合、または最小サイズを求めた後の最適解を数える。",
+        "preprocessing": "孤立頂点を含む宣言された全頂点を残し、元のグラフを直接使う。n = 0と指定サイズが[0,n]の外にある場合は直接処理する。n = 0では空集合が唯一の支配集合である。",
         "derivation": [
-          "各頂点に選択ビットを置き、各vについて $y_v=\\bigvee_{u\\in N[v]}x_u$ のOR回路を作ってy_v=1を要求する。",
-          "近傍サイズの総和は $\\sum_v |N[v]|=n+2m$。各ゲートを両方向の同値で定義すれば、変数・節がともにO(n+m)で、各頂点集合からの拡張は一意。",
-          "疎な計数の仮定を適用する。サイズ指定を加えても追加ゲートはO(n)。m=O(n)ならB(n)に多項式因子を掛けた上界になる。"
+          "各頂点に選択変数x_vと任意に選べる印y_vを置く。閉近傍N[v]の各uに $\\neg y_v\\vee\\neg x_u$ を加える。選択集合Sがvを支配しないときに限りy_vを1にでき、その場合でも0を選べる。この含意の節はn+2m個で、すべて二項節である。",
+          "n≥1ではn−1個の二入力XORゲートで $p=\\bigoplus_v y_v$ を計算し、n=1ではp=y_vとする。各XORは[METHODS.md第2.1節](../../METHODS.md)の完全な同値制約で表す。p=0、p=1をそれぞれ要求した式H_0、H_1の充足割当て数を正確に求める。",
+          "Sを固定し、支配されていない頂点の集合をU(S)とする。許される印の集合はちょうどT⊆U(S)なので、$\\#H_0-\\#H_1$ への寄与は $\\sum_{T\\subseteq U(S)}(-1)^{|T|}$ となる。U(S)が空なら1、それ以外なら0であり、差は支配集合の個数と一致する。xとyを固定した後のXOR補助変数への拡張は一意で、印による多重度はこの和で相殺する。",
+          "サイズ制約を加える前は、選択変数と印が計2n個、XOR出力がn−1個である。$\\sum_v x_v=r$ または $\\sum_v x_v\\le b$ を加えても、[METHODS.md第2節](../../METHODS.md)の一意に決まるカウンタ・比較器の追加変数と節はO(n)個。サイズ制約やxの固定値は両方の偶奇の式に同じように加える。各式はN=O(n)、M=O(n+m)、幅高々3となる。",
+          "各偶奇の計数値は高々2^(2n)なので、正確な引き算はO(n)ビットで行える。標準的な明示的CNFの符号長はO((n+m) log(n+2))で、Lの多項式以内である。仮定した正確な#SATアルゴリズムを2回逐次呼び出し、A(n)L^{O(1)}時間・多項式領域を得る。別に報告された形式化の仮定では、表示されたより弱い指数を使う。この手順には充足可能性だけでなく個数が必要である。",
+          "最小支配集合の個数には、選択サイズがb以下という制約を加えた偶奇差C_bを使う。C_b>0となる最初のbを二分探索すると、O(log(n+1))回の問い合わせとなり、各回で#SATを2回呼び出す。得られた最適値b*でサイズをちょうどb*に固定し、さらに2回の呼出しで最適解の個数を求める。その個数が1であることと最適解が一意であることは同値。呼出し数は多項式のままで、別のvariantラベルは設けない。",
+          "従来の直接符号化も保持する。$z_v\\leftrightarrow\\bigvee_{u\\in N[v]}x_u$ を二入力ORの完全同値で表し、全z_v=1を要求して必要なサイズ制約を加える。このN+M=O(n+m)の符号化は支配集合ごとに一意な拡張を持ち、必要なら0固定変数による密度調整を加えることで、変更していない疎な仮定からB(n+m)L^{O(1)}を得る。固定Dについてm≤Dnとなるクラスでは、どちらの方法も総サイズO_D(n)であり、B(n)L^{O(1)}となる。"
         ],
         "caveats": [
-          "単に充足可能性を保存する長節の分割だけでは計数保存は保証されない。完全なゲート同値制約を使う。",
-          "密なグラフでは、このn+mによる上界は頂点数による指数時間アルゴリズムの改善とは限らない。"
+          "主たるA(n)の方法は、正確な計数を2回行って整数の差を取る帰着である。偶奇どちらか一方の式だけでは、支配集合との一対一対応も、予算内の支配集合の存在判定も得られない。",
+          "印には「印を選べば未支配」という片方向の含意を使う。決定的なXORゲートや個数制約には完全な同値が必要だが、印の含意まで同値に置き換えると相殺の意味が変わる。",
+          "孤立頂点は残す。孤立頂点を含まない選択集合は相殺で除かれる。必須の選択や指定サイズを補正せずに孤立頂点を削除すると、別の問題になる。",
+          "最適解の一意性は、最適解を正確に数えた結果としてのみ扱う。重み付き版、全解列挙の時間、新規性、最新最良との比較は主張しない。"
         ]
       }
     },
     {
       "id": "exact-minimum-dominating-set",
       "track": "exact",
-      "measure_tex": "n+m",
+      "measure_tex": "n",
       "origin": "catalog-deduction",
       "claim_status": "derivation-available",
-      "review_status": "draft",
-      "review_history": [],
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent linear_kernel_fpt",
+          "scope": "2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 220419d79f5b960bf6d0621c8a3a5ae1d1009b820fc3280d4ee7b5b63714e43b (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, marker implications, exact even-minus-odd cancellation, unique XOR/cardinality extensions, all auxiliary-variable/clause/width counts, original measures, count bit lengths, positive-difference optimization and reconstruction, at-most-threshold monotonicity, isolated/empty-input cases, sparse/direct alternatives, and historical-source scope. METHODS.md Section 9 was checked against these entries. Two English U(S) definitions were clarified and rechecked. Small-instance checks covered 76 simple graphs through n=4 and 1,111 CNF inputs; these finite checks do not prove the general claims. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、印の含意、偶数側と奇数側の正確な相殺、XOR・個数制約の一意拡張、補助変数・節・幅、元の尺度、計数値のビット長、差の正値性による最適化・復元、サイズ上限の閾値の単調性、孤立点・空入力、疎な場合と直接符号化、引用範囲を確認。METHODS第9節との一致と英語のU(S)の定義2箇所の修正を再確認した。小例は頂点数4以下の単純グラフ76個とCNF入力1,111個で検査し、一般の証明とは区別する。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
       "variant": "optimization",
       "fixed_constants": [],
       "depends_on": [
-        "sat26-sparse",
-        "sat26-reported-formal"
+        "sat26-general",
+        "sat26-reported-formal",
+        "sat26-sparse"
       ],
-      "bound_kind": "sparse",
+      "bound_kind": "general",
       "encoding": {
-        "variables_tex": "O(n+m)",
+        "variables_tex": "O(n)",
         "clauses_tex": "O(n+m)",
         "width_tex": "3"
       },
       "comparison_status": "not-systematically-surveyed",
-      "source_refs": [],
+      "source_refs": [
+        {
+          "source_id": "van-rooij-nederlof-van-dijk2008",
+          "locator": "Abstract and Section 1: historical context for inclusion/exclusion in counting dominating sets. The marker/parity transformation and its conditional SAT bounds below are catalog deductions, not results attributed to this paper."
+        },
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: binary-counter/comparator cardinality encodings; use the explicit full-equivalence width-three implementation in METHODS.md, Section 2, for linear auxiliary size and unique extension."
+        }
+      ],
       "en": {
         "name": "Minimum Dominating Set",
-        "parameter": "n vertices plus m edges",
-        "restrictions": "Unweighted simple undirected graphs; optimum cardinality and an optimum set.",
-        "preprocessing": "Use the closed-neighborhood OR circuits on the original graph.",
+        "parameter": "n = |V(G)| original vertices; m = |E(G)| original edges. The primary exponential-time measure is n; L denotes the original input bit length.",
+        "restrictions": "Unweighted simple undirected graphs with no degree or density restriction. Compute the minimum cardinality and an optimum dominating vertex set.",
+        "preprocessing": "Keep the original graph and every declared vertex, including isolated vertices. For n = 0 return value 0 and the empty set. Handle threshold budgets outside [0,n] directly.",
         "derivation": [
-          "Combine the exact OR-gate encoding with the threshold $\\sum_v x_v\\le t$, adding O(n) cardinality gates.",
-          "Each threshold test has O(n+m) variables and clauses. Binary search over [0,n] and bit-fixing self-reduction use polynomially many calls and polynomial space.",
-          "The sparse SAT profile therefore gives B(n+m) times a polynomial input-length factor. This is subexponential in n when m=O(n)."
+          "For a budget b, use selection bits x_v and optional markers y_v, and add $\\neg y_v\\vee\\neg x_u$ for every u∈N[v]. Compute the XOR of all y_v by full-equivalence width-three gates. Add $\\sum_v x_v\\le b$ with the linear cardinality circuit, and form the two formulas with even and odd marker parity.",
+          "Let C_b be the even count minus the odd count. For any chosen S of size at most b, its signed contribution is $\\sum_{T\\subseteq U(S)}(-1)^{|T|}$, where U(S) is the set of undominated vertices. Thus C_b counts precisely the dominating sets within the budget, and C_b>0 is the required feasibility test. Any already fixed x-bits are imposed in both formulas.",
+          "The two formulas each use 2n selection/marker bits, at most n−1 parity outputs, and O(n) counter/comparator auxiliaries. Gate extensions are unique for fixed x and y. Hence N=O(n), M=O(n+m), and width is at most three. Each count has O(n) bits; exact subtraction is polynomial-time. The explicit CNF bit length is O((n+m) log(n+2)), polynomial in the original L.",
+          "Binary search for the first b with C_b>0 uses O(log(n+1)) feasibility queries, each comprising two exact #SAT calls. Let b* be the optimum. Keep the original graph and budget b*, then test each x_v=0 together with the previous fixed choices. Retain 0 when the corresponding parity difference is positive; otherwise fix x_v=1. At most n further feasibility queries recover a dominating set of size exactly b*, since a smaller one would contradict optimality.",
+          "The polynomial number of sequential exact-counting calls gives A(n)L^{O(1)} time and polynomial space, including construction, O(n)-bit arithmetic, and the stored witness prefix. The reported formalization assumption gives its separate weaker displayed bound. Satisfiability of only one parity formula is not the feasibility oracle used here.",
+          "The previous direct OR-circuit encoding also remains valid: require $\\bigvee_{u\\in N[v]}x_u$ for every v by full binary OR equivalences and add the same budget. This has N+M=O(n+m), giving the alternative B(n+m)L^{O(1)} bound under the unchanged sparse assumption with forced-zero padding if needed. Binary search and bit fixing can use ordinary SAT decisions for that direct route. On classes m≤Dn for fixed D, either route gives B(n)L^{O(1)}."
         ],
         "caveats": [
-          "The input has no degree restriction, but the n-based subexponential conclusion is stated only for sparse graphs.",
-          "No weighted variant is included."
+          "The primary bound is subexponential in the original vertex count n even for dense graphs, and uses the full exact-counting part of the fixed-width SAT assumption.",
+          "During reconstruction, preserve the original domination neighborhoods and add unit clauses for the choice bits. The test is positivity of an exact even-minus-odd count, not satisfiability of one auxiliary formula.",
+          "The older B(n+m) route uses a different size accounting and remains an alternative; no SAT assumption or source version is strengthened or changed.",
+          "No weighted variant or latest-best algorithm comparison is included."
         ]
       },
       "ja": {
         "name": "Minimum Dominating Set",
-        "parameter": "nは頂点数、mは辺数。指数の尺度はn+m",
-        "restrictions": "非重み付き単純無向グラフ。最小サイズと、そのサイズの支配集合を求める。",
-        "preprocessing": "元のグラフ上で閉近傍のOR回路を作る。",
+        "parameter": "n = |V(G)| は元の頂点数、m = |E(G)| は元の辺数。主たる指数時間の尺度はnで、Lは元入力のビット長。",
+        "restrictions": "次数・密度の制限がない非重み付き単純無向グラフ。最小サイズと、そのサイズの支配頂点集合を求める。",
+        "preprocessing": "孤立頂点を含む全頂点と元のグラフを保持する。n = 0なら値0と空集合を返す。予算が[0,n]の外にある場合は直接処理する。",
         "derivation": [
-          "ORゲートの同値符号化に閾値 $\\sum_v x_v\\le t$ を加える。追加の個数制約はO(n)ゲート。",
-          "各閾値判定は変数・節ともにO(n+m)。[0,n]での二分探索と、ビットを順に固定する自己帰着は多項式回の呼出し・多項式領域で行える。",
-          "疎なSAT仮定よりB(n+m)に入力長の多項式を掛けた上界となる。m=O(n)ならnに関する劣指数時間。"
+          "予算bについて、選択変数x_vと任意に選べる印y_vを置き、各u∈N[v]に $\\neg y_v\\vee\\neg x_u$ を加える。全y_vのXORを幅3の完全同値ゲートで計算する。線形サイズの個数制約 $\\sum_v x_v\\le b$ を加え、印の偶奇がそれぞれ偶数・奇数となる2つの式を作る。",
+          "偶数側の個数から奇数側の個数を引いた値をC_bとする。サイズb以下の各選択集合Sの寄与は、未支配頂点の集合U(S)について $\\sum_{T\\subseteq U(S)}(-1)^{|T|}$ となる。したがってC_bは予算内の支配集合を正確に数え、C_b>0が必要な存在判定になる。既に固定したxの値も両方の式に同じように課す。",
+          "各式は選択変数と印が計2n個、偶奇回路の出力が高々n−1個、カウンタ・比較器の補助変数がO(n)個である。xとyを固定するとゲート変数への拡張は一意。よってN=O(n)、M=O(n+m)、幅高々3となる。計数値はO(n)ビットで、正確な差を多項式時間で求められる。明示的なCNFの符号長はO((n+m) log(n+2))で、元入力長Lの多項式以内である。",
+          "C_b>0となる最初のbを二分探索すると、存在判定はO(log(n+1))回で、各回は正確な#SATの2回の呼出しからなる。最適値をb*とする。元のグラフと予算b*を保持し、これまでの固定値に加えて各x_v=0を試す。対応する偶奇差が正なら0を残し、それ以外なら1に固定する。高々n回の追加判定でサイズちょうどb*の支配集合を得る。より小さければ最適性に反するためである。",
+          "式の生成、O(n)ビットの算術、解の固定済み部分の保持を含め、多項式回の正確な計数を逐次実行するので、A(n)L^{O(1)}時間・多項式領域となる。報告された形式化の仮定では、別に表示されたより弱い上界を使う。偶奇の一方の式だけの充足可能性を存在判定に使っているのではない。",
+          "従来の直接OR回路による方法も保持する。各vについて $\\bigvee_{u\\in N[v]}x_u$ を二入力ORの完全同値で要求し、同じ予算を加える。この方法はN+M=O(n+m)なので、必要なら0固定変数を加え、変更していない疎な仮定から別の上界B(n+m)L^{O(1)}を得る。この直接符号化では、二分探索とビット固定に通常のSAT判定を使える。固定Dについてm≤Dnとなるクラスでは、どちらの方法もB(n)L^{O(1)}を与える。"
         ],
         "caveats": [
-          "入力に次数制限はないが、頂点数nに関する劣指数という結論は疎なグラフについて述べている。",
-          "重み付き版は含めない。"
+          "主たる上界は密なグラフでも元の頂点数nについて劣指数であり、固定幅SATの仮定のうち正確な計数の機能を使う。",
+          "復元中は元の支配近傍を保ち、選択変数の単位節を加える。判定に使うのは正確な偶数側と奇数側の個数の差が正かどうかであり、補助的な片方の式の充足可能性ではない。",
+          "従来のB(n+m)の方法はサイズの評価が異なる別の上界として残る。SATの仮定や出典の版を強めたり変更したりしない。",
+          "重み付き版や最新最良のアルゴリズムとの比較は含めない。"
         ]
       }
     },
@@ -1658,6 +1954,531 @@
           "一般グラフの解サイズkについてA(k)やB(k)を主張する項目ではない。一般kの候補・障害と、最大次数を固定した別のFPT項目を参照。",
           "補助変数を加える前から、辺の選択変数はm個ある。line graphの明示的な構築や、各辺の長い支配節は必要なく、端点ごとに共有するOR回路で全体をO(m)に保つ。",
           "重み付きの目的関数や、最新の最良上界との比較は主張しない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-count-maximal-independent-sets",
+      "track": "exact",
+      "measure_tex": "n",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent linear_kernel_fpt",
+          "scope": "2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 72966875d40b30b84894d5595b9be55e1ae06f9c99756481c0360cc55f209828 (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, marker implications, exact even-minus-odd cancellation, unique XOR/cardinality extensions, all auxiliary-variable/clause/width counts, original measures, count bit lengths, positive-difference optimization and reconstruction, at-most-threshold monotonicity, isolated/empty-input cases, sparse/direct alternatives, and historical-source scope. METHODS.md Section 9 was checked against these entries. Two English U(S) definitions were clarified and rechecked. Small-instance checks covered 76 simple graphs through n=4 and 1,111 CNF inputs; these finite checks do not prove the general claims. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、印の含意、偶数側と奇数側の正確な相殺、XOR・個数制約の一意拡張、補助変数・節・幅、元の尺度、計数値のビット長、差の正値性による最適化・復元、サイズ上限の閾値の単調性、孤立点・空入力、疎な場合と直接符号化、引用範囲を確認。METHODS第9節との一致と英語のU(S)の定義2箇所の修正を再確認した。小例は頂点数4以下の単純グラフ76個とCNF入力1,111個で検査し、一般の証明とは区別する。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
+      "variant": "counting",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal",
+        "sat26-sparse"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(n)",
+        "clauses_tex": "O(n+m)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: binary-counter/comparator cardinality encodings; use the explicit full-equivalence width-three implementation in METHODS.md, Section 2, for linear auxiliary size and unique extension."
+        }
+      ],
+      "en": {
+        "name": "Counting Maximal Independent Sets / Minimal Vertex Covers",
+        "parameter": "n = |V(G)| original vertices; m = |E(G)| original edges. The exponential-time measure is n, and L is the full input bit length.",
+        "restrictions": "Simple undirected graphs. Maximal and minimal refer to set inclusion, not to maximum or minimum cardinality. Count all such sets or those of a specified size.",
+        "preprocessing": "Retain every vertex, including isolated vertices, which belong to every maximal independent set. For n = 0, the empty set is the unique maximal independent set and unique minimal vertex cover; handle invalid requested sizes directly.",
+        "derivation": [
+          "Use selection bits x_v and impose $\\neg x_u\\vee\\neg x_v$ for every edge uv, so the selected set S is independent. It is maximal exactly when it also dominates every vertex: an undominated vertex could be added, and a dominated unselected vertex cannot be added.",
+          "Add optional markers y_v and all clauses $\\neg y_v\\vee\\neg x_u$ for u∈N[v]. Compute the marker parity with n−1 binary XOR gates and full equivalences when n≥1. Let H_0 and H_1 additionally require even and odd parity, respectively. An independent S contributes $\\sum_{T\\subseteq U(S)}(-1)^{|T|}$ to $\\#H_0-\\#H_1$, so precisely the maximal independent sets remain. Here U(S) is the set of vertices undominated by S.",
+          "Both formulas have 2n selection/marker bits, at most n−1 XOR outputs, and O(n) extra variables if $\\sum_v x_v=r$ is requested. Full XOR and cardinality equivalences uniquely determine every gate output for fixed x and y. The m independence clauses, n+2m marker clauses, parity clauses, and optional cardinality clauses give N=O(n), M=O(n+m), and width at most three.",
+          "Two sequential exact #SAT calls and subtraction give A(n)L^{O(1)} time and polynomial space. Each parity count is at most 2^(2n), with O(n) bits, and an explicit CNF has bit length O((n+m) log(n+2)), polynomial in L. The separately reported formalization profile uses its own weaker exponent. If m≤Dn for fixed D, the sparse assumption, with forced-zero padding if needed, also yields B(n)L^{O(1)}.",
+          "Complementation is a bijection: S is a maximal independent set exactly when V∖S is an inclusion-minimal vertex cover. Hence the same total count applies to minimal vertex covers; minimal covers of size r correspond to maximal independent sets of size n−r. This correspondence preserves the count without a multiplicity correction."
+        ],
+        "caveats": [
+          "This counts inclusion-maximal independent sets and inclusion-minimal vertex covers. It is different from counting maximum independent sets or minimum vertex covers.",
+          "The reduction uses the full exact-counting assumption. Markers are optional witnesses of being undominated; they are canceled by the even-minus-odd difference, so counting only one parity formula gives a different quantity.",
+          "The result is a counting algorithm, not an algorithm enumerating every set within the same total time. No weighted extension, novelty claim, or latest-best comparison is asserted."
+        ]
+      },
+      "ja": {
+        "name": "極大独立集合 / 極小Vertex Coverの厳密計数",
+        "parameter": "n = |V(G)| は元の頂点数、m = |E(G)| は元の辺数。指数時間の尺度はnで、Lは入力全体のビット長。",
+        "restrictions": "単純無向グラフ。「極大」「極小」は包含関係についてであり、サイズが最大・最小という意味ではない。全解または指定サイズの解を数える。",
+        "preprocessing": "全頂点を残す。孤立頂点はすべての極大独立集合に含まれる。n = 0では空集合が唯一の極大独立集合かつ極小vertex coverであり、不正な指定サイズも直接処理する。",
+        "derivation": [
+          "選択変数x_vを使い、各辺uvに $\\neg x_u\\vee\\neg x_v$ を課して選択集合Sを独立にする。独立集合が極大であることと、全頂点を支配することは同値である。未支配頂点なら追加でき、支配済みの未選択頂点は追加できないためである。",
+          "任意に選べる印y_vと、各u∈N[v]について $\\neg y_v\\vee\\neg x_u$ を加える。n≥1ではn−1個の二入力XORゲートと完全同値制約で印の偶奇を計算する。偶数・奇数をそれぞれ要求する式をH_0、H_1とすると、各独立集合Sの $\\#H_0-\\#H_1$ への寄与は $\\sum_{T\\subseteq U(S)}(-1)^{|T|}$ となり、極大独立集合だけが残る。ここでU(S)は未支配頂点の集合である。",
+          "両方の式は、選択変数と印が計2n個、XOR出力が高々n−1個。$\\sum_v x_v=r$ を要求しても、追加変数はO(n)個である。完全なXOR・個数制約の同値により、xとyを固定すると全ゲート出力は一意に決まる。独立性のm節、印のn+2m節、偶奇と必要な個数制約の節を合わせて、N=O(n)、M=O(n+m)、幅高々3となる。",
+          "正確な#SATを2回逐次実行して差を取ると、A(n)L^{O(1)}時間・多項式領域を得る。各偶奇の個数は高々2^(2n)でO(n)ビット、明示的なCNFの符号長はO((n+m) log(n+2))でLの多項式以内である。別に報告された形式化の仮定では、そのより弱い指数を使う。固定Dについてm≤Dnなら、必要に応じて0固定変数を加え、疎な仮定からB(n)L^{O(1)}も得られる。",
+          "補集合は一対一対応を与える。Sが極大独立集合であることと、V∖Sが包含極小なvertex coverであることは同値なので、全体の個数は同じである。サイズrの極小vertex coverは、サイズn−rの極大独立集合に対応する。この対応に多重度の補正は必要ない。"
+        ],
+        "caveats": [
+          "数えるのは包含極大な独立集合と包含極小なvertex coverである。最大独立集合や最小vertex coverの計数とは異なる。",
+          "正確な計数の仮定を使う。印は未支配のとき任意に選べるもので、偶数側と奇数側の差によって相殺する。一方だけを数えると別の量になる。",
+          "計数のアルゴリズムであり、同じ総時間ですべての解を列挙する主張ではない。重み付き版、新規性、最新最良との比較は主張しない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-minimum-independent-dominating-set",
+      "track": "exact",
+      "measure_tex": "n",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent linear_kernel_fpt",
+          "scope": "2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 57ed878365350acb17200c10b59f22abb13209e4caad1efef091cd9b08fdc767 (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, marker implications, exact even-minus-odd cancellation, unique XOR/cardinality extensions, all auxiliary-variable/clause/width counts, original measures, count bit lengths, positive-difference optimization and reconstruction, at-most-threshold monotonicity, isolated/empty-input cases, sparse/direct alternatives, and historical-source scope. METHODS.md Section 9 was checked against these entries. Two English U(S) definitions were clarified and rechecked. Small-instance checks covered 76 simple graphs through n=4 and 1,111 CNF inputs; these finite checks do not prove the general claims. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、印の含意、偶数側と奇数側の正確な相殺、XOR・個数制約の一意拡張、補助変数・節・幅、元の尺度、計数値のビット長、差の正値性による最適化・復元、サイズ上限の閾値の単調性、孤立点・空入力、疎な場合と直接符号化、引用範囲を確認。METHODS第9節との一致と英語のU(S)の定義2箇所の修正を再確認した。小例は頂点数4以下の単純グラフ76個とCNF入力1,111個で検査し、一般の証明とは区別する。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
+      "variant": "optimization",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal",
+        "sat26-sparse"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(n)",
+        "clauses_tex": "O(n+m)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: binary-counter/comparator cardinality encodings; use the explicit full-equivalence width-three implementation in METHODS.md, Section 2, for linear auxiliary size and unique extension."
+        }
+      ],
+      "en": {
+        "name": "Minimum Independent Dominating Set / Upper Vertex Cover",
+        "parameter": "n = |V(G)| original vertices; m = |E(G)| original edges. The primary exponential-time measure is n; L is the original input bit length.",
+        "restrictions": "Unweighted simple undirected graphs. Find a smallest independent dominating set and a largest inclusion-minimal vertex cover, including optimum values and realizing vertex sets.",
+        "preprocessing": "Keep the original graph and all vertices. Handle n = 0 directly with optimum value 0 and the empty set for both problems. An isolated vertex must belong to every independent dominating set.",
+        "derivation": [
+          "For a threshold b, impose independence by $\\neg x_u\\vee\\neg x_v$ for every edge uv and require $\\sum_v x_v\\le b$. For each vertex v use an optional marker y_v with $\\neg y_v\\vee\\neg x_u$ for all u∈N[v]. Compute marker parity by full-equivalence XOR gates.",
+          "Take the exact count with even marker parity minus that with odd parity. For each independent set S obeying the threshold and any fixed x-bits, its contribution is $\\sum_{T\\subseteq U(S)}(-1)^{|T|}$. This is 1 exactly when S dominates G. The difference therefore counts independent dominating sets within the budget and is positive exactly when such a set exists. Here U(S) is the set of vertices undominated by S.",
+          "Each test uses two formulas with 2n selection/marker variables, at most n−1 parity outputs, and O(n) counter/comparator auxiliaries. There are O(n+m) clauses of width at most three. Gate extensions are unique for fixed x and y. The explicit CNF bit length is O((n+m) log(n+2)); the two counts and their difference use O(n) bits, so construction and exact arithmetic are polynomial in L.",
+          "Binary search on b∈[0,n] takes O(log(n+1)) feasibility tests, each using two exact #SAT calls. At the optimum b*, fix each original x_v to 0 if the parity difference with that additional unit clause is positive, and to 1 otherwise. At most n further tests recover an independent dominating set of size exactly b*. Retain all prior choices and the original graph throughout.",
+          "An independent dominating set is exactly an inclusion-maximal independent set. Its complement is an inclusion-minimal vertex cover. Thus if the minimum independent dominating size is i(G), the largest inclusion-minimal vertex cover has size n−i(G), and complementing the recovered set produces an optimum Upper Vertex Cover solution.",
+          "The polynomial number of sequential exact-counting calls gives A(n)L^{O(1)} time and polynomial space; the reported formalization assumption gives its separate weaker bound. For m≤Dn with D fixed, N+M=O_D(n), so forced-zero padding and the sparse assumption also give B(n)L^{O(1)}."
+        ],
+        "caveats": [
+          "Upper Vertex Cover maximizes the size of an inclusion-minimal cover. It is different from Minimum Vertex Cover, whose complement is a maximum independent set.",
+          "The feasibility oracle uses the sign of an exact even-minus-odd count. The satisfiability of either auxiliary formula alone does not establish independent domination.",
+          "This entry uses original vertex count n, not a solution-size parameter. No weighted extension, enumeration bound, novelty claim, or latest-best comparison is included."
+        ]
+      },
+      "ja": {
+        "name": "Minimum Independent Dominating Set / Upper Vertex Cover",
+        "parameter": "n = |V(G)| は元の頂点数、m = |E(G)| は元の辺数。主たる指数時間の尺度はnで、Lは元入力のビット長。",
+        "restrictions": "非重み付き単純無向グラフ。最小サイズの独立支配集合と、最大サイズの包含極小vertex coverについて、最適値とそれを実現する頂点集合を求める。",
+        "preprocessing": "元のグラフと全頂点を保持する。n = 0では両問題とも最適値0と空集合を直接返す。孤立頂点はすべての独立支配集合に含まれる。",
+        "derivation": [
+          "閾値bについて、各辺uvに $\\neg x_u\\vee\\neg x_v$ を課して独立性を表し、$\\sum_v x_v\\le b$ を要求する。各頂点vに任意に選べる印y_vを置き、各u∈N[v]に $\\neg y_v\\vee\\neg x_u$ を加える。印の偶奇は完全な同値制約を持つXORゲートで計算する。",
+          "印が偶数個の場合の正確な個数から、奇数個の場合の個数を引く。閾値と固定済みのxの条件を満たす各独立集合Sの寄与は $\\sum_{T\\subseteq U(S)}(-1)^{|T|}$ となり、SがGを支配するときに限り1である。したがって差は予算内の独立支配集合の個数であり、そのような集合が存在するときに限り正となる。ここでU(S)は未支配頂点の集合である。",
+          "各判定の2つの式は、選択変数と印が計2n個、偶奇回路の出力が高々n−1個、カウンタ・比較器の補助変数がO(n)個である。節はO(n+m)個で幅高々3、xとyを固定した後のゲート拡張は一意である。明示的なCNFの符号長はO((n+m) log(n+2))で、両計数値とその差はO(n)ビット。構築と正確な算術はLの多項式時間で行える。",
+          "b∈[0,n]で二分探索すると、存在判定はO(log(n+1))回で、各回に正確な#SATを2回使う。最適値b*で、元の各x_vを0にする単位節を追加した偶奇差が正なら0、それ以外なら1に固定する。高々n回の追加判定で、サイズちょうどb*の独立支配集合を復元できる。固定済みの値と元のグラフは全段階で保持する。",
+          "独立支配集合は包含極大な独立集合と同じで、その補集合は包含極小なvertex coverである。最小独立支配集合のサイズをi(G)とすると、最大サイズの包含極小vertex coverはn−i(G)であり、復元した集合の補集合がUpper Vertex Coverの最適解になる。",
+          "多項式回の正確な計数を逐次実行するので、A(n)L^{O(1)}時間・多項式領域となる。報告された形式化の仮定では、別に表示されるより弱い上界を使う。固定Dでm≤DnならN+M=O_D(n)であり、0固定変数による密度調整と疎な仮定からB(n)L^{O(1)}も得られる。"
+        ],
+        "caveats": [
+          "Upper Vertex Coverは包含極小な被覆のサイズを最大化する。最大独立集合の補集合を求めるMinimum Vertex Coverとは異なる。",
+          "存在判定には、正確な偶数側と奇数側の計数値の差が正かどうかを使う。どちらか一方の補助式が充足可能であることだけでは独立支配を示せない。",
+          "尺度は元の頂点数nであり、解サイズのパラメータではない。重み付き版、列挙時間、新規性、最新最良との比較は含めない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-count-unrestricted-cnf",
+      "track": "exact",
+      "measure_tex": "n+m",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent linear_kernel_fpt",
+          "scope": "2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 ad1bf477472884d3e0c1f071bd8086692f9391f2cc9f708d61fc882226c67620 (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, marker implications, exact even-minus-odd cancellation, unique XOR/cardinality extensions, all auxiliary-variable/clause/width counts, original measures, count bit lengths, positive-difference optimization and reconstruction, at-most-threshold monotonicity, isolated/empty-input cases, sparse/direct alternatives, and historical-source scope. METHODS.md Section 9 was checked against these entries. Two English U(S) definitions were clarified and rechecked. Small-instance checks covered 76 simple graphs through n=4 and 1,111 CNF inputs; these finite checks do not prove the general claims. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、印の含意、偶数側と奇数側の正確な相殺、XOR・個数制約の一意拡張、補助変数・節・幅、元の尺度、計数値のビット長、差の正値性による最適化・復元、サイズ上限の閾値の単調性、孤立点・空入力、疎な場合と直接符号化、引用範囲を確認。METHODS第9節との一致と英語のU(S)の定義2箇所の修正を再確認した。小例は頂点数4以下の単純グラフ76個とCNF入力1,111個で検査し、一般の証明とは区別する。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
+      "variant": "counting",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(n+m)",
+        "clauses_tex": "O(\\ell+m)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sat26-paper",
+          "locator": "Theorem 1.1 supplies the assumed fixed-width exact-counting algorithm. The arbitrary-width, two-query parity transformation is a catalog deduction, not a source-stated corollary."
+        }
+      ],
+      "en": {
+        "name": "Counting Satisfying Assignments of Unrestricted-Width CNF",
+        "parameter": "n explicitly declared input variables plus m explicitly listed input clauses; ℓ is the total number of literal occurrences, and L is the original input bit length. The exponential-time measure is n+m.",
+        "restrictions": "Boolean CNF with arbitrary clause width and an explicit declared variable set. Count assignments to every declared variable, including unused variables.",
+        "preprocessing": "Retain declared variables. If an empty clause is present, return 0; if m = 0, return 2^n. Duplicate literals, duplicate clauses, and tautological clauses may be retained. The measures n and m refer to the original input.",
+        "derivation": [
+          "For each original clause C_j introduce an optional marker y_j. For every literal a in C_j, add the binary clause $\\neg y_j\\vee\\neg a$, simplifying the negation of a literal in the usual way. Thus y_j can be 1 exactly when the original clause is false, and can always be 0. There is one implication clause per literal occurrence and no variable per occurrence.",
+          "For m≥1 compute $p=\\bigoplus_{j=1}^{m} y_j$ with m−1 binary XOR gates using the complete equivalences of [METHODS.md, Section 2.1](../../METHODS.md); for m=1 take p=y_1. Let H_0 and H_1 be the implication formula with even and odd marker parity, respectively. Neither formula includes the original long clauses.",
+          "For each original assignment x, let U(x) be the set of its unsatisfied clauses. The allowed marker sets are all T⊆U(x), and every such assignment has exactly one XOR-gate extension. Consequently $\\#H_0-\\#H_1=\\sum_x\\sum_{T\\subseteq U(x)}(-1)^{|T|}=\\#F$, since the inner sum is 1 exactly when U(x) is empty. A tautological clause forces its marker to zero, and repeated clauses cause no incorrect multiplicity after cancellation.",
+          "Each query has n original variables, m markers, and m−1 XOR outputs: N=n+2m−1. The ℓ implication clauses, four clauses per XOR, and final parity unit clause give M=O(ℓ+m) and width at most three. The explicit encoded bit length is O((n+m+ℓ) log(n+m+2)), polynomial in L under the stated explicit-input model.",
+          "Each parity count is at most 2^(n+m), because gate extensions are unique. The counts and their exact difference therefore require O(n+m) bits. Two sequential calls to the general fixed-width #SAT assumption, followed by exact subtraction, give A(n+m)L^{O(1)} time and polynomial space. The reported formalization profile gives its separately displayed weaker exponent."
+        ],
+        "caveats": [
+          "This is a two-query exact-counting reduction with subtraction, not a single parsimonious transformation. A SAT oracle that returns only YES or NO cannot supply the required counts.",
+          "The measure is n+m, not n alone. The conclusion does not give a subexponential-in-n algorithm for arbitrary-width CNF with an unbounded number of clauses as a function of n.",
+          "The clause count is controlled by literal occurrences ℓ, which need not be O(n+m). The primary claim therefore uses the general-density profile; no sparsification lemma or sparse-profile bound is assumed here.",
+          "Unused declared variables remain in both formulas, so their powers-of-two contributions are retained. The result does not assume a compressed representation of exponentially many clauses or variables.",
+          "The transformation is recorded as a catalog deduction without a novelty claim or a systematic latest-best comparison."
+        ]
+      },
+      "ja": {
+        "name": "任意幅CNFの充足割当ての厳密計数",
+        "parameter": "明示的に宣言された元変数n個と、明示的に列挙された元の節m個。ℓはリテラルの総出現数、Lは元入力のビット長。指数時間の尺度はn+m。",
+        "restrictions": "節幅に制限のないBoolean CNFで、宣言された変数集合は明示的に与える。使われない変数を含む全宣言変数への割当てを数える。",
+        "preprocessing": "宣言変数を保持する。空節があれば0、m = 0なら2^nを返す。重複リテラル、重複節、恒真な節は残してよい。nとmは元入力の量とする。",
+        "derivation": [
+          "元の各節C_jに任意に選べる印y_jを置く。C_j内の各リテラルaについて二項節 $\\neg y_j\\vee\\neg a$ を加え、リテラルの否定は通常どおり簡約する。元の節が偽のときに限りy_jを1にでき、0には常にできる。リテラルの各出現に対して含意の節を一つ置き、出現ごとの変数は作らない。",
+          "m≥1では[METHODS.md第2.1節](../../METHODS.md)の完全同値を使い、m−1個の二入力XORゲートで $p=\\bigoplus_{j=1}^{m}y_j$ を計算する。m=1ではp=y_1とする。含意の式に印が偶数個・奇数個という条件をそれぞれ加えたものをH_0、H_1とする。元の長い節はどちらの式にも加えない。",
+          "元変数への割当てxについて、満たされない節の集合をU(x)とする。許される印の集合はT⊆U(x)のすべてであり、それぞれのXORゲートへの拡張は一意。したがって $\\#H_0-\\#H_1=\\sum_x\\sum_{T\\subseteq U(x)}(-1)^{|T|}=\\#F$ となる。内側の和はU(x)が空のときに限り1だからである。恒真節の印は0に固定され、重複節による誤った多重度も相殺後には残らない。",
+          "各問い合わせの変数は、元変数n個、印m個、XOR出力m−1個なのでN=n+2m−1。含意のℓ節、各XORの4節、最後の偶奇を指定する単位節を合わせて、M=O(ℓ+m)、幅高々3である。明示的な符号長はO((n+m+ℓ) log(n+m+2))で、指定した明示的入力のモデルではLの多項式以内に収まる。",
+          "ゲート拡張が一意なので、各偶奇の計数値は高々2^(n+m)である。個数とその正確な差はO(n+m)ビットで表せる。一般密度の固定幅#SATの仮定を2回逐次呼び出して正確な差を取ると、A(n+m)L^{O(1)}時間・多項式領域となる。報告された形式化の仮定では、別に表示されるより弱い指数を使う。"
+        ],
+        "caveats": [
+          "正確な計数を2回行って差を取る帰着であり、単一の一対一対応を保つ変換ではない。YES/NOだけを返すSATオラクルでは、必要な個数を得られない。",
+          "尺度はnだけではなくn+mである。nに対して節数が制限されない任意幅CNFについて、nだけに関する劣指数時間を与える結論ではない。",
+          "節数の上限はリテラル出現数ℓによるもので、ℓ=O(n+m)とは限らない。したがって主張には一般密度の仮定を使い、ここでは疎化補題や疎なプロファイルの上界を仮定しない。",
+          "未使用の宣言変数も両方の式に残すので、個数に対する2のべきの寄与は保たれる。指数個の節や変数を圧縮して表した入力は仮定していない。",
+          "この変換はカタログ側の導出として記録し、新規性や最新最良の上界を網羅した比較は主張しない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-count-finite-obstruction-vertex-deletions",
+      "track": "exact",
+      "measure_tex": "n",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent transfer_audit",
+          "scope": "2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 14a4dec20cca31ed3e6489ec03f1358f2b4905ecd7db2c90a50852fe6cbbfde5 (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, the fixed nonempty finite forbidden family and induced/ordinary-copy convention, retention of every original vertex, direct clauses without per-copy variables, unique cardinality extensions, size and optimum counts, monotone thresholds and witness recovery, original-n versus budget-k scope, encoded bit lengths and polynomial space, and the tournament directed-triangle equivalence. The rainbow2023 abstract/introduction supports only the triangle-hitting formulation used here. This reviewer authored the METHODS.md additions; this separate audit covers the other author's four entry records, not an independent audit of METHODS.md itself. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、非空の固定禁止族、誘導・通常コピーの区別、全頂点の保持、コピーごとの補助変数を使わない節、個数制約の一意拡張、サイズ別・最適解の計数、閾値と復元、元nと予算kの区別、符号長・領域、トーナメントの有向三角形との同値を確認。rainbow2023のAbstract・Introductionで引用する定式化を確認した。この担当はMETHODSの追記を執筆しており、本独立監査の対象は別著者による4項目のデータである。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
+      "variant": "counting",
+      "fixed_constants": [
+        "H",
+        "copy_mode"
+      ],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(n)",
+        "clauses_tex": "O_{\\mathcal H}(n^h+n)",
+        "width_tex": "\\max\\{h,3\\}"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: parallel-counter cardinality encodings; the full-equivalence width-three construction used here is given in METHODS.md Section 2"
+        }
+      ],
+      "en": {
+        "name": "Counting Vertex Deletions for a Fixed Finite Forbidden Family",
+        "parameter": "n is the original number of vertices; m is the original number of edges",
+        "restrictions": "Unweighted simple undirected graphs. Fix a nonempty finite family H of nonempty forbidden graphs and fix whether copies are induced or ordinary subgraphs. Put h = max_{H in H}|V(H)|. Count all vertex sets D for which G−D has no forbidden copy, or only those of a specified size.",
+        "preprocessing": "Retain every original vertex, including isolated vertices. Enumerate the forbidden-copy vertex sets in n^{O_H(1)} time. An empty graph has exactly one deletion set, the empty set. A requested size outside [0,n] has count zero.",
+        "derivation": [
+          "Use one deletion bit x_v for each original vertex. For every vertex set S supporting a forbidden copy, add $\\bigvee_{v\\in S}x_v$. Duplicate copies on the same S may share one clause. No gate or auxiliary variable is introduced for a forbidden copy.",
+          "Vertex deletion keeps the adjacency relation among surviving vertices unchanged. Hence G−D is free of the specified induced or ordinary copies exactly when D meets every forbidden copy in the original graph. This establishes a bijection between deletion sets and satisfying assignments of the selection bits.",
+          "There are O_H(n^h) copy clauses, each of width at most h. For size t add $\\sum_v x_v=t$ using the linear-size adder of METHODS.md Section 2, with full gate equivalences. It adds O(n) variables and clauses, and every eligible deletion set has exactly one extension.",
+          "Thus N=O(n), M=O_H(n^h+n), and w≤max(h,3). The encoded bit length is O_H((n^h+n) log(n+2)); construction is polynomial for the fixed family. Apply the general-density exact-counting assumption to obtain A(n)L^{O(1)}, with polynomial space. The separately reported formalization profile gives its own displayed weaker alternative.",
+          "All sizes can be counted with n+1 queries. The smallest size with nonzero count is the optimum deletion size; its count is the number of optimum deletion sets, and comparing it with one decides optimum uniqueness. These polynomially many calls do not change the exponential factor. See the separate optimization entry for witness reconstruction.",
+          "For induced copies, H={P3} gives Cluster Vertex Deletion; for ordinary copies, H={K2} gives Vertex Cover. These are examples of the direct counting construction, without a decision kernel. METHODS.md Section 3 explains the distinction from solution-budget FPT transfers."
+        ],
+        "caveats": [
+          "The finite family, its largest order h, and the induced/noninduced convention are fixed independently of the input. Enumerating arbitrary input patterns is outside this entry.",
+          "The scale is the original vertex count n, not the deletion budget. A linear vertex kernel is unnecessary here, and an ordinary decision kernel cannot be inserted into this counting argument without a separate count-preservation proof.",
+          "Fixed forbidden minors are not covered by the copy-enumeration argument: a minor model can use unboundedly many vertices. Edge additions, deletions, or editing can create forbidden copies and require a separate analysis.",
+          "No binary-weight or inclusion-minimal-deletion counting claim is made by this entry. The clauses remain at their fixed width; splitting every constant-width clause into 3-clauses can unnecessarily increase the variable count."
+        ]
+      },
+      "ja": {
+        "name": "固定有限禁止パターンへの頂点削除の厳密計数",
+        "parameter": "nは元の頂点数、mは元の辺数",
+        "restrictions": "非重み付き単純無向グラフ。非空グラフからなる非空の有限禁止族Hと、コピーを誘導部分グラフとして扱うか通常の部分グラフとして扱うかを固定する。h = max_{H in H}|V(H)|とする。G−Dに禁止コピーを残さない全頂点集合D、または指定サイズのDを数える。",
+        "preprocessing": "孤立頂点も含め、元の全頂点を残す。禁止コピーの頂点集合をn^{O_H(1)}時間で列挙する。空グラフの削除集合は空集合の一つ。指定サイズが[0,n]の外なら個数は0。",
+        "derivation": [
+          "元の各頂点vに削除ビットx_vを一つ置く。禁止コピーを支える各頂点集合Sに節 $\\bigvee_{v\\in S}x_v$ を追加する。同じS上の複数コピーには一つの節を共有でき、コピーごとのゲートや補助変数は作らない。",
+          "頂点削除では、生き残る頂点間の隣接関係は変わらない。したがってG−Dが指定の誘導・非誘導コピーを含まないことと、Dが元のグラフの全禁止コピーをhitすることは同値。削除集合と選択ビットへの充足割当てが一対一に対応する。",
+          "コピーの節はO_H(n^h)個で、各幅は高々h。サイズtの指定にはMETHODS.md第2節の線形加算器で $\\sum_v x_v=t$ を加える。全ゲートを同値で定義すれば、追加変数・節はO(n)個で、各適格な削除集合からの拡張は一意となる。",
+          "よってN=O(n)、M=O_H(n^h+n)、w≤max(h,3)。符号長はO_H((n^h+n) log(n+2))で、禁止族を固定すると構成時間は多項式。一般密度の厳密計数の仮定からA(n)L^{O(1)}時間と多項式領域を得る。報告された形式化の別の仮定では、表示する弱い代替上界を得る。",
+          "n+1回の問い合わせで全サイズの個数を求められる。個数が初めて正になるサイズが最小削除数で、その個数が最適削除集合の数となる。1と比較すれば最適解の一意性も判定できる。多項式回の呼出しなので指数部分は変わらない。最適解の復元は別の最適化項目に記す。",
+          "誘導コピーでH={P3}とするとCluster Vertex Deletion、通常のコピーでH={K2}とするとVertex Coverになる。いずれも判定カーネルを使わない直接計数の例である。解サイズによるFPTへの移送との違いはMETHODS.md第3節を参照。"
+        ],
+        "caveats": [
+          "有限禁止族、最大頂点数h、誘導・非誘導の約束は入力と独立に固定する。入力で与える任意パターンの列挙を扱う項目ではない。",
+          "尺度は元の頂点数nであり、削除予算ではない。この導出に線形頂点カーネルは不要で、通常の判定カーネルを計数保存の証明なしに挿入することもできない。",
+          "固定禁止minorのモデルは任意に多くの頂点を使い得るため、このコピー列挙の議論では扱わない。辺の追加・削除・編集は新しい禁止コピーを作り得るので別の議論が必要。",
+          "二進重み付き版や包含極小な削除集合の計数は、この項目では主張しない。節は固定幅のまま使い、定数幅の全節を3節へ分解して変数を不要に増やさない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-minimum-finite-obstruction-vertex-deletion",
+      "track": "exact",
+      "measure_tex": "n",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent transfer_audit",
+          "scope": "2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 1bdaad46ea0e62a41e54d3f2a9263678ef63066852d596fda4e8f3a0278e45e5 (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, the fixed nonempty finite forbidden family and induced/ordinary-copy convention, retention of every original vertex, direct clauses without per-copy variables, unique cardinality extensions, size and optimum counts, monotone thresholds and witness recovery, original-n versus budget-k scope, encoded bit lengths and polynomial space, and the tournament directed-triangle equivalence. The rainbow2023 abstract/introduction supports only the triangle-hitting formulation used here. This reviewer authored the METHODS.md additions; this separate audit covers the other author's four entry records, not an independent audit of METHODS.md itself. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、非空の固定禁止族、誘導・通常コピーの区別、全頂点の保持、コピーごとの補助変数を使わない節、個数制約の一意拡張、サイズ別・最適解の計数、閾値と復元、元nと予算kの区別、符号長・領域、トーナメントの有向三角形との同値を確認。rainbow2023のAbstract・Introductionで引用する定式化を確認した。この担当はMETHODSの追記を執筆しており、本独立監査の対象は別著者による4項目のデータである。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
+      "variant": "optimization",
+      "fixed_constants": [
+        "H",
+        "copy_mode"
+      ],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(n)",
+        "clauses_tex": "O_{\\mathcal H}(n^h+n)",
+        "width_tex": "\\max\\{h,3\\}"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: parallel-counter cardinality encodings; the full-equivalence width-three construction used here is given in METHODS.md Section 2"
+        }
+      ],
+      "en": {
+        "name": "Minimum Vertex Deletion for a Fixed Finite Forbidden Family",
+        "parameter": "n is the original number of vertices; m is the original number of edges",
+        "restrictions": "Unweighted simple undirected graphs; a fixed nonempty finite family H of nonempty forbidden graphs, and a fixed induced or ordinary-copy convention. Let h be the largest forbidden order. Output the minimum deletion size and an optimum vertex set.",
+        "preprocessing": "Use the entire input graph; no kernel is required. Enumerate all forbidden-copy vertex sets in n^{O_H(1)} time. The empty input has optimum zero and the empty witness.",
+        "derivation": [
+          "Use one deletion bit per vertex and the clause $\\bigvee_{v\\in S}x_v$ for each forbidden-copy vertex set S. A deletion set is feasible exactly when it meets all these copies, since vertex deletion does not change adjacency among survivors.",
+          "For a threshold b in [0,n], add $\\sum_v x_v\\le b$ with the O(n)-size cardinality circuit. Each query has N=O(n), M=O_H(n^h+n), and width at most max(h,3), including every auxiliary variable. Its bit length is O_H((n^h+n) log(n+2)).",
+          "Threshold feasibility is monotone in b. Deleting all n vertices is feasible because every forbidden graph is nonempty. Binary search uses O(log(n+1)) fixed-width SAT queries to find the optimum b*. This is a direct satisfiability reduction; no signed-count cancellation is needed.",
+          "Keep the optimum threshold and fix the original deletion bits one at a time. Test x_v=0 while keeping previous choices; retain zero if satisfiable and otherwise force one. This uses at most n further queries and O(n) unit clauses. The resulting set is feasible and has minimum size b*.",
+          "Polynomially many sequential general-density SAT calls give A(n)L^{O(1)} time and polynomial space. The separately reported formalization assumption supplies the alternative stated bound. Optimum solution counts belong to the paired counting entry."
+        ],
+        "caveats": [
+          "The original vertex count n is the scale. A solution-budget FPT bound requires a separate variable-reduction argument.",
+          "The forbidden family and copy convention must remain fixed. The clause width can be greater than three but is constant; apply the corresponding fixed-width SAT statement directly.",
+          "This is vertex deletion, not edge modification, forbidden-minor deletion, or binary-weight optimization. No latest-best-algorithm comparison is claimed."
+        ]
+      },
+      "ja": {
+        "name": "固定有限禁止パターンへの頂点削除の厳密最適化",
+        "parameter": "nは元の頂点数、mは元の辺数",
+        "restrictions": "非重み付き単純無向グラフ。非空グラフからなる非空の有限禁止族Hと、誘導・通常のコピーの約束を固定する。最大禁止頂点数をhとする。最小削除数と最適な頂点集合を出力する。",
+        "preprocessing": "カーネルを使わず元のグラフ全体を扱う。禁止コピーの頂点集合をn^{O_H(1)}時間で列挙する。空グラフの最適値は0で、最適解は空集合。",
+        "derivation": [
+          "各頂点に削除ビットを置き、禁止コピーの各頂点集合Sに節 $\\bigvee_{v\\in S}x_v$ を置く。頂点削除は残る頂点間の隣接関係を変えないため、全コピーをhitすることと削除集合の実行可能性が同値になる。",
+          "[0,n]の閾値bに対して、O(n)サイズの個数回路で $\\sum_v x_v\\le b$ を加える。補助変数を全て含め、各問い合わせはN=O(n)、M=O_H(n^h+n)、幅max(h,3)以下である。符号長はO_H((n^h+n) log(n+2))。",
+          "閾値付きの実行可能性はbについて単調。禁止グラフは全て非空なので、全n頂点を削除すれば必ず実行可能になる。二分探索によりO(log(n+1))回の固定幅SAT判定で最適値b*を求める。この方法は充足可能性への直接帰着であり、計数の差による打消しは使わない。",
+          "最適閾値を維持し、元の削除ビットを一つずつ固定する。以前の選択を保ってx_v=0を試し、充足可能なら0、そうでなければ1にする。追加問い合わせは高々n回、追加する単位節はO(n)個。得られる集合は実行可能で、最小サイズb*を持つ。",
+          "一般密度のSATを多項式回、逐次呼び出すのでA(n)L^{O(1)}時間と多項式領域を得る。報告された形式化の別の仮定では表示する代替上界を得る。最適解の個数は対応する計数項目で扱う。"
+        ],
+        "caveats": [
+          "尺度は元の頂点数n。解サイズをパラメータにするFPT上界には、別途変数を減らす議論が必要。",
+          "禁止族とコピーの約束は固定する。節幅が3より大きくても定数なら、その固定幅のSATの主張を直接使う。",
+          "頂点削除の結果であり、辺の変更、禁止minorの削除、二進重み付き最適化の結果ではない。現在の最良アルゴリズムとの比較も主張しない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-count-tournament-feedback-vertex-sets",
+      "track": "exact",
+      "measure_tex": "n",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent transfer_audit",
+          "scope": "2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 01aa584dfaf3e7d3c6f494cf87f324ad4836de7db95740ab892e60a75b817b27 (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, the fixed nonempty finite forbidden family and induced/ordinary-copy convention, retention of every original vertex, direct clauses without per-copy variables, unique cardinality extensions, size and optimum counts, monotone thresholds and witness recovery, original-n versus budget-k scope, encoded bit lengths and polynomial space, and the tournament directed-triangle equivalence. The rainbow2023 abstract/introduction supports only the triangle-hitting formulation used here. This reviewer authored the METHODS.md additions; this separate audit covers the other author's four entry records, not an independent audit of METHODS.md itself. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、非空の固定禁止族、誘導・通常コピーの区別、全頂点の保持、コピーごとの補助変数を使わない節、個数制約の一意拡張、サイズ別・最適解の計数、閾値と復元、元nと予算kの区別、符号長・領域、トーナメントの有向三角形との同値を確認。rainbow2023のAbstract・Introductionで引用する定式化を確認した。この担当はMETHODSの追記を執筆しており、本独立監査の対象は別著者による4項目のデータである。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
+      "variant": "counting",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(n)",
+        "clauses_tex": "O(n^3+n)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "rainbow2023",
+          "locator": "Abstract and introduction: FVST is formulated as a vertex set hitting all directed triangles of a tournament; no kernel bound is used in this exact-n deduction"
+        },
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: parallel-counter cardinality encodings; the full-equivalence width-three construction used here is given in METHODS.md Section 2"
+        }
+      ],
+      "en": {
+        "name": "Counting Feedback Vertex Sets in Tournaments",
+        "parameter": "n is the original number of vertices; m=n(n−1)/2 is the number of directed arcs",
+        "restrictions": "Unweighted tournaments: exactly one directed arc between each distinct pair of vertices, and no loops. Count vertex sets D whose deletion leaves an acyclic tournament, either all such sets or those of a specified size.",
+        "preprocessing": "Keep all declared vertices. Enumerate directed triangles in O(n^3) time. The empty tournament contributes one empty deletion set. Handle a requested size outside [0,n] with count zero.",
+        "derivation": [
+          "A tournament has a directed cycle if and only if it has a directed triangle. Indeed, if a shortest directed cycle had length at least four, the arc between its first and third vertices would give either a directed triangle or a shorter directed cycle. Vertex deletion preserves the tournament property.",
+          "Therefore D is a feedback vertex set exactly when it hits every directed triangle. Put one deletion bit x_v per vertex and a clause $x_a\\vee x_b\\vee x_c$ for each directed triangle on a,b,c. The triangle-hitting formulation is also stated in the cited source; this entry does not use its kernel theorem.",
+          "Each original deletion set has exactly one assignment to these bits. For cardinality t add $\\sum_v x_v=t$ using the full-equivalence linear-size circuit. Including all gate outputs gives N=O(n), M=O(n^3+n), and width at most three, with a unique extension for each eligible set.",
+          "The encoded bit length is O((n^3+n) log(n+2)). Apply the general-density exact-counting assumption to get A(n)L^{O(1)} time and polynomial space. Despite the input tournament being dense, its arcs and triangles contribute clauses rather than additional selection variables.",
+          "Running the size-refined count for t=0,...,n gives the full size distribution with polynomial overhead. Its first positive entry counts optimum feedback vertex sets; comparing that number with one decides optimum uniqueness. A separate optimization entry provides an optimum witness."
+        ],
+        "caveats": [
+          "This is an exact algorithm measured in the original vertex count n. It does not establish a subexponential FPT bound in the deletion budget k; that separate transfer remains a candidate.",
+          "Do not use a decision kernel when counting without checking its multiplicities. Retaining every original vertex ensures that even vertices in no triangle are counted correctly.",
+          "The triangle argument is for vertex deletion in tournaments. In a general digraph, a directed cycle need not contain a triangle; deleting arcs from a tournament can also leave a directed cycle without a triangle.",
+          "No weighted, inclusion-minimal-counting, or full-enumeration running-time claim is made."
+        ]
+      },
+      "ja": {
+        "name": "Tournament Feedback Vertex Setの厳密計数",
+        "parameter": "nは元の頂点数、m=n(n−1)/2は有向辺数",
+        "restrictions": "非重み付きトーナメント。異なる各頂点対には一方向の有向辺がちょうど一つあり、ループはない。削除後に有向閉路を残さない頂点集合Dの全数、または指定サイズの個数を数える。",
+        "preprocessing": "宣言された全頂点を残す。有向三角形をO(n^3)時間で列挙する。空トーナメントには空の削除集合が一つある。指定サイズが[0,n]の外なら0を返す。",
+        "derivation": [
+          "トーナメントに有向閉路があることと、有向三角形があることは同値。最短有向閉路が4頂点以上なら、第1頂点と第3頂点の間の有向辺から、有向三角形か、より短い有向閉路ができるためである。頂点削除後もトーナメントである。",
+          "よってDがfeedback vertex setであることと、全ての有向三角形をhitすることは同値。各頂点に削除ビットx_vを置き、a,b,c上の各有向三角形に節 $x_a\\vee x_b\\vee x_c$ を置く。三角形をhitする定式化は引用文献にも明記されているが、この項目ではそのカーネル定理を使わない。",
+          "元の各削除集合は選択ビットの割当て一つに対応する。サイズtの指定には、完全なゲート同値を持つ線形回路で $\\sum_v x_v=t$ を加える。全ゲート出力を含めN=O(n)、M=O(n^3+n)、幅3以下となり、適格な各集合からの拡張は一意。",
+          "符号長はO((n^3+n) log(n+2))。一般密度の厳密計数の仮定からA(n)L^{O(1)}時間と多項式領域を得る。トーナメントの入力は密でも、有向辺や三角形は選択変数を増やさず、節数に寄与する。",
+          "t=0,...,nのサイズ別計数で全サイズ分布を多項式の追加コストで求められる。最初の正の項は最適feedback vertex setの個数であり、1と比較すれば最適解の一意性も判定できる。最適解の復元は別の最適化項目に記載する。"
+        ],
+        "caveats": [
+          "元の頂点数nを尺度にしたexactアルゴリズムであり、削除予算kに関する劣指数FPTを示すものではない。その別の移送は候補として残している。",
+          "計数で判定カーネルを使うには多重度の確認が必要。元の全頂点を残すことで、どの三角形にも属さない頂点の寄与も正しく数える。",
+          "三角形の議論はトーナメントの頂点削除に対するもの。一般の有向グラフでは閉路が三角形を含むとは限らず、トーナメントから有向辺を削除しても、三角形のない有向閉路が残り得る。",
+          "重み付き版、包含極小な解の計数、全解の列挙時間は主張しない。"
+        ]
+      }
+    },
+    {
+      "id": "exact-minimum-tournament-feedback-vertex-set",
+      "track": "exact",
+      "measure_tex": "n",
+      "origin": "catalog-deduction",
+      "claim_status": "derivation-available",
+      "review_status": "ai-audited",
+      "review_history": [
+        {
+          "date": "2026-10-28",
+          "reviewer_type": "ai",
+          "reviewer": "Codex agent transfer_audit",
+          "scope": "2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 88ca45a46d409d0ddb19676465d11fbf82a4ac2c416bf729d52d7396f73e2394 (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, the fixed nonempty finite forbidden family and induced/ordinary-copy convention, retention of every original vertex, direct clauses without per-copy variables, unique cardinality extensions, size and optimum counts, monotone thresholds and witness recovery, original-n versus budget-k scope, encoded bit lengths and polynomial space, and the tournament directed-triangle equivalence. The rainbow2023 abstract/introduction supports only the triangle-hitting formulation used here. This reviewer authored the METHODS.md additions; this separate audit covers the other author's four entry records, not an independent audit of METHODS.md itself. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、非空の固定禁止族、誘導・通常コピーの区別、全頂点の保持、コピーごとの補助変数を使わない節、個数制約の一意拡張、サイズ別・最適解の計数、閾値と復元、元nと予算kの区別、符号長・領域、トーナメントの有向三角形との同値を確認。rainbow2023のAbstract・Introductionで引用する定式化を確認した。この担当はMETHODSの追記を執筆しており、本独立監査の対象は別著者による4項目のデータである。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。"
+        }
+      ],
+      "variant": "optimization",
+      "fixed_constants": [],
+      "depends_on": [
+        "sat26-general",
+        "sat26-reported-formal"
+      ],
+      "bound_kind": "general",
+      "encoding": {
+        "variables_tex": "O(n)",
+        "clauses_tex": "O(n^3+n)",
+        "width_tex": "3"
+      },
+      "comparison_status": "not-systematically-surveyed",
+      "source_refs": [
+        {
+          "source_id": "rainbow2023",
+          "locator": "Abstract and introduction: FVST is formulated as a vertex set hitting all directed triangles of a tournament; no kernel bound is used in this exact-n deduction"
+        },
+        {
+          "source_id": "sinz2005",
+          "locator": "Sections 4.1–4.2 and Theorem 2: parallel-counter cardinality encodings; the full-equivalence width-three construction used here is given in METHODS.md Section 2"
+        }
+      ],
+      "en": {
+        "name": "Minimum Feedback Vertex Set in Tournaments",
+        "parameter": "n is the original number of vertices; m=n(n−1)/2 is the number of directed arcs",
+        "restrictions": "Unweighted tournaments. Output the minimum number of vertices whose deletion makes the tournament acyclic, together with an optimum deletion set.",
+        "preprocessing": "Use the original tournament and enumerate all directed triangles in O(n^3) time. The empty tournament has optimum zero and the empty witness.",
+        "derivation": [
+          "A shortest directed cycle in a tournament is a directed triangle: the arc between its first and third vertices otherwise supplies a shorter cycle or a triangle. Since deleting vertices retains a tournament, deleting all directed triangles is equivalent to removing every directed cycle.",
+          "Use one deletion variable per vertex and the clause $x_a\\vee x_b\\vee x_c$ for each directed triangle. For threshold b add $\\sum_v x_v\\le b$ with the linear-size cardinality circuit. No auxiliary variable is introduced for a triangle.",
+          "Each threshold query has N=O(n), M=O(n^3+n), and width at most three, including all gate variables. Its bit length is O((n^3+n) log(n+2)). Apply the general-density SAT assumption.",
+          "Binary search the monotone threshold b in [0,n] with O(log(n+1)) queries. Then keep the optimum threshold and fix original deletion bits sequentially, trying zero whenever an optimum extension remains. This uses at most n more queries and O(n) additional unit clauses, and produces an optimum vertex set.",
+          "The total is A(n)L^{O(1)} time and polynomial space, with the separately reported formalization bound available under its own assumption. The paired counting entry additionally counts optimum solutions."
+        ],
+        "caveats": [
+          "The scale is n, not the optimum solution size. This deduction neither supplies nor assumes a linear-vertex kernel for the solution-budget parameter.",
+          "The result is for feedback vertex sets in tournaments, not feedback arc sets or arbitrary directed graphs.",
+          "No binary-weight extension or latest-best comparison is asserted. Preserve the fixed width of three and the original vertex measure."
+        ]
+      },
+      "ja": {
+        "name": "Tournament Feedback Vertex Setの厳密最適化",
+        "parameter": "nは元の頂点数、m=n(n−1)/2は有向辺数",
+        "restrictions": "非重み付きトーナメント。有向閉路をなくすための最小削除頂点数と、最適な削除頂点集合を求める。",
+        "preprocessing": "元のトーナメントを使い、有向三角形をO(n^3)時間で列挙する。空トーナメントの最適値は0、最適解は空集合。",
+        "derivation": [
+          "トーナメントの最短有向閉路は有向三角形である。そうでなければ第1頂点と第3頂点の間の辺から、より短い有向閉路か三角形が得られる。頂点削除後もトーナメントなので、全有向三角形をなくすことと、全有向閉路をなくすことが同値になる。",
+          "各頂点に削除変数を置き、各有向三角形に節 $x_a\\vee x_b\\vee x_c$ を置く。閾値bに対して線形サイズの個数回路で $\\sum_v x_v\\le b$ を加える。三角形ごとの補助変数は置かない。",
+          "全ゲート変数を含め、各閾値の問い合わせはN=O(n)、M=O(n^3+n)、幅3以下。符号長はO((n^3+n) log(n+2))である。一般密度のSATの仮定を適用する。",
+          "[0,n]の単調な閾値bをO(log(n+1))回の問い合わせで二分探索する。続いて最適閾値を保ち、最適解への拡張が残るなら0を選びながら、元の削除ビットを順に固定する。追加は高々n回の問い合わせとO(n)個の単位節で、最適な頂点集合を得る。",
+          "全体でA(n)L^{O(1)}時間と多項式領域。報告された形式化の上界はその別の仮定のもとで得られる。対応する計数項目では、さらに最適解の個数を数えられる。"
+        ],
+        "caveats": [
+          "尺度はnであり、最適解のサイズではない。解サイズのパラメータに対する線形頂点カーネルを、この導出は与えず、仮定もしない。",
+          "トーナメントのfeedback vertex setに対する結果であり、feedback arc setや一般の有向グラフに対する結果ではない。",
+          "二進重み付き版や現在の最良上界との比較は主張しない。固定幅3と元の頂点数という尺度を保つ。"
         ]
       }
     }

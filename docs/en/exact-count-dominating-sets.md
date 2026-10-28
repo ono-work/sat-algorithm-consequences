@@ -14,60 +14,71 @@ Data date: 2026-10-28
 | --- | --- |
 | ID | `exact-count-dominating-sets` |
 | Track | Exact exponential-time algorithms |
-| Size measure | n vertices plus m edges |
-| Measure symbol | $n+m$ |
-| Restrictions | Unweighted simple undirected graphs; all dominating vertex sets, or those of a specified cardinality. |
+| Size measure | n = \|V(G)\| original vertices; m = \|E(G)\| original edges. The primary exponential-time measure is n; L is the full input bit length. |
+| Measure symbol | $n$ |
+| Restrictions | Unweighted simple undirected graphs, with no degree or density restriction. Count all dominating vertex sets, those of a specified size, or optimum sets after determining the minimum size. |
 | Fixed constants | None |
 | Variant | `counting` |
 | Origin / claim status | `catalog-deduction` / `derivation-available` |
-| Review status | `draft` |
+| Review status | `ai-audited` |
 | Comparison status | `not-systematically-surveyed` |
 
 **Catalog deduction.** This entry records a derivation assembled in this catalog, rather than attributing the full consequence to a source theorem. Its review and comparison status are stated separately.
 
 ## Exact assumptions and conditional bounds
 
-- [`sat26-sparse`](../../ASSUMPTIONS.md#sat26-sparse)
+- [`sat26-general`](../../ASSUMPTIONS.md#sat26-general)
 - [`sat26-reported-formal`](../../ASSUMPTIONS.md#sat26-reported-formal)
+- [`sat26-sparse`](../../ASSUMPTIONS.md#sat26-sparse)
 
-Conditional on `sat26-sparse`:
+Conditional on `sat26-general`:
 
 $$
-2^{O((n+m)/\sqrt{\log(n+m)})}L^{O(1)}
+2^{O(n\log\log n/\sqrt{\log n})}L^{O(1)}
 $$
 
 Alternatively, conditional on `sat26-reported-formal`:
 
 $$
-2^{O((n+m)(\log\log(n+m))^2/\sqrt{\log(n+m)})}L^{O(1)}
+2^{O(n(\log\log n)^2/\sqrt{\log n})}L^{O(1)}
 $$
 
 The resulting algorithm is deterministic and uses polynomial space, conditional on the corresponding assumption and this derivation. $L$ denotes the original input length; constants may depend on the stated fixed constants. Logarithms in asymptotic bounds may be regularized when the declared measure is small.
 
 ## Preprocessing
 
-Keep the original graph. An isolated vertex is forced into every dominating set.
+Keep all declared vertices, including isolated vertices; use the original graph directly. Handle n = 0 and requested sizes outside [0,n] directly. For n = 0 the empty set is the unique dominating set.
 
 ## Encoding size
 
 | Quantity | Bound |
 | --- | --- |
-| Boolean variables, including auxiliaries | $O(n+m)$ |
+| Boolean variables, including auxiliaries | $O(n)$ |
 | Clauses | $O(n+m)$ |
 | Maximum clause width | $3$ |
 
 ## Derivation
 
-1. Use one selection bit per vertex. For each vertex v build an OR circuit for $y_v=\bigvee_{u\in N[v]}x_u$ and require y_v=1.
+1. Use one selection bit x_v and one optional marker y_v for each vertex. For every u in the closed neighborhood N[v], add $\neg y_v\vee\neg x_u$. Thus y_v may be 1 exactly when v is undominated by the selected set S; an undominated vertex may also have marker 0. The implications contribute n+2m binary clauses.
 
-2. The total neighborhood size is $\sum_v |N[v]|=n+2m$. Bidirectional gate definitions produce O(n+m) variables and clauses and a unique extension for every chosen vertex set.
+2. Compute $p=\bigoplus_v y_v$ using n−1 binary XOR gates when n≥1, with p=y_v when n=1. Encode every XOR by the full equivalences in [METHODS.md, Section 2.1](../../METHODS.md). Form H_0 and H_1 by requiring p=0 and p=1, respectively, and compute their exact satisfying-assignment counts.
 
-3. Apply the sparse counting profile. A specified cardinality requires only O(n) additional gates. If m=O(n), this becomes B(n) times a polynomial factor.
+3. For fixed S, let U(S) be its undominated vertices. The allowed marker sets are precisely all T⊆U(S), so its contribution to $\#H_0-\#H_1$ is $\sum_{T\subseteq U(S)}(-1)^{|T|}$, equal to 1 if U(S) is empty and 0 otherwise. Hence the difference is exactly the number of dominating sets. XOR auxiliaries have one extension for each assignment of x and y; the marker multiplicities are deliberately canceled by this sum.
+
+4. Before an optional size constraint there are 2n original/marker bits and n−1 XOR outputs. Requiring $\sum_v x_v=r$ or $\sum_v x_v\le b$ adds O(n) uniquely determined counter/comparator variables and clauses by [METHODS.md, Section 2](../../METHODS.md). Apply the identical constraint and any fixed x-bits to both parity formulas. Each formula has N=O(n), M=O(n+m), and width at most three.
+
+5. Each parity count is at most 2^(2n), so exact subtraction needs O(n) bits. A standard explicit CNF encoding has bit length O((n+m) log(n+2)), polynomial in L. Two sequential calls to the assumed exact #SAT algorithm give A(n)L^{O(1)} time and polynomial space; the separately reported formalization profile yields its own displayed, weaker exponent. This step uses counts, not merely satisfiability.
+
+6. For the number of minimum dominating sets, let C_b be the same parity difference with the constraint that the selected size is at most b. Binary search for the first b with C_b>0 takes O(log(n+1)) such queries, each using two #SAT calls. At the resulting optimum b*, two more calls with selected size exactly b* give the optimum count; it equals 1 exactly when the optimum set is unique. These remain polynomially many calls, with no additional variant label.
+
+7. The earlier direct route remains valid: compute $z_v\leftrightarrow\bigvee_{u\in N[v]}x_u$ with full binary OR equivalences, require all z_v=1, and add any size constraint. Its N+M=O(n+m) encoding has one extension per dominating set and gives B(n+m)L^{O(1)} under the unchanged sparse assumption, using forced-zero density padding if needed. On classes m≤Dn with fixed D, either route has total size O_D(n) and gives B(n)L^{O(1)}.
 
 ## Caveats and comparison limits
 
-- A satisfiability-preserving long-clause replacement alone is not enough for counting; use full gate equivalences.
-- For dense graphs this n+m-measure bound need not improve vertex-exponential algorithms.
+- The primary A(n) route is a two-query exact-counting reduction followed by an integer subtraction. Neither parity formula alone is a parsimonious encoding of dominating sets or a valid test for their existence under a budget.
+- Markers must express only the implication from being selected as a marker to being undominated. Full equivalences are required for deterministic XOR and cardinality gates; replacing the marker implication by an equivalence changes the cancellation.
+- Isolated vertices are retained. Cancellation automatically removes selected sets that omit an isolated vertex; deleting such vertices without accounting for their forced membership and the requested size would change the problem.
+- Optimum uniqueness is only the consequence of computing an exact optimum count. No weighted extension, enumeration running-time bound, novelty claim, or latest-best comparison is asserted.
 
 Counting requires a count-preserving encoding and preprocessing, or an explicit correction for multiplicities. The derivation must justify this; decision preservation alone is insufficient.
 
@@ -77,10 +88,11 @@ Not systematically surveyed
 
 ## Sources and exact locators
 
-No additional literature dependency is recorded; see the derivation and its named SAT assumptions.
+- **`van-rooij-nederlof-van-dijk2008`** — [Johan M. M. van Rooij, Jesper Nederlof, and Thomas C. van Dijk, Inclusion/Exclusion Meets Measure and Conquer: Exact algorithms for counting dominating sets](https://ics-archive.science.uu.nl/research/techreps/repo/CS-2008/2008-043.pdf). Version: Utrecht University Technical Report UU-CS-2008-043, November 2008; 20-page report including cover pages. Locator: Abstract and Section 1: historical context for inclusion/exclusion in counting dominating sets. The marker/parity transformation and its conditional SAT bounds below are catalog deductions, not results attributed to this paper..
+- **`sinz2005`** — [Carsten Sinz, Towards an Optimal CNF Encoding of Boolean Cardinality Constraints](https://www.carstensinz.de/techreports/CardConstraints.pdf). Version: Author-hosted 14-page technical report accompanying the CP 2005 paper; accessed 28 October 2026. Locator: Sections 4.1–4.2 and Theorem 2: binary-counter/comparator cardinality encodings; use the explicit full-equivalence width-three implementation in METHODS.md, Section 2, for linear auxiliary size and unique extension..
 
 ## Review record
 
-Status: `draft`
+Status: `ai-audited`
 
-No named human review is recorded.
+- 2026-10-28 — Codex agent linear_kernel_fpt (`ai`): 2026-10-28 parity-counting/additional-consequences revision; reviewed payload SHA-256 bed2bd6efe8fd41df36acbaf0ed697a2b6894339b6b6b66445d2b09ddc27d9ad (canonical JSON without review_status/review_history; UTF-8, sorted keys, compact separators). METHODS.md reference-version SHA-256 105b0472a64802e0a9fc2f7da2416aba506d8d0eba7d62ea7a75f30cc443629b. Checked both languages, marker implications, exact even-minus-odd cancellation, unique XOR/cardinality extensions, all auxiliary-variable/clause/width counts, original measures, count bit lengths, positive-difference optimization and reconstruction, at-most-threshold monotonicity, isolated/empty-input cases, sparse/direct alternatives, and historical-source scope. METHODS.md Section 9 was checked against these entries. Two English U(S) definitions were clarified and rechecked. Small-instance checks covered 76 simple graphs through n=4 and 1,111 CNF inputs; these finite checks do not prove the general claims. This audit assumes the pinned SAT statements and does not verify their proofs or constitute human review. / 英日、印の含意、偶数側と奇数側の正確な相殺、XOR・個数制約の一意拡張、補助変数・節・幅、元の尺度、計数値のビット長、差の正値性による最適化・復元、サイズ上限の閾値の単調性、孤立点・空入力、疎な場合と直接符号化、引用範囲を確認。METHODS第9節との一致と英語のU(S)の定義2箇所の修正を再確認した。小例は頂点数4以下の単純グラフ76個とCNF入力1,111個で検査し、一般の証明とは区別する。 固定されたSATの主張を仮定した導出のAI確認であり、元定理の証明検証や人間の確認ではない。

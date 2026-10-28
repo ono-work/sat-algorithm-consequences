@@ -28,11 +28,18 @@ $$
 | [固定領域・固定arityのCSP解の厳密計数](docs/ja/exact-count-finite-csp.md) | 計数 | $n$ | $A(n)$ | `draft` |
 | [Perfect Matchingの厳密計数](docs/ja/exact-count-perfect-matchings.md) | 計数 | $m$ | $B(m)$ | `draft` |
 | [次数制約を満たす辺集合の厳密計数](docs/ja/exact-count-degree-constrained-edge-sets.md) | 計数 | $m$ | $B(m)$ | `draft` |
-| [Dominating Setの厳密計数](docs/ja/exact-count-dominating-sets.md) | 計数 | $n+m$ | $B(n+m)$ | `draft` |
-| [Minimum Dominating Set](docs/ja/exact-minimum-dominating-set.md) | 最適化 | $n+m$ | $B(n+m)$ | `draft` |
+| [Dominating Setの厳密計数](docs/ja/exact-count-dominating-sets.md) | 計数 | $n$ | $A(n)$ | `ai-audited` |
+| [Minimum Dominating Set](docs/ja/exact-minimum-dominating-set.md) | 最適化 | $n$ | $A(n)$ | `ai-audited` |
 | [Max-Cut](docs/ja/exact-max-cut.md) | 最適化 | $n+m$ | $B(n+m)$ | `draft` |
 | [固定領域・固定arityのMax-CSPの厳密最適化](docs/ja/exact-max-finite-csp.md) | 最適化 | $n+m$ | $B(n+m)$ | `draft` |
 | [Minimum Edge Dominating Set](docs/ja/exact-edge-dominating-set.md) | 最適化 | $m$ | $B(m)$ | `ai-audited` |
+| [極大独立集合 / 極小Vertex Coverの厳密計数](docs/ja/exact-count-maximal-independent-sets.md) | 計数 | $n$ | $A(n)$ | `ai-audited` |
+| [Minimum Independent Dominating Set / Upper Vertex Cover](docs/ja/exact-minimum-independent-dominating-set.md) | 最適化 | $n$ | $A(n)$ | `ai-audited` |
+| [任意幅CNFの充足割当ての厳密計数](docs/ja/exact-count-unrestricted-cnf.md) | 計数 | $n+m$ | $A(n+m)$ | `ai-audited` |
+| [固定有限禁止パターンへの頂点削除の厳密計数](docs/ja/exact-count-finite-obstruction-vertex-deletions.md) | 計数 | $n$ | $A(n)$ | `ai-audited` |
+| [固定有限禁止パターンへの頂点削除の厳密最適化](docs/ja/exact-minimum-finite-obstruction-vertex-deletion.md) | 最適化 | $n$ | $A(n)$ | `ai-audited` |
+| [Tournament Feedback Vertex Setの厳密計数](docs/ja/exact-count-tournament-feedback-vertex-sets.md) | 計数 | $n$ | $A(n)$ | `ai-audited` |
+| [Tournament Feedback Vertex Setの厳密最適化](docs/ja/exact-minimum-tournament-feedback-vertex-set.md) | 最適化 | $n$ | $A(n)$ | `ai-audited` |
 
 **既知結果との比較：** 以下に列挙した項目を除き、体系的な比較は未実施です。記録済みの評価：
 

@@ -8,7 +8,7 @@
 
 一回の作業では一つの問題族、または三つまでの具体的な候補を調べます。単位は **問題 × パラメータまたはサイズ尺度 × 入力クラス**。さらに判定・計数・最適化・探索を区別します。発見した件数を目標にして、導出が不完全な項目を主表へ移さないでください。
 
-2026-10-28のVC・EDS更新時点では、FPT 13項目、厳密アルゴリズム12項目、候補10項目を収録しています。VCとEDSの3項目および一般EDSの候補に範囲限定のAI監査を記録し、それ以外はdraftです。人間による確認の記録はなく、新規性を主張する論文の結果一覧でもありません。
+2026-10-28の包含排除・追加帰結の更新時点では、FPT 16項目、厳密アルゴリズム19項目、候補10項目を収録しています。今回追加・更新した12項目と先のVC・EDSの3項目、さらに一般EDSの候補に範囲限定のAI監査を記録しています。残る20項目と候補9項目はdraftです。人間による確認の記録はなく、新規性を主張する論文の結果一覧でもありません。
 
 [計算量理論への影響](COMPLEXITY.ja.md)は、個別アルゴリズムの項目数とは別の解説です。クラスの一致、パラメータを明示した完全問題、仮説に基づく下界、回路下界を扱います。帰着の種類、サイズの定義、導けることの範囲を保ち、英日両版と共通の出典一覧を更新してください。ある議論から分離を導けないことを、論理的独立性の証明として扱わないでください。
 
@@ -20,6 +20,7 @@
 | FPT：構造パラメータ | 小さいmodulator、延長不能の定数サイズ証人 | 境界上の変数だけで表せるか。拡張数も扱えるか。 |
 | FPT：目標値による縮小 | 自明な保証、有界次数、有界出現回数 | 非自明な入力で変数と制約の総数がO(k)になるか。 |
 | 厳密：局所制約 | 固定領域CSP、彩色、頂点・辺の選択 | NがO(n)、O(m)、O(n+m)のどれになるか。 |
+| 厳密：包含排除 | 固定幅CNFで表せる禁止事象、任意に選べる印と偶奇 | 二つの正確な計数値の差が目的の個数になるか。補助変数の一意性と整数のビット長を保つか。 |
 | 厳密：計数・最適化・探索 | 個数制約、目的値の判定、解の復元 | 解の個数・目的関数を保存し、呼出し回数と数値のビット長を制御できるか。 |
 
 ### 尺度と問題の版
@@ -29,6 +30,8 @@ schema version 2では、`track` は `fpt` または `exact`、`measure_tex` は
 元問題のn・mの意味を定義し、元入力の符号長L、CNFの変数数N・節数M・最大幅w、CNFの符号長と区別します。疎な入力でO(n)になる表現が、密な入力ではO(n²)になることがあります。n+mに関する劣指数時間を、密な入力でnに関する改善と読み替えてはいけません。
 
 計数では、各ゲートの一意拡張に加え、前処理から最終出力までの計数保存を確認します。判定カーネルや境界の延長可能性の判定だけでは十分ではありません。密度調整のために固定0変数を追加すれば一意拡張を保てます。自由変数を追加する場合の2のべき倍、孤立成分の除去、複数の証明表現による多重度には、保存の証明か明示的な補正が必要です。
+
+包含排除では、各補助式の解と元問題の解が一対一に対応するとは限りません。目的の個数が二つの正確な#SAT値の差になることを証明し、最適化・復元で使う可否判定はその差が正かどうかで行います。一方の補助式への通常のSAT判定だけに置き換えてはいけません。禁止事象に一意でない存在量化の補助変数を加える場合にも、相殺の多重度を再検証します。[METHODS.md第9節](METHODS.md)を参照してください。
 
 最適化では目的値の保存とSAT呼出しの回数、探索では解の復元を示します。二進重みは値の大きさとビット長を区別し、重みの値に依存する擬多項式時間をLの多項式に含めないでください。重み付き版、above-guarantee版、一意性の問いは、それぞれ追加の議論を要します。
 
@@ -56,7 +59,7 @@ schema version 2では、`track` は `fpt` または `exact`、`measure_tex` は
 
 ### 次に調べるもの
 
-- FPT 13項目と厳密12項目について、同じ尺度での既存上界の調査と追加出典の補完。
+- FPT 16項目と厳密19項目について、同じ尺度での既存上界の調査と追加出典の補完。
 - finite-obstruction deletionの他の線形カーネル。
 - 固定q彩色のmodulator先の拡張と、計数版の拡張数。
 - 候補10項目の未完了部分。一般EDSの辺選択・マッチング条件を含め、FPTのカーネル・符号化の障害と、厳密アルゴリズムの密な入力・連結性・重みの障害を区別する。
@@ -64,17 +67,19 @@ schema version 2では、`track` は `fpt` または `exact`、`measure_tex` は
 
 ## English
 
-**Parameterized and Exact Algorithms from Faster SAT** is a living bilingual reference; its selected publication target is `ono-work/sat-algorithm-consequences`, and its archive slug is `sat-algorithm-consequences`. At the 2026-10-28 VC/EDS update it contains 13 FPT entries, 12 exact-algorithm entries, and 10 candidates. The three VC/EDS entries and the general-EDS candidate have scoped AI audit records; the rest are draft, with no human review recorded. Inclusion is not a novelty claim.
+**Parameterized and Exact Algorithms from Faster SAT** is a living bilingual reference; its selected publication target is `ono-work/sat-algorithm-consequences`, and its archive slug is `sat-algorithm-consequences`. At the 2026-10-28 parity-counting/additional-consequences update it contains 16 FPT entries, 19 exact-algorithm entries, and 10 candidates. The twelve added or revised entries, the three previously reviewed VC/EDS entries, and the general-EDS candidate have scoped AI audit records. The remaining 20 entries and nine candidates are draft, with no human review recorded. Inclusion is not a novelty claim.
 
 [Complexity-Theoretic Consequences](COMPLEXITY.md) is a companion note outside the algorithm-entry counts. It covers class equalities, complete problems with explicit parameters, hypothesis-based lower bounds, and circuit lower bounds. Preserve reduction types, size definitions, and the scope of each inference; update both languages and the shared source register. Failure of one separation argument is not a proof of logical independence.
 
 Investigate one family or at most three precise candidates per task. Keep the unit **problem × parameter-or-size-measure × input class**, with distinct decision, counting, optimization, or search variants. Do not turn a discovery quota into incomplete positive entries.
 
-Discovery routes include linear kernels, small structural modulators with bounded extension witnesses, and target-value/degree/occurrence reductions for FPT; and local finite-domain encodings, count-preserving cardinality constraints, optimization calls, or solution reconstruction for exact algorithms.
+Discovery routes include linear kernels, small structural modulators with bounded extension witnesses, and target-value/degree/occurrence reductions for FPT; and local finite-domain encodings, inclusion-exclusion for fixed-width bad events using optional markers and parity, count-preserving cardinality constraints, optimization calls, or solution reconstruction for exact algorithms.
 
 Schema version 2 uses `track: fpt | exact`, `measure_tex: k | n | m | n+m`, and `variant: decision | counting | optimization | search`. Define original n and m, and distinguish them from input bit length L, encoded variable count N, clause count M, width w, and encoded bit length. Track density: a representation linear in n for sparse graphs may be quadratic in n for dense graphs. Subexponential dependence on n+m does not by itself improve a vertex-based bound on dense inputs.
 
 For counting, verify unique gate extensions and preservation of counts throughout preprocessing, or supply an explicit multiplicity correction. A decision kernel or an extension-existence test does not establish a counting result. Forced-zero density padding preserves unique extension; free-variable padding requires its power-of-two correction. Account for removed isolated components and multiple certificates for the same solution. For optimization, preserve the objective and bound repeated calls; for search, supply reconstruction. Binary weights must be accounted for by bit length: do not hide a pseudopolynomial dependence on their values in L^{O(1)}. Weighted, above-guarantee, and uniqueness questions need separate arguments and, when needed, an explicit schema extension.
+
+For inclusion-exclusion, a single auxiliary formula need not have one satisfying assignment per target solution. Prove that the difference of two exact #SAT counts is the target count, including the bit cost of subtraction. Optimization and reconstruction test whether that difference is positive; ordinary SAT on either auxiliary formula is not a replacement. Adding non-unique existential auxiliary variables to a bad event also requires a new multiplicity argument. See [METHODS.md, Section 9](METHODS.md).
 
 For each entry: establish its definition, track, measure, variant, fixed constants, and restrictions; read primary sources and record versions/theorem locations; account for every stage, randomness, bit lengths, and output size; write correctness and runtime arguments; compare under the same variant/class/measure/model; obtain a separate critical audit; synchronize both languages and regenerate the indexes. `source-corollary` identifies a qualitative consequence explicitly stated in the source; its quantitative specialization may still be a catalog derivation. Neither this label nor `catalog-deduction` claims novelty.
 
@@ -86,4 +91,4 @@ Updates can follow new candidates, upstream revisions, algorithm/kernel improvem
 
 Treat assumption versions as immutable. Trace `depends_on`, `source_refs`, and `comparison_refs` across both tracks and the candidates; recheck affected derivations and comparisons before migrating dependencies. New assumption IDs or theorem shapes may require an explicit update to profile validation. Preserve corrections in CHANGELOG.md.
 
-The next batch should compare all 25 entries under their actual measures, broaden finite-obstruction deletion and coloring-modulator families, study extension counts, and investigate the ten candidates, including edge selection and matching conditions for general EDS. Distinguish FPT kernel/encoding obstacles from dense-input, connectivity, and weight obstacles for exact algorithms; keep variant-specific claims separate.
+The next batch should compare all 35 entries under their actual measures, broaden finite-obstruction deletion and coloring-modulator families, study extension counts, and investigate the ten candidates, including edge selection and matching conditions for general EDS. Distinguish FPT kernel/encoding obstacles from dense-input, connectivity, and weight obstacles for exact algorithms; keep variant-specific claims separate.

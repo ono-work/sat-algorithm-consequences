@@ -24,7 +24,9 @@
 
 ## 現在の内容
 
-10月28日の最新更新では、[偶奇による包含排除](METHODS.md)を共通手法に追加しました。目的の個数を固定幅#SATの二つの計数値の差として表し、[Dominating Setの計数](docs/ja/exact-count-dominating-sets.md)と[最小Dominating Set・最適解の復元](docs/ja/exact-minimum-dominating-set.md)を、密なグラフでも元の頂点数nに関する一般密度版のA(n)で扱います。従来のB(n+m)の導出と、密度を固定した場合のB(n)も残しています。この手法は正確な計数を使い、補助的な二つの式のどちらかの充足可能性だけでは目的の条件を判定できません。
+10月29日の更新では、解説に[**XP・XNLPと時間・領域の同時上界**](COMPLEXITY.ja.md#xp-xnlp)を追加しました。無条件の真包含 FPT ⊊ XP、小さい固定幅SAT符号化から得られる条件付きFPT、XNLPやSlice-wise Polynomial Space Conjectureに波及するために必要な追加の進展を分けて説明します。分解が与えられたCliqueでは、その幅を頂点数の対数で割ったパラメータについて肯定的な帰結を得ます。同じ正規化をしたIndependent Set・Dominating Setとの違いも示し、なお大きな課題が残ることを説明します。SATの仮定との論理的独立性を証明したという主張はしていません。解説内の議論として収録し、下記の個別アルゴリズムの項目数は維持しています。
+
+10月28日の更新では、[偶奇による包含排除](METHODS.md)を共通手法に追加しました。目的の個数を固定幅#SATの二つの計数値の差として表し、[Dominating Setの計数](docs/ja/exact-count-dominating-sets.md)と[最小Dominating Set・最適解の復元](docs/ja/exact-minimum-dominating-set.md)を、密なグラフでも元の頂点数nに関する一般密度版のA(n)で扱います。従来のB(n+m)の導出と、密度を固定した場合のB(n)も残しています。この手法は正確な計数を使い、補助的な二つの式のどちらかの充足可能性だけでは目的の条件を判定できません。
 
 新規項目として、[極大独立集合・極小Vertex Coverの計数](docs/ja/exact-count-maximal-independent-sets.md)、[最小独立支配集合・Upper Vertex Cover](docs/ja/exact-minimum-independent-dominating-set.md)、[変数数と節数の和を尺度にする任意幅CNFの計数](docs/ja/exact-count-unrestricted-cnf.md)、元の頂点数を尺度にする[固定有限禁止族への頂点削除](docs/ja/exact-count-finite-obstruction-vertex-deletions.md)と[Tournament Feedback Vertex Set](docs/ja/exact-count-tournament-feedback-vertex-sets.md)の計数・最適化を追加しました。FPT側には、vertex cover numberをパラメータにした[最大Clique](docs/ja/clique-vertex-cover.md)と[指定サイズのクリークの計数](docs/ja/count-cliques-vertex-cover.md)、[rankと最大・最小の正の出現回数の比を固定したHitting Set](docs/ja/bounded-ratio-occurrence-hitting-set.md)を加えました。
 
@@ -32,13 +34,13 @@
 
 同日の先の更新では、[Vertex Coverの導出](docs/ja/vertex-cover-solution-size.md)と[個数制約の符号化の解説](METHODS.md)に、具体的なゲートの節、計算例、変数O(k)・節O(k²)の区別を追記しました。また、[最大次数を固定したEdge Dominating Set](docs/ja/bounded-degree-edge-dominating-set.md)と、[辺数を尺度とする厳密最適化](docs/ja/exact-edge-dominating-set.md)を追加しました。一般グラフで解サイズだけをパラメータにした場合は、[候補・障害](CANDIDATES.ja.md)に未導出の項目として別に記録しています。
 
-**FPT 16項目、厳密アルゴリズム19項目の計35項目**と、**10項目の候補・障害の記録**を英日で収録しています。今回追加・更新した12項目と、先に確認したVC・EDSの3項目を合わせた **15項目** に、対象範囲を限定した **AI監査** の記録があります。一般EDSの候補にもAI監査を記録し、残る20項目と候補9項目は **draft** です。人間による確認の記録はありません。調査・導出・記述の大部分はCodexによるもので、AI監査は元のSAT定理の認定や人間による正しさの検証に代わるものではありません。計数と非重み付き最適化は別の版として記録し、明記した項目では最適解の復元も扱います。現在の最良アルゴリズムとの系統的比較は今後の調査項目です。Perfect Matchingの項目では、permanentの古典的な比較用上界だけを、その範囲を明記して収録しています。
+**FPT 16項目、厳密アルゴリズム19項目の計35項目**と、**10項目の候補・障害の記録**を英日で収録しています。10月28日の包含排除の更新で追加・更新した12項目と、先に確認したVC・EDSの3項目を合わせた **15項目** に、対象範囲を限定した **AI監査** の記録があります。一般EDSの候補にもAI監査を記録し、残る20項目と候補9項目は **draft** です。解説の各節に対する確認は、その解説内で別に記録します。人間による確認の記録はありません。調査・導出・記述の大部分はCodexによるもので、AI監査は元のSAT定理の認定や人間による正しさの検証に代わるものではありません。計数と非重み付き最適化は別の版として記録し、明記した項目では最適解の復元も扱います。現在の最良アルゴリズムとの系統的比較は今後の調査項目です。Perfect Matchingの項目では、permanentの古典的な比較用上界だけを、その範囲を明記して収録しています。
 
 | 区分 | 代表的な対象 | 主な尺度 |
 | --- | --- | --- |
 | [FPT](FPT.ja.md) | 線形カーネル、小さいmodulator、目標値による縮小を使う判定・計数・最適化、vertex cover numberをパラメータにしたClique | 意味を各項目で指定するパラメータ $k$ |
 | [厳密アルゴリズム](EXACT.ja.md) | 頂点・辺の選択、支配、固定禁止パターンへの削除、固定領域CSPなどの計数・最適化、任意幅CNFの計数 | 各項目で指定する $n$、$m$、$n+m$ |
-| [計算量理論](COMPLEXITY.ja.md) | クラスの一致、パラメータを明記したM[1]完全問題、古典的クラスへの帰結の限界、回路下界 | クラス・パラメータ・帰着の種類・計算モデルを明記 |
+| [計算量理論](COMPLEXITY.ja.md) | クラスの一致、M[1]完全問題、XP・XNLPと時間・領域の同時上界、古典的クラスへの帰結の限界、回路下界 | クラス・パラメータ・帰着の種類・計算モデルを明記 |
 | [候補・障害](CANDIDATES.ja.md) | 解サイズをパラメータにした一般Edge Dominating Set、行列の次元に関する密なpermanent、Hamiltonian Cycle、Chromatic Number、二進重み問題などの未完成の導出 | 問題名だけで一括せず、目標とする尺度を明記 |
 
 独立集合・固定色数の彩色・Perfect Matchingの計数については、元原稿の系1.3に定性的な帰結が明記されています。これらは `source-corollary` とし、定量的な精密化を別途説明します。それ以外の導出は `catalog-deduction` として記録します。いずれも新規性の主張を意味しません。

@@ -8,9 +8,11 @@
 
 一回の作業では一つの問題族、または三つまでの具体的な候補を調べます。単位は **問題 × パラメータまたはサイズ尺度 × 入力クラス**。さらに判定・計数・最適化・探索を区別します。発見した件数を目標にして、導出が不完全な項目を主表へ移さないでください。
 
-2026-10-28の包含排除・追加帰結の更新時点では、FPT 16項目、厳密アルゴリズム19項目、候補10項目を収録しています。今回追加・更新した12項目と先のVC・EDSの3項目、さらに一般EDSの候補に範囲限定のAI監査を記録しています。残る20項目と候補9項目はdraftです。人間による確認の記録はなく、新規性を主張する論文の結果一覧でもありません。
+2026-10-29時点では、FPT 16項目、厳密アルゴリズム19項目、候補10項目を収録しています。10月28日の包含排除の更新で追加・更新した12項目と先のVC・EDSの3項目、さらに一般EDSの候補に範囲限定のAI監査を記録しています。残る20項目と候補9項目はdraftです。解説の各節の確認は個別に記録します。人間による確認の記録はなく、新規性を主張する論文の結果一覧でもありません。
 
 [計算量理論への影響](COMPLEXITY.ja.md)は、個別アルゴリズムの項目数とは別の解説です。クラスの一致、パラメータを明示した完全問題、仮説に基づく下界、回路下界を扱います。帰着の種類、サイズの定義、導けることの範囲を保ち、英日両版と共通の出典一覧を更新してください。ある議論から分離を導けないことを、論理的独立性の証明として扱わないでください。
+
+XP・XNLPと時間・領域の議論では、無条件の分離、仮定に基づく導出、既存の予想、まだ成立を確認していない帰着を区別します。節幅と全補助変数数、分解が入力として与えられるか、正規化前後のパラメータ、時間・領域を同一アルゴリズムが同時に満たすかを確認します。符号化長に関する多項式領域を、元の入力に関するFPT領域や対数領域へ読み替えないでください。一般のF(κ)L^{O(1)}上界は、現在のA(k)・B(k)だけを扱う個別項目の欄へ押し込めず、解説内に記録するかスキーマを明示的に拡張します。
 
 ### 調査の系統
 
@@ -67,9 +69,11 @@ schema version 2では、`track` は `fpt` または `exact`、`measure_tex` は
 
 ## English
 
-**Parameterized and Exact Algorithms from Faster SAT** is a living bilingual reference; its selected publication target is `ono-work/sat-algorithm-consequences`, and its archive slug is `sat-algorithm-consequences`. At the 2026-10-28 parity-counting/additional-consequences update it contains 16 FPT entries, 19 exact-algorithm entries, and 10 candidates. The twelve added or revised entries, the three previously reviewed VC/EDS entries, and the general-EDS candidate have scoped AI audit records. The remaining 20 entries and nine candidates are draft, with no human review recorded. Inclusion is not a novelty claim.
+**Parameterized and Exact Algorithms from Faster SAT** is a living bilingual reference; its selected publication target is `ono-work/sat-algorithm-consequences`, and its archive slug is `sat-algorithm-consequences`. As of 2026-10-29 it contains 16 FPT entries, 19 exact-algorithm entries, and 10 candidates. The twelve entries added or revised in the October 28 parity-counting update, the three previously reviewed VC/EDS entries, and the general-EDS candidate have scoped AI audit records. The remaining 20 entries and nine candidates are draft; companion-section reviews are recorded separately, with no human review recorded. Inclusion is not a novelty claim.
 
 [Complexity-Theoretic Consequences](COMPLEXITY.md) is a companion note outside the algorithm-entry counts. It covers class equalities, complete problems with explicit parameters, hypothesis-based lower bounds, and circuit lower bounds. Preserve reduction types, size definitions, and the scope of each inference; update both languages and the shared source register. Failure of one separation argument is not a proof of logical independence.
+
+For XP/XNLP and time–space discussions, distinguish unconditional separations, deductions under stated assumptions, existing conjectures, and reductions not yet established. Check clause width and every auxiliary variable, whether a decomposition is supplied, the parameter before and after normalization, and whether one algorithm satisfies both resource bounds simultaneously. Polynomial space in the encoded formula length need not be FPT space or logarithmic space in the original input. Keep a general F(κ)L^{O(1)} bound in the companion note unless the schema is explicitly extended; do not force it into an A(k) or B(k) entry field.
 
 Investigate one family or at most three precise candidates per task. Keep the unit **problem × parameter-or-size-measure × input class**, with distinct decision, counting, optimization, or search variants. Do not turn a discovery quota into incomplete positive entries.
 

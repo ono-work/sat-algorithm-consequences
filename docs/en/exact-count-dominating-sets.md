@@ -2,7 +2,7 @@
 
 # Counting Dominating Sets
 
-Data date: 2026-10-28
+Data date: 2026-10-29
 
 > **Conditional catalog; see each entry's review status.** Unreviewed entries are drafts; an AI audit is recorded separately from a human review. The bounds depend on the named SAT assumptions. Schema validation and reproducible rendering are mechanical checks, not mathematical proof verification or a certification of the underlying result.
 

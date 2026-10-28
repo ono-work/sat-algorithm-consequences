@@ -2,7 +2,7 @@
 
 # 仮定と出典の版
 
-データ更新日：2026-10-28
+データ更新日：2026-10-29
 
 > **条件付きカタログ。確認状態は各項目に明記しています。** 未確認の項目は草稿であり、AIによる監査と人による確認は区別して記録します。計算量は指定したSATの仮定に依存します。スキーマ検証と生成物の一致確認は機械的なチェックであり、数学的な証明検証や元の結果の正しさの認定ではありません。
 
@@ -66,12 +66,19 @@ $$
 
 # 出典一覧
 
+## chen-flum2008
+
+[Yijia Chen and Jörg Flum, Subexponential Time and Fixed-Parameter Tractability: Exploiting the Miniaturization Mapping](https://basics.sjtu.edu.cn/~chen/papers/subeptjlc.pdf)
+
+- 版：Author preprint dated 20 August 2008, 28 pages; published in Journal of Logic and Computation 19(1) (2009), pages 89–122; DOI 10.1093/logcom/exn029
+- 参照箇所：Section 2, printed page 4 (effective little-o and computable convergence); Section 9, Proposition 43, printed pages 26–27 (effective subexponential time in parameter times log input length implies FPT). Numbering follows the author preprint.
+
 ## chen-grohe2006
 
 [Yijia Chen and Martin Grohe, An Isomorphism between Subexponential and Parameterized Complexity Theory](https://eccc.weizmann.ac.il/report/2006/011/download)
 
 - 版：ECCC TR06-011 (2006), 23-page preprint; published in SIAM Journal on Computing 37(4) (2007), 1228–1258
-- 参照箇所：Section 2.1 (size conventions); Definition 13, printed page 7 (unary padding and parameter); Theorem 14 (miniaturization correspondence)
+- 参照箇所：Section 2.1 (size conventions); Definition 13, printed page 7 (unary padding and parameter); Theorem 14 (miniaturization correspondence); Definition 11, printed page 7 (uniform XP); Section 4, first step of the proof of Lemma 18, printed page 9 (FPT-equivalent square-root-exponent reparameterization of every XP problem). Numbering follows ECCC TR06-011.
 
 ## cluster-editing2010
 
@@ -108,6 +115,13 @@ $$
 - 版：Author-hosted paper; Theoretical Computer Science 141 (1995), 109–131
 - 参照箇所：Introduction (Dominating Set is W[2]-complete); Corollary 3.2 (Clique is W[1]-complete), with solution cardinality as parameter
 
+## downey2012
+
+[Rod Downey, A Basic Parameterized Complexity Primer](https://homepages.ecs.vuw.ac.nz/~downey/publications/basic.pdf)
+
+- 版：Author-hosted 38-page version; published in The Multivariate Algorithmic Revolution and Beyond, LNCS 7370 (2012), pages 91–128; DOI 10.1007/978-3-642-30891-8_9
+- 参照箇所：Definition 1, PDF page 5 (strongly uniform FPT); Section 2, PDF page 8 (XP, slices complete for polynomial-time degrees, and strict separation from FPT).
+
 ## flum-grohe2004
 
 [Jörg Flum and Martin Grohe, Parameterized Complexity and Subexponential Time](https://www.uni-ulm.de/fileadmin/website_uni_ulm/iui.inst.190/Mitarbeiter/toran/beatcs/column84.pdf)
@@ -122,6 +136,13 @@ $$
 - 版：Journal of Computer and System Sciences 63(4) (2001), pages 512–530
 - 参照箇所：Sections 1.1.1–1.1.4 (size measures and reductions preserving subexponential complexity)
 
+## linear-xnlp2025
+
+[Hans L. Bodlaender, Carla Groenland, Hugo Jacob, Lars Jaffke, and Paloma T. Lima, XNLP-Completeness for Parameterized Problems on Graphs with a Linear Structure](https://link.springer.com/article/10.1007/s00453-024-01274-9)
+
+- 版：Algorithmica 87 (2025), pp. 465–506; first published 4 November 2024
+- 参照箇所：Introduction, Conjecture 1; Theorem 6 (logarithmic pathwidth); Sections 3.1–3.2 (XNLP and pl-reductions); Introduction, Footnote 2 (fixed polynomial exponent in space); Related Work (FPT-reduction closure of XNLP).
+
 ## marx2010
 
 [Dániel Marx, Can You Beat Treewidth?](https://toc.cs.uchicago.edu/articles/v006a005/v006a005.pdf)
@@ -135,6 +156,13 @@ $$
 
 - 版：Dissertation dated November 2008; defended 2 March 2009
 - 参照箇所：Example 3.2.17, printed pages 125–126 (log-inverse Vertex Cover; the example does not specify the completeness reduction type); Appendix A.2, printed page 195 (structure size)
+
+## pilipczuk-wrochna2016
+
+[Michał Pilipczuk and Marcin Wrochna, On Space Efficiency of Algorithms Working on Structural Decompositions of Graphs](https://drops.dagstuhl.de/storage/00lipics/lipics-vol047-stacs2016/LIPIcs.STACS.2016.57/LIPIcs.STACS.2016.57.pdf)
+
+- 版：STACS 2016, LIPIcs 47, article 57, pp. 57:1–57:15; DOI 10.4230/LIPIcs.STACS.2016.57; theorem numbering follows the STACS version
+- 参照箇所：Conjecture 2 (p. 57:3); Section 3, Theorem 12, Corollary 13, Theorems 14–15 (pp. 57:8–57:9); discussion after Theorem 15 (p. 57:9)
 
 ## rainbow2023
 
@@ -207,3 +235,10 @@ $$
 
 - 版：arXiv:1601.00164v1, 2 January 2016
 - 参照箇所：Theorem 1 (Vertex Cover) and Theorem 3 (Bounded-Degree Vertex Deletion)
+
+## xnlp2024
+
+[Hans L. Bodlaender, Carla Groenland, Jesper Nederlof, and Céline Swennenhuis, Parameterized problems complete for nondeterministic FPT time and logarithmic space](https://research-portal.uu.nl/ws/portalfiles/portal/236951425/1-s2.0-S0890540124000609-main.pdf)
+
+- 版：Journal version, Information and Computation 300 (2024), article 105195; DOI 10.1016/j.ic.2024.105195; Utrecht repository PDF with one cover page followed by 34 journal pages
+- 参照箇所：Sections 2.2–2.3, printed page 4 (strong uniformity, XNLP, and pl reductions); Section 2.4, Lemmas 1–3, printed page 5; Section 4.2, Theorem 17, printed page 17 (Log-Pathwidth Dominating Set); Theorem 18, printed page 18 (Log-Pathwidth Independent Set); discussion immediately before Proposition 19, printed page 20 (Log-Pathwidth Clique and containment of every clique in a bag). Numbering and page references use the journal version, not the arXiv version. Section 5.1, Conjectures 30–31, printed page 31 (Slice-wise Polynomial Space Conjecture and its class formulation).

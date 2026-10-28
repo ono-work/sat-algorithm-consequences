@@ -1,5 +1,21 @@
 # Changelog / 更新履歴
 
+## 2026-10-29 — XP, XNLP, and time–space obstacles / XP・XNLPと時間・領域に関する障害
+
+- Expanded the bilingual complexity companion with Section 7. Distinguished the unconditional strongly uniform separation FPT ⊊ XP, conditional algorithms from fixed-width SAT encodings with O(h(k) log L) total variables, and existing conjectures. Explained why L^{o(k)} alone does not imply FPT.
+- Added a conditional Log-Pathwidth Clique derivation for a supplied path decomposition: O(p+1) variables, O((p+1)²) clauses, fixed width, and FPT time in ceil((p+1)/log₂(n+2)). Included decision, the optimum, a maximum-clique witness, tiny cases, and the separate reported-formalization profile.
+- Contrasted XNLP-complete normalized-pathwidth Independent Set and Dominating Set with Clique. Distinguished small workspace from a short complete SAT encoding, and vertex-count bounds from width bounds. Recorded XNLP⊆FPT as the relevant possible inclusion, without assuming its reverse.
+- Explained the Slice-wise Polynomial Space Conjecture and why XP time and FPT space must be achieved simultaneously. The comparison table separates current A(n) transfers from hypothetical width-dependent algorithms that would refute SPSC or imply XNLP⊆FPT. No logical-independence or algorithm-impossibility claim is made.
+- Added five primary sources and appended Chen–Grohe locators. Recorded an independent, scoped AI audit of both language versions of Section 7 and their source locators, with exact section hashes. The overall note remains draft; no human review or validation of the SAT theorem is asserted.
+- Updated navigation, the protocol, and generated snapshot dates. The 35 algorithm entries (16 FPT, 19 exact), 10 candidate records, existing entry reviews, pinned SAT assumptions, and METHODS.md are unchanged.
+
+- 英日の計算量解説に第7節を追加。強一様なFPT ⊊ XPの無条件の分離、全変数数O(h(k) log L)の固定幅SAT符号化から得る条件付きアルゴリズム、既存の予想を区別し、L^{o(k)}だけではFPTにならないことを説明しました。
+- 与えられたパス分解を使うLog-Pathwidth Cliqueの条件付き導出を追加。変数O(p+1)・節O((p+1)²)・固定幅を数え、ceil((p+1)/log₂(n+2))についてFPTを得ます。判定・最適値・最大クリークの復元、小さい入力、報告された形式化による別のプロファイルも記載しました。
+- 同じ正規化幅でXNLP完全なIndependent Set・Dominating Setと比較。作業領域の小ささと完全なSAT符号化の小ささ、頂点数に関する上界と幅に関する上界を区別し、逆包含を仮定せずXNLP⊆FPTを論点として記録しました。
+- Slice-wise Polynomial Space Conjectureと、XP時間・FPT領域を同じアルゴリズムで同時に満たす必要性を説明。現在のA(n)の移送と、SPSCの反証やXNLP⊆FPTに十分な仮想的な幅依存アルゴリズムを表で分けました。論理的独立性やアルゴリズムの不可能性は主張しません。
+- 一次資料5件とChen–Groheの参照箇所を追加。英日第7節と対応する出典箇所について、独立したAIによる範囲限定の確認と、対象節のhashを記録しました。解説全体はdraftのままで、人間の確認やSAT定理の検証は意味しません。
+- 導線・更新手順・生成物の日付を更新。個別アルゴリズム35項目（FPT 16・厳密19）、候補10項目、既存項目の確認記録、固定されたSAT仮定、METHODS.mdは維持しています。
+
 ## 2026-10-28 — Parity counting and additional consequences / 包含排除による計数と追加の帰結
 
 - Added METHODS.md Section 9 in both languages: fixed-width bad events, optional markers, full-equivalence XOR gates, the difference of two exact #SAT counts, the cancellation identity, integer bit lengths, and positive-difference tests for optimization and witness recovery. The scope requires exact counting, not just SAT decision.

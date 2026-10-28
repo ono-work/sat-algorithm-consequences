@@ -6,7 +6,7 @@ Data date: 2026-10-28
 
 > **Conditional catalog; see each entry's review status.** Unreviewed entries are drafts; an AI audit is recorded separately from a human review. The bounds depend on the named SAT assumptions. Schema validation and reproducible rendering are mechanical checks, not mathematical proof verification or a certification of the underlying result.
 
-[日本語](CATALOG.ja.md) · [FPT](FPT.md) · [Exact algorithms](EXACT.md) · [Assumptions and sources](ASSUMPTIONS.md) · [Candidates](CANDIDATES.md)
+[日本語](CATALOG.ja.md) · [FPT](FPT.md) · [Exact algorithms](EXACT.md) · [Complexity theory](COMPLEXITY.md) · [Assumptions and sources](ASSUMPTIONS.md) · [Candidates](CANDIDATES.md)
 
 The FPT track measures the parameter dependence; the exact-algorithm track measures dependence on the stated input-size quantity. Decision, counting, optimization, and search variants are distinguished on the entry pages. Fixed constants remain independent of the parameter and input length. Inclusion alone is not a claim of novelty or a best-known bound.
 

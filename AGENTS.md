@@ -12,6 +12,7 @@ This repository, **Parameterized and Exact Algorithms from Faster SAT**, is a li
 - Schema version 2 supports `track: fpt | exact`; `measure_tex: k | n | m | n+m`; `variant: decision | counting | optimization | search`; and `origin: catalog-deduction | source-corollary`.
 - The general profile substitutes an O(x)-variable fixed-width CNF; the sparse profile requires the corresponding fixed-density condition, typically through N+M=O(x). Here x is the declared parameter or size measure. Other measures, profiles, or representations need an explicit schema/renderer extension.
 - `CATALOG*.md` contains both tracks; `FPT*.md` and `EXACT*.md` are their generated indexes. Entry pages remain in `docs/en/` and `docs/ja/`. Never edit generated pages directly.
+- `COMPLEXITY.md` and `COMPLEXITY.ja.md` are hand-maintained companion notes, outside the algorithm-entry schema and entry counts. Update both together, preserve exact parameters and reduction types, and record primary-source locators and conditional/review scope. Their source references also appear in the shared source register. Do not turn a limitation of one inference into a theorem of logical independence.
 
 ## Research standard
 

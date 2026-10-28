@@ -1,6 +1,6 @@
 # Parameterized and Exact Algorithms from Faster SAT
 
-[日本語](README.ja.md) · [FPT](FPT.md) · [Exact algorithms](EXACT.md) · [All entries](CATALOG.md) · [Candidates](CANDIDATES.md) · [Assumptions and sources](ASSUMPTIONS.md)
+[日本語](README.ja.md) · [FPT](FPT.md) · [Exact algorithms](EXACT.md) · [Complexity theory](COMPLEXITY.md) · [All entries](CATALOG.md) · [Candidates](CANDIDATES.md) · [Assumptions and sources](ASSUMPTIONS.md)
 
 ## How this catalog began
 
@@ -24,12 +24,15 @@ The initial focus is the **October 25, 2026 revision** of *The Exponential Time 
 
 ## Current snapshot
 
+The October 28, 2026 update adds [**Complexity-Theoretic Consequences**](COMPLEXITY.md): the conditional equality FPT = M[1], concrete miniaturized problems and their parameters, the scope of W-hierarchy and ETH-based lower-bound consequences, the distinction between two subexponential time scales in the NP-versus-EXP question, and circuit lower bounds. This companion note is a Codex-prepared draft with no human verification recorded; its statements are not counted as additional algorithm entries.
+
 The catalog contains **23 entries: 12 FPT and 11 exact-algorithm entries**, plus **9 candidate/obstacle notes**, in English and Japanese. All are labeled **draft**. Most of the research, derivation, and writing were carried out by Codex; this is not a collection whose correctness has been carefully verified by a human. The exact entries cover counting and unweighted optimization, including optimum witnesses. A systematic comparison against the latest best algorithms remains open; the perfect-matching entry records one classical permanent benchmark explicitly as such.
 
 | Track | Representative scope | Main scale |
 | --- | --- | --- |
 | [FPT](FPT.md) | Decision algorithms using linear kernels, small modulators, or target-based size reductions | Parameter $k$ |
 | [Exact algorithms](EXACT.md) | Counting independent sets, fixed-color colorings, CSP solutions and constrained edge sets; optimizing Independent Set, Dominating Set, Max-Cut and fixed-domain Max-CSP | $n$, $m$, or $n+m$, as stated per entry |
+| [Complexity theory](COMPLEXITY.md) | Class equalities, precisely parameterized M[1]-complete examples, limits of classical-class conclusions, and circuit lower bounds | Declared class, parameter, reduction type, and model |
 | [Candidates and obstacles](CANDIDATES.md) | Incomplete routes including dense permanent by matrix dimension, Hamiltonian Cycle, Chromatic Number and binary-weight problems | The specific target scale, not a generic problem-name claim |
 
 Three qualitative exact-counting consequences—independent sets, fixed-color colorings and perfect matchings—already appear in the source manuscript's Corollary 1.3. Their entries are labeled `source-corollary`, with quantitative refinements identified. Other entries record `catalog-deduction`. These provenance labels do not assert novelty.
@@ -69,10 +72,11 @@ Drafts can be published with their labels. A review label concerns this entry, n
 
 | File or directory | Purpose |
 | --- | --- |
-| `data/catalog.json` | Shared mathematical fields, sources, statuses, and bilingual text. |
+| `data/catalog.json` | Shared algorithm-entry fields, SAT assumptions, sources, statuses, and bilingual entry text. |
 | `CATALOG.md`, `CATALOG.ja.md` | Generated overall indexes. |
 | `FPT.md`, `FPT.ja.md` | Generated parameterized-algorithm indexes. |
 | `EXACT.md`, `EXACT.ja.md` | Generated exact-algorithm indexes, with variants and size measures. |
+| `COMPLEXITY.md`, `COMPLEXITY.ja.md` | Hand-maintained companion notes on complexity-theoretic consequences, with matched statements and source locators. |
 | `docs/en/`, `docs/ja/` | Generated entry pages. |
 | `ASSUMPTIONS.md`, `ASSUMPTIONS.ja.md` | Generated assumption definitions and source versions. |
 | `CANDIDATES.md`, `CANDIDATES.ja.md` | Unfinished routes and concrete obstacles. |
@@ -90,7 +94,7 @@ python3 tools/render_catalog.py
 python3 tools/render_catalog.py --check
 ```
 
-Edit the shared JSON and hand-written methods/protocol, then regenerate the entry pages and indexes. Commit the source data and regenerated files together. Shared formulas, source IDs, and status fields are rendered into both languages from the same record. Translation equivalence still requires reading both explanations.
+Edit the shared JSON and hand-written methods/protocol, then regenerate the entry pages and indexes. Maintain both `COMPLEXITY` notes together when changing a class consequence, parameter, reduction convention, or source attribution. Commit the source data and regenerated files together. Shared algorithm-entry formulas, source IDs, and status fields are rendered into both languages from the same record. Translation equivalence still requires reading both explanations.
 
 To add a result, use [the investigation task](prompts/investigate.md). To challenge a derivation, use [the audit task](prompts/audit.md). To handle an upstream revision, use [the source-update task](prompts/update-sources.md). Candidate and correction issue templates are included.
 

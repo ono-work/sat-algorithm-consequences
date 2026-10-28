@@ -18,7 +18,7 @@ The initial public upload of **Parameterized and Exact Algorithms from Faster SA
 
 ### 1. 収録内容を準備する
 
-README、全体一覧、FPT一覧、厳密アルゴリズム一覧、仮定を英日両方で確認します。問題の版、k/n/m/n+mの尺度、疎密や重みの制限を保ち、`source-corollary` とカタログ側の導出、古典的基準との比較と最新最良上界の調査を区別します。draftはdraftのまま共有でき、人間の確認済みという表示を公開条件として要求しません。
+README、全体一覧、FPT一覧、厳密アルゴリズム一覧、計算量理論への影響、仮定を英日両方で確認します。問題の版、k/n/m/n+mの尺度、疎密や重みの制限を保ち、`source-corollary` とカタログ側の導出、古典的基準との比較と最新最良上界の調査を区別します。draftはdraftのまま共有でき、人間の確認済みという表示を公開条件として要求しません。
 
 ```bash
 python3 tools/render_catalog.py
@@ -70,7 +70,7 @@ gh repo create ono-work/sat-algorithm-consequences --public --source=. --remote=
 
 ### 1. Prepare the contents
 
-Inspect the README, overall catalog, FPT index, exact-algorithm index, and assumptions in both languages. Preserve variants, size measures, density and weight restrictions, source provenance, and the distinction between classical benchmarks and latest-best surveys. Drafts may be shared with accurate labels; human review is not a publication prerequisite. Run the render and check commands above, and include data and generated pages together. The check validates schema and generated-content consistency, not proofs or the underlying SAT result.
+Inspect the README, overall catalog, FPT index, exact-algorithm index, complexity-theory note, and assumptions in both languages. Preserve variants, size measures, density and weight restrictions, source provenance, and the distinction between classical benchmarks and latest-best surveys. Drafts may be shared with accurate labels; human review is not a publication prerequisite. Run the render and check commands above, and include data and generated pages together. The check validates schema and generated-content consistency, not proofs or the underlying SAT result.
 
 ### 2. Authenticate and verify the account
 

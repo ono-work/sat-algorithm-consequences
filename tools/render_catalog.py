@@ -408,6 +408,7 @@ def render_index(data: dict[str, Any], lang: str, track: str | None = None) -> s
     navigation = [f"[{choose(lang, '日本語', 'English')}]({filename(stem, other)})"]
     for target, label in (("CATALOG", choose(lang, "All tracks", "全体一覧")),
                           ("FPT", "FPT"), ("EXACT", choose(lang, "Exact algorithms", "厳密アルゴリズム")),
+                          ("COMPLEXITY", choose(lang, "Complexity theory", "計算量理論")),
                           ("ASSUMPTIONS", choose(lang, "Assumptions and sources", "仮定と出典")),
                           ("CANDIDATES", choose(lang, "Candidates", "候補"))):
         if target != stem:

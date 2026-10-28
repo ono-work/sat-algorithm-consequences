@@ -1,5 +1,21 @@
 # Changelog / 更新履歴
 
+## 2026-10-28 — Complexity-theoretic consequences / 計算量理論への影響
+
+- Added matched English and Japanese companion notes, [COMPLEXITY.md](COMPLEXITY.md) and [COMPLEXITY.ja.md](COMPLEXITY.ja.md), with conditional scope, draft status, and exact primary-source locations.
+- Explained FPT = M[1] under the assumed effective subexponential SAT algorithms; included the threshold argument and known complete miniaturizations with explicit measures, unary padding, parameters, and FPT Turing completeness. Recorded logarithmically normalized Vertex Cover separately, preserving the source's reduction-type qualification.
+- Distinguished the continued validity of W-hardness reductions from the loss of ETH as a quantitative lower-bound premise. Added the fixed-width obstacle in the direct binary Clique encoding.
+- Explained why the current SAT upper bounds do not establish NP versus EXP, and why the stronger hypothetical 2^{N^{o(1)}} bound would suffice. No logical-independence claim is made.
+- Recorded Williams's qualitative E^NP circuit lower bound and the manuscript's stronger, infinitely-often quantitative corollary with distinct provenance and assumption scope.
+- Linked the notes from both READMEs and generated indexes; added eight primary references to the shared source register and updated maintenance guidance. The algorithm-entry schema, 23 entries, 9 candidates, pinned SAT assumptions, and their review labels are unchanged.
+
+- 英日の解説を追加し、条件付きの範囲、draft表示、一次資料の参照箇所を明記。
+- 実効的な劣指数時間SATの仮定から FPT = M[1] を得る閾値の議論を説明。完全なミニ化問題の尺度・単項padding・パラメータ・FPT Turing完全性を明示し、対数で正規化したVertex Coverは、出典の帰着種別の留保を保って別に記載。
+- W困難性の帰着が有効であることと、ETHを定量的な下界の前提として使えなくなることを区別。Cliqueの直接的な二進符号化で節幅が増える問題を説明。
+- 今回の上界からNP対EXPを決着できない理由と、より強い仮定なら時間階層定理で分離を導けることを記載。論理的独立性は主張しない。
+- Williamsの定性的な回路下界と、元原稿の「無限に多くの入力長」に対する定量的な系を、由来・仮定を分けて記録。
+- READMEと生成索引からのリンク、8件の一次資料、更新手順を追加。個別アルゴリズムのスキーマ、23項目・候補9項目、固定されたSATの仮定、既存の確認状況は維持。
+
 ## 2026-10-28 — Initial public publication / 初回公開
 
 - Published the bilingual catalog at [ono-work/sat-algorithm-consequences](https://github.com/ono-work/sat-algorithm-consequences) using `agent-maria`, with 12 FPT entries, 11 exact-algorithm entries, and 9 candidate/obstacle notes.

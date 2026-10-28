@@ -66,6 +66,13 @@ $$
 
 # Source register
 
+## chen-grohe2006
+
+[Yijia Chen and Martin Grohe, An Isomorphism between Subexponential and Parameterized Complexity Theory](https://eccc.weizmann.ac.il/report/2006/011/download)
+
+- Version: ECCC TR06-011 (2006), 23-page preprint; published in SIAM Journal on Computing 37(4) (2007), 1228–1258
+- Locator: Section 2.1 (size conventions); Definition 13, printed page 7 (unary padding and parameter); Theorem 14 (miniaturization correspondence)
+
 ## cluster-editing2010
 
 [Yixin Cao and Jianer Chen, Cluster Editing: Kernelization based on Edge Cuts](https://arxiv.org/abs/1008.4250v3)
@@ -93,6 +100,41 @@ $$
 
 - Version: IPEC 2016, LIPIcs 63, Article 20, published 2017
 - Locator: Abstract and main result in Section 1: at most 2ℓk vertices, time n^{O(ℓ)}
+
+## downey-fellows1995
+
+[Rodney G. Downey and Michael R. Fellows, Fixed-Parameter Tractability and Completeness II: On Completeness for W[1]](https://homepages.ecs.vuw.ac.nz/~downey/publications/2.pdf)
+
+- Version: Author-hosted paper; Theoretical Computer Science 141 (1995), 109–131
+- Locator: Introduction (Dominating Set is W[2]-complete); Corollary 3.2 (Clique is W[1]-complete), with solution cardinality as parameter
+
+## flum-grohe2004
+
+[Jörg Flum and Martin Grohe, Parameterized Complexity and Subexponential Time](https://www.uni-ulm.de/fileadmin/website_uni_ulm/iui.inst.190/Mitarbeiter/toran/beatcs/column84.pdf)
+
+- Version: Bulletin of the EATCS 84 (2004), pages 71–100; 31-page column PDF
+- Locator: Definition 4.2 and Theorem 4.4 (M hierarchy); Theorem 5.3, Corollaries 5.6, 5.8, 5.9, and Proposition 5.10 with its following discussion (miniaturization and measures); Section 7 (ETH iff M[1] ≠ FPT)
+
+## ipz2001
+
+[Russell Impagliazzo, Ramamohan Paturi, and Francis Zane, Which Problems Have Strongly Exponential Complexity?](https://cseweb.ucsd.edu/~russell/ipz.pdf)
+
+- Version: Journal of Computer and System Sciences 63(4) (2001), pages 512–530
+- Locator: Sections 1.1.1–1.1.4 (size measures and reductions preserving subexponential complexity)
+
+## marx2010
+
+[Dániel Marx, Can You Beat Treewidth?](https://toc.cs.uchicago.edu/articles/v006a005/v006a005.pdf)
+
+- Version: Theory of Computing 6 (2010), pages 85–112
+- Locator: Theorem 1.5, page 89: an f(k)n^{o(k)} algorithm for k-Clique would refute ETH
+
+## mueller2008
+
+[Moritz Müller, Parameterized Randomization](https://d-nb.info/993356915/34)
+
+- Version: Dissertation dated November 2008; defended 2 March 2009
+- Locator: Example 3.2.17, printed pages 125–126 (log-inverse Vertex Cover; the example does not specify the completeness reduction type); Appendix A.2, printed page 195 (structure size)
 
 ## rainbow2023
 
@@ -123,6 +165,20 @@ $$
 
 - Version: Author manuscript dated 18 June 2005
 - Locator: Section 2, page 3: Ryser formula in Gray-code order takes Θ(n·2^n) arithmetic operations; used only as a classical benchmark
+
+## vadhan2007
+
+[Salil Vadhan, CS225 Lecture 5: Basic Derandomization Techniques](https://people.seas.harvard.edu/~salil/cs225/spring07/lecnotes/lec5.pdf)
+
+- Version: Harvard CS225 lecture notes, 15 February 2007; based on scribe notes by Arthur Rudolph and Chun-Yun Hsiao
+- Locator: Section 2, page 2, Definition 1 and the following time-hierarchy statement: SUBEXP = intersection over epsilon > 0 of DTIME(2^{n^epsilon}), and SUBEXP is properly contained in EXP
+
+## williams2010
+
+[Ryan Williams, Improving Exhaustive Search Implies Superpolynomial Lower Bounds](https://people.csail.mit.edu/rrw/improved-algs-lbs2.pdf)
+
+- Version: Author full version dated 4 May 2010; journal version in SIAM Journal on Computing 42(3) (2013), 1218–1244
+- Locator: Theorem 6.1, PDF page 21: if ETH is false, E^NP does not have linear-size circuits
 
 ## xiao2016
 

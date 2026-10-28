@@ -10,6 +10,8 @@
 
 2026-10-28の対象拡張時点では、FPT 12項目、厳密アルゴリズム11項目、候補9項目を収録し、すべてdraftです。これは新規性を主張する論文の結果一覧ではありません。
 
+[計算量理論への影響](COMPLEXITY.ja.md)は、個別アルゴリズムの項目数とは別の解説です。クラスの一致、パラメータを明示した完全問題、仮説に基づく下界、回路下界を扱います。帰着の種類、サイズの定義、導けることの範囲を保ち、英日両版と共通の出典一覧を更新してください。ある議論から分離を導けないことを、論理的独立性の証明として扱わないでください。
+
 ### 調査の系統
 
 | 系統 | 探すもの | 典型的な確認点 |
@@ -63,6 +65,8 @@ schema version 2では、`track` は `fpt` または `exact`、`measure_tex` は
 ## English
 
 **Parameterized and Exact Algorithms from Faster SAT** is a living bilingual reference; its selected publication target is `ono-work/sat-algorithm-consequences`, and its archive slug is `sat-algorithm-consequences`. At the 2026-10-28 scope extension it contains 12 FPT entries, 11 exact-algorithm entries, and 9 candidates, all draft. Inclusion is not a novelty claim.
+
+[Complexity-Theoretic Consequences](COMPLEXITY.md) is a companion note outside the algorithm-entry counts. It covers class equalities, complete problems with explicit parameters, hypothesis-based lower bounds, and circuit lower bounds. Preserve reduction types, size definitions, and the scope of each inference; update both languages and the shared source register. Failure of one separation argument is not a proof of logical independence.
 
 Investigate one family or at most three precise candidates per task. Keep the unit **problem × parameter-or-size-measure × input class**, with distinct decision, counting, optimization, or search variants. Do not turn a discovery quota into incomplete positive entries.
 
